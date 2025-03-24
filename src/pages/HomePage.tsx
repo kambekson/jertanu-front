@@ -86,7 +86,7 @@ const tours = [
 
 export default function HomePage() {
   return (
-    <div className="container mx-auto px-4 py-3">
+    <div className="py-3">
       <Hero />
       <div className="py-12">
         <HotTours tours={tours} />

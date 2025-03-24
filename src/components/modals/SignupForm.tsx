@@ -41,8 +41,8 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           password,
           profile: {
             firstName,
-            lastName
-          }
+            lastName,
+          },
         }),
       });
 
@@ -64,8 +64,8 @@ export default function SignupForm({ switchView }: SignupFormProps) {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Создайте аккаунт.</h1>
         <div className="flex items-center gap-2">
           <span className="text-gray-600">Уже есть аккаунт?</span>
-          <button 
-            onClick={() => switchView('login')} 
+          <button
+            onClick={() => switchView('login')}
             className="text-blue-600 font-semibold hover:underline"
           >
             Войти
@@ -73,11 +73,7 @@ export default function SignupForm({ switchView }: SignupFormProps) {
         </div>
       </div>
 
-      {error && (
-        <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
+      {error && <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-2">
         <div className="space-y-4">
@@ -85,7 +81,7 @@ export default function SignupForm({ switchView }: SignupFormProps) {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
               <div className="relative">
-                <User 
+                <User
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                   strokeLinejoin="round"
                 />
@@ -103,7 +99,7 @@ export default function SignupForm({ switchView }: SignupFormProps) {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Фамилия</label>
               <div className="relative">
-                <User 
+                <User
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                   strokeLinejoin="round"
                 />
@@ -122,7 +118,7 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div className="relative">
-              <Mail 
+              <Mail
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                 strokeLinejoin="round"
               />
@@ -140,7 +136,7 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
             <div className="relative">
-              <Lock 
+              <Lock
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                 strokeLinejoin="round"
               />
@@ -156,9 +152,11 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Подтвердите пароль</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Подтвердите пароль
+            </label>
             <div className="relative">
-              <Lock 
+              <Lock
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
                 strokeLinejoin="round"
               />
@@ -183,8 +181,8 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           />
           <span className="text-sm text-gray-600">
             Я согласен с{' '}
-            <a 
-              href="/terms" 
+            <a
+              href="/terms"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
@@ -206,10 +204,7 @@ export default function SignupForm({ switchView }: SignupFormProps) {
   ) : (
     <div className="text-center space-y-6">
       <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-        <Mail 
-          className="w-8 h-8 text-blue-600"
-          strokeLinejoin="round"
-        />
+        <Mail className="w-8 h-8 text-blue-600" strokeLinejoin="round" />
       </div>
       <div>
         <h2 className="text-2xl font-bold text-gray-900">Подтвердите email</h2>
@@ -218,8 +213,8 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           следуйте инструкциям.
         </p>
       </div>
-      <button 
-        onClick={() => switchView('login')} 
+      <button
+        onClick={() => switchView('login')}
         className="text-blue-600 font-medium hover:underline"
       >
         Вернуться к входу

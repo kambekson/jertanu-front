@@ -1,0 +1,19 @@
+// Container styles
+.container {
+  width: 100%;
+  max-width: 1320px;
+  padding-left: 1rem; // px-4
+  padding-right: 1rem; // px-4
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 768px) {
+    padding-left: 1.5rem; // md:px-6
+    padding-right: 1.5rem; // md:px-6
+  }
+
+  @media (min-width: 1024px) {
+    padding-left: 2rem; // lg:px-8
+    padding-right: 2rem; // lg:px-8
+  }
+}

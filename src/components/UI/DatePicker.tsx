@@ -99,7 +99,7 @@ export default function DatePicker({
         setShowCalendar(false);
       }
     }
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);

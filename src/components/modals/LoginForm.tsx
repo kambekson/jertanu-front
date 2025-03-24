@@ -29,7 +29,7 @@ export default function LoginForm({ switchView }: LoginFormProps) {
       // Store both tokens
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('refresh_token', data.refresh_token);
-      
+
       window.location.href = '/';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла ошибка при входе');

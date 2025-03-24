@@ -60,7 +60,7 @@ export default function Header() {
   };
 
   return (
-    <header className="flex justify-between p-4 bg-white relative">
+    <header className="flex justify-between p-4 bg-white relative container">
       <div className="flex items-center">
         <a className="pb-2.5">
           <img src={logo} alt="logo" />
@@ -79,14 +79,14 @@ export default function Header() {
 
       {isLoggedIn ? (
         <div className="relative" ref={dropdownRef}>
-          <div 
+          <div
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-3 cursor-pointer"
           >
             <span className="font-medium">{userFullName}</span>
             <User className="w-5 h-5" />
           </div>
-          
+
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-2xl py-2 z-50">
               <div className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
@@ -101,7 +101,7 @@ export default function Header() {
                 <Calendar className="w-4 h-4" />
                 <span>Брони</span>
               </div>
-              <div 
+              <div
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 text-red-500"
               >
@@ -113,20 +113,20 @@ export default function Header() {
         </div>
       ) : (
         <div className="flex gap-3">
-          <Button 
+          <Button
             onClick={() => {
               setAuthMode('register');
               setAuthOpen(true);
-            }} 
+            }}
             variant="secondary"
           >
             Регистрация
           </Button>
-          <Button 
+          <Button
             onClick={() => {
               setAuthMode('login');
               setAuthOpen(true);
-            }} 
+            }}
             variant="primary"
           >
             Войти
@@ -134,9 +134,9 @@ export default function Header() {
         </div>
       )}
 
-      <AuthModal 
-        isOpen={isAuthOpen} 
-        onClose={() => setAuthOpen(false)} 
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setAuthOpen(false)}
         initialMode={authMode as 'login' | 'signup' | 'forgot' | 'reset' | 'verify' | 'register'}
       />
     </header>

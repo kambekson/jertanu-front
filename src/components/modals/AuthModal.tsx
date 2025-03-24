@@ -9,7 +9,6 @@ import authbg2 from '../../assets/auth-modal2.jpg';
 import authbg3 from '../../assets/auth-modal3.jpg';
 import logo from '../../assets/jertanu-logo-white.svg';
 
-
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,41 +21,41 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
     if (mode === 'register') return 'signup';
     return mode as 'login' | 'signup' | 'forgot' | 'reset' | 'verify';
   };
-  
+
   const [view, setView] = useState<'login' | 'signup' | 'forgot' | 'reset' | 'verify'>(
-    resolveView(initialMode)
+    resolveView(initialMode),
   );
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   // Обновляем view при изменении initialMode
   useEffect(() => {
     setView(resolveView(initialMode));
   }, [initialMode]);
-  
+
   // Данные для карусели (изображения и слоганы)
   const carouselData = [
     {
       image: authbg1, // Используем существующее изображение как первое
-      slogan: "Исследуйте страну, одно направление за другим"
+      slogan: 'Исследуйте страну, одно направление за другим',
     },
     {
       image: authbg2, // Замените на другие изображения
-      slogan: "Откройте для себя новые горизонты путешествий"
+      slogan: 'Откройте для себя новые горизонты путешествий',
     },
     {
       image: authbg3, // Замените на другие изображения
-      slogan: "Создавайте незабываемые моменты вместе с нами"
-    }
+      slogan: 'Создавайте незабываемые моменты вместе с нами',
+    },
   ];
 
   // Автоматическая смена слайдов
   useEffect(() => {
     if (!isOpen) return;
-    
+
     const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % carouselData.length);
+      setCurrentSlide((prev) => (prev + 1) % carouselData.length);
     }, 5000); // Смена каждые 5 секунд
-    
+
     return () => clearInterval(interval);
   }, [isOpen, carouselData.length]);
 
@@ -65,13 +64,13 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
       <div className="bg-white rounded-[24px] shadow-xl w-[900px] h-[600px] relative flex overflow-hidden">
-        <button 
+        <button
           onClick={onClose}
           className="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-colors z-10"
         >
           <X size={20} />
         </button>
-        
+
         <div className="w-1/2 p-8">
           {view === 'login' && <LoginForm switchView={setView} />}
           {view === 'signup' && <SignupForm switchView={setView} />}
@@ -82,33 +81,33 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
 
         <div className="w-1/2 relative">
           {carouselData.map((slide, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`absolute inset-0 transition-opacity duration-1000 ${
                 index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
             >
-              <img 
-                src={slide.image} 
-                alt={`Слайд ${index + 1}`} 
+              <img
+                src={slide.image}
+                alt={`Слайд ${index + 1}`}
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60" />
             </div>
           ))}
-          
+
           <div className="absolute top-6 left-8">
             <img src={logo} alt="JerTanu" className="h-6" />
           </div>
-          
+
           <div className="absolute bottom-16 left-8 right-8 text-white">
             <div className="h-[96px] relative">
               {carouselData.map((slide, index) => (
-                <h2 
+                <h2
                   key={index}
                   className={`text-[32px] font-bold leading-tight absolute inset-0 transition-all duration-1000 ${
-                    index === currentSlide 
-                      ? 'opacity-100 transform translate-y-0' 
+                    index === currentSlide
+                      ? 'opacity-100 transform translate-y-0'
                       : 'opacity-0 transform translate-y-4'
                   }`}
                 >
@@ -116,10 +115,10 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                 </h2>
               ))}
             </div>
-            
+
             <div className="flex gap-2 mt-8 absolute bottom-[-40px] left-0">
               {carouselData.map((_, index) => (
-                <div 
+                <div
                   key={index}
                   className={`w-2 h-2 rounded-full cursor-pointer transition-all duration-300 ${
                     index === currentSlide ? 'bg-white' : 'bg-white/30'

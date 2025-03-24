@@ -66,4 +66,4 @@ export const authService = {
   isAuthenticated(): boolean {
     return !!this.getAccessToken();
   },
-}; 
+};

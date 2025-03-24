@@ -45,7 +45,9 @@ const TourCard = ({ tour }: { tour: Tour }) => {
             <p className={`${tour.textColor || 'text-gray-600'} mt-2 font-base`}>{tour.dates}</p>
             <div className="mt-2 flex items-center">
               {tour.oldPrice && (
-                <span className={`mr-2 ${tour.textColor || 'text-gray-500'} line-through font-base text-sm`}>
+                <span
+                  className={`mr-2 ${tour.textColor || 'text-gray-500'} line-through font-base text-sm`}
+                >
                   {tour.oldPrice.toLocaleString()} ₸
                 </span>
               )}
