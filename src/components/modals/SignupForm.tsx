@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, User } from 'lucide-react';
 
-export default function SignupForm({ switchView }) {
+interface SignupFormProps {
+  switchView: (view: 'login' | 'signup' | 'forgot' | 'reset' | 'verify') => void;
+}
+
+export default function SignupForm({ switchView }: SignupFormProps) {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<'signup' | 'email-verification'>('signup');
@@ -12,6 +19,11 @@ export default function SignupForm({ switchView }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!acceptTerms) {
+      setError('Пожалуйста, примите условия использования');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Пароли не совпадают');
@@ -21,17 +33,23 @@ export default function SignupForm({ switchView }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/sign-up', {
+      const response = await fetch('http://localhost:3000/api/auth/register/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          profile: {
+            firstName,
+            lastName
+          }
+        }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Ошибка при регистрации');
 
       localStorage.setItem('token', data.token);
-
       setStep('email-verification');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла ошибка при регистрации');
@@ -41,71 +59,169 @@ export default function SignupForm({ switchView }) {
   };
 
   return step === 'signup' ? (
-    <div>
-      <h2 className="text-2xl font-bold mb-6 text-center">Регистрация</h2>
-      {error && <div className="mb-4 p-2 bg-red-100 text-red-600 rounded">{error}</div>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-center border rounded p-2">
-            <Mail className="w-5 h-5 text-gray-400 mr-2" />
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full outline-none"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+    <div className="h-full flex flex-col">
+      <div className="mb-4">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Создайте аккаунт.</h1>
+        <div className="flex items-center gap-2">
+          <span className="text-gray-600">Уже есть аккаунт?</span>
+          <button 
+            onClick={() => switchView('login')} 
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Войти
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <div className="space-y-4">
+          <div className="flex space-x-4">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+              <div className="relative">
+                <User 
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                  strokeLinejoin="round"
+                />
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Ваше имя"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Фамилия</label>
+              <div className="relative">
+                <User 
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                  strokeLinejoin="round"
+                />
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Ваша фамилия"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex items-center border rounded p-2">
-            <Lock className="w-5 h-5 text-gray-400 mr-2" />
-            <input
-              type="password"
-              placeholder="Пароль"
-              className="w-full outline-none"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <div className="relative">
+              <Mail 
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                strokeLinejoin="round"
+              />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Ваш email"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
           </div>
-          <div className="flex items-center border rounded p-2">
-            <Lock className="w-5 h-5 text-gray-400 mr-2" />
-            <input
-              type="password"
-              placeholder="Подтвердите пароль"
-              className="w-full outline-none"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+            <div className="relative">
+              <Lock 
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                strokeLinejoin="round"
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Ваш пароль"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Подтвердите пароль</label>
+            <div className="relative">
+              <Lock 
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                strokeLinejoin="round"
+              />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Повторите пароль"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
           </div>
         </div>
+
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={acceptTerms}
+            onChange={(e) => setAcceptTerms(e.target.checked)}
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <span className="text-sm text-gray-600">
+            Я согласен с{' '}
+            <a 
+              href="/terms" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              условиями использования
+            </a>
+          </span>
+        </label>
+
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed mt-6"
           disabled={isLoading}
         >
           {isLoading ? 'Загрузка...' : 'Зарегистрироваться'}
         </button>
       </form>
-      <div className="mt-4 text-center">
-        <p>
-          Уже есть аккаунт?{' '}
-          <button onClick={() => switchView('login')} className="text-blue-500 hover:underline">
-            Войти
-          </button>
-        </p>
-      </div>
     </div>
   ) : (
-    <div className="text-center space-y-4">
-      <Mail className="w-16 h-16 text-blue-500 mx-auto" />
-      <h2 className="text-2xl font-bold">Подтвердите email</h2>
-      <p className="text-gray-600">
-        Мы отправили письмо с подтверждением на вашу почту. Пожалуйста, проверьте почтовый ящик и
-        следуйте инструкциям.
-      </p>
-      <button onClick={() => switchView('login')} className="text-blue-500 hover:underline">
+    <div className="text-center space-y-6">
+      <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+        <Mail 
+          className="w-8 h-8 text-blue-600"
+          strokeLinejoin="round"
+        />
+      </div>
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900">Подтвердите email</h2>
+        <p className="mt-2 text-gray-600">
+          Мы отправили письмо с подтверждением на вашу почту. Пожалуйста, проверьте почтовый ящик и
+          следуйте инструкциям.
+        </p>
+      </div>
+      <button 
+        onClick={() => switchView('login')} 
+        className="text-blue-600 font-medium hover:underline"
+      >
         Вернуться к входу
       </button>
     </div>

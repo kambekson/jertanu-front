@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 
-export default function LoginForm({ switchView }) {
+interface LoginFormProps {
+  switchView: (view: 'forgot' | 'signup') => void;
+}
+
+export default function LoginForm({ switchView }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -22,7 +26,10 @@ export default function LoginForm({ switchView }) {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Ошибка при входе');
 
-      localStorage.setItem('token', data.token);
+      // Store both tokens
+      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('refresh_token', data.refresh_token);
+      
       window.location.href = '/';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла ошибка при входе');
