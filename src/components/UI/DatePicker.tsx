@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function DatePicker({
   selectedDate,
@@ -10,24 +10,16 @@ export default function DatePicker({
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Days of week starting with Monday
   const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-  // Function to get days for a specific month
   const getDaysInMonth = (year: number, month: number) => {
     const days: { date: Date; currentMonth: boolean }[] = [];
-
-    // Get the first day of the month
     const firstDay = new Date(year, month, 1);
-
-    // Get the last day of the previous month
     const lastDayPrevMonth = new Date(year, month, 0).getDate();
+    let firstDayIndex = firstDay.getDay() - 1;
+    if (firstDayIndex < 0) firstDayIndex = 6;
 
-    // Get day of week of first day (0 = Sunday, 1 = Monday, etc.)
-    let firstDayIndex = firstDay.getDay() - 1; // Adjust to start from Monday
-    if (firstDayIndex < 0) firstDayIndex = 6; // Sunday becomes the 7th day
-
-    // Add days from previous month
     for (let i = firstDayIndex - 1; i >= 0; i--) {
       const prevMonth = month === 0 ? 11 : month - 1;
       const prevYear = month === 0 ? year - 1 : year;
@@ -37,7 +29,6 @@ export default function DatePicker({
       });
     }
 
-    // Add days of current month
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     for (let i = 1; i <= daysInMonth; i++) {
       days.push({
@@ -46,8 +37,7 @@ export default function DatePicker({
       });
     }
 
-    // Add days from next month to complete the grid
-    const daysToAdd = 42 - days.length; // 6 rows of 7 days
+    const daysToAdd = 42 - days.length;
     for (let i = 1; i <= daysToAdd; i++) {
       const nextMonth = month === 11 ? 0 : month + 1;
       const nextYear = month === 11 ? year + 1 : year;
@@ -60,7 +50,6 @@ export default function DatePicker({
     return days;
   };
 
-  // Navigate to previous month
   const prevMonth = () => {
     setCurrentMonth(currentMonth === 0 ? 11 : currentMonth - 1);
     if (currentMonth === 0) {
@@ -68,22 +57,18 @@ export default function DatePicker({
     }
   };
 
-  // Navigate to next month
   const nextMonth = () => {
     setCurrentMonth(currentMonth === 11 ? 0 : currentMonth + 1);
     if (currentMonth === 11) {
       setCurrentYear(currentYear + 1);
     }
   };
-  // Get month name
   const getMonthName = (month: number) => {
     const monthName = new Date(2000, month, 1).toLocaleString('default', { month: 'long' });
     return monthName.charAt(0).toUpperCase() + monthName.slice(1);
   };
 
-  // Get days for current month
   const daysInCurrentMonth = getDaysInMonth(currentYear, currentMonth);
-  // Check if a date is today
   const isToday = (date: Date) => {
     const today = new Date();
     return (
@@ -92,7 +77,6 @@ export default function DatePicker({
       date.getFullYear() === today.getFullYear()
     );
   };
-  // Check if a date is selected
   const isSelected = (date: Date) => {
     return (
       selectedDate &&
@@ -101,7 +85,6 @@ export default function DatePicker({
       date.getFullYear() === selectedDate.getFullYear()
     );
   };
-  // Format date as "DD Month YYYY"
   const formatDate = (date: Date) => {
     if (!date) return '';
     const day = date.getDate();
@@ -110,8 +93,21 @@ export default function DatePicker({
     return `${day} ${month} ${year}`;
   };
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setShowCalendar(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={calendarRef}>
       <label
         htmlFor="calendar"
         className="block overflow-hidden rounded border border-transparent px-3 focus-within:bg-orange-50 w-52"
@@ -129,7 +125,7 @@ export default function DatePicker({
       </label>
 
       {showCalendar && (
-        <div className="absolute top-12 left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+        <div className="absolute top-12 left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-50">
           <div className="flex justify-between items-center mb-4">
             <button onClick={prevMonth} className="p-2 text-gray-600 hover:text-gray-900">
               <svg

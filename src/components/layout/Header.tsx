@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AuthModal from '../modals/AuthModal';
 import Button from '../UI/Button';
@@ -12,6 +12,7 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userFullName, setUserFullName] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -35,6 +36,22 @@ export default function Header() {
 
     checkAuth();
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -61,38 +78,36 @@ export default function Header() {
       </div>
 
       {isLoggedIn ? (
-        <div className="relative">
-          <Button 
+        <div className="relative" ref={dropdownRef}>
+          <div 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            variant="secondary"
-            className="gap-3"
+            className="flex items-center gap-3 cursor-pointer"
           >
             <span className="font-medium">{userFullName}</span>
             <User className="w-5 h-5" />
-          </Button>
+          </div>
           
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
-              <Button variant="secondary" className="w-full px-4 py-2 text-left z-50">
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-2xl py-2 z-50">
+              <div className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
                 <User className="w-4 h-4" />
-                Профиль
-              </Button>
-              <Button variant="secondary" className="w-full px-4 py-2 text-left">
+                <span>Профиль</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
                 <Heart className="w-4 h-4" />
-                Избранные туры
-              </Button>
-              <Button variant="secondary" className="w-full px-4 py-2 text-left">
+                <span>Избранные туры</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100">
                 <Calendar className="w-4 h-4" />
-                Брони
-              </Button>
-              <Button 
+                <span>Брони</span>
+              </div>
+              <div 
                 onClick={handleLogout}
-                variant="danger"
-                className="w-full px-4 py-2 text-left"
+                className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 text-red-500"
               >
                 <LogOut className="w-4 h-4" />
-                Выйти
-              </Button>
+                <span>Выйти</span>
+              </div>
             </div>
           )}
         </div>

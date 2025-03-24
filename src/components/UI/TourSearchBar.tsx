@@ -6,7 +6,7 @@ export default function TourSearchBar() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   return (
-    <div className="absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-4 px-6 bg-white rounded-2xl flex w-full max-w-[872px]">
+    <div className="absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-4 px-6 bg-white rounded-2xl flex w-full max-w-[872px] shadow-2xl">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
         <AutocompleteInput
           placeholder="Нажмите здесь, чтобы изменить"
