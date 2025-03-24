@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import AuthModal from '../modals/AuthModal';
 import Button from '../UI/Button';
 import logo from '../../assets/jertanu-logo.svg';
@@ -8,7 +7,6 @@ import { User, Heart, Calendar, LogOut } from 'lucide-react';
 export default function Header() {
   const [isAuthOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
-  const [searchParams] = useSearchParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userFullName, setUserFullName] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
