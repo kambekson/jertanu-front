@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+@theme {
+  /*primary color*/
+  --color-orange-50: rgb(254, 239, 234);
+  --color-orange-100: rgb(253, 205, 188);
+  --color-orange-200: rgb(252, 181, 156);
+  --color-orange-300: rgb(250, 147, 111);
+  --color-orange-400: rgb(245, 127, 95);
+  --color-orange-500: rgb(248, 94, 40);
+  --color-orange-600: rgb(226, 86, 36);
+  --color-orange-700: rgb(176, 67, 28);
+  --color-orange-800: rgb(136, 52, 22);
+  --color-orange-900: rgb(104, 39, 17);
+
+  /*secondary color*/
+  --color-blue-50: rgb(234, 235, 252);
+  --color-blue-100: rgb(189, 194, 244);
+  --color-blue-200: rgb(157, 165, 239);
+  --color-blue-300: rgb(112, 124, 232);
+  --color-blue-400: rgb(84, 98, 227);
+  --color-blue-500: rgb(41, 59, 220);
+  --color-blue-600: rgb(37, 54, 200);
+  --color-blue-700: rgb(29, 42, 156);
+  --color-blue-800: rgb(23, 32, 121);
+  --color-blue-900: rgb(17, 25, 92);
+
+  /*neutral color*/
+  --color-grey-50: rgb(240, 243, 244);
+  --color-grey-100: rgb(209, 218, 221);
+  --color-grey-200: rgb(186, 201, 204);
+  --color-grey-300: rgb(155, 176, 181);
+  --color-grey-400: rgb(136, 161, 166);
+  --color-grey-500: rgb(106, 137, 144);
+  --color-grey-600: rgb(96, 125, 131);
+  --color-grey-700: rgb(75, 97, 102);
+  --color-grey-800: rgb(58, 75, 79);
+  --color-grey-900: rgb(45, 58, 60);
+
+  /*bw color*/
+  --color-white: rgb(255, 255, 255);
+  --color-black: rgb(0, 0, 0);
+
+  /*font family*/
+  --font-sans: 'Roboto', sans-serif;
+  --font-xs: 11px;
+  --font-sm: 14px;
+  --font-base: 16px;
+  --font-lg: 19px;
+  --font-xl: 23px;
+  --font-2xl: 28px;
+  --font-3xl: 33px;
+  --font-4xl: 40px;
+  --font-5xl: 48px;
+  --font-6xl: 58px;
+  --font-7xl: 70px;
+}
