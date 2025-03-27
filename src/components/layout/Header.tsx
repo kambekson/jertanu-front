@@ -87,12 +87,12 @@ export default function Header() {
             <img src={logo} alt="logo" />
           </Link>
           <div className="nav">
-          <ul className="flex ">
-            <li className="px-2 font-normal font-base">
-              <Link to="/tours">Направления</Link>
-            </li>
-          </ul>
-        </div>
+            <ul className="flex ">
+              <li className="px-2 font-normal font-base">
+                <Link to="/tours">Направления</Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {isLoggedIn ? (

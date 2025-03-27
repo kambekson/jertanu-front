@@ -10,23 +10,22 @@ const TopMenu = () => {
 
   return (
     <div className="bg-gray-200 rounded-lg">
-      <div className='py-2 px-5 grid grid-cols-6'>
+      <div className="py-2 px-5 grid grid-cols-6">
         {tabs.map((tab) => (
-            <button
+          <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 text-sm font-medium transition-colors duration-200
                 ${
-                activeTab === tab
+                  activeTab === tab
                     ? ' text-gray-700 font-black bg-gray-100 rounded-lg font-lg'
                     : 'text-gray-600 hover:text-blue-600 font-normal font-lg'
                 }`}
-            >
+          >
             {tab}
-            </button>
+          </button>
         ))}
-        </div>  
-      
+      </div>
     </div>
   );
 };

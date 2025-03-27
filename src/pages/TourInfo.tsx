@@ -12,7 +12,7 @@ const TourInfo = () => {
     img5: 'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd', // Colosseum
   };
 
-  const locations = ["kolsay", "kolsay","kolsay","kolsay","kolsay","kolsay","kolsay"]
+  const locations = ['kolsay', 'kolsay', 'kolsay', 'kolsay', 'kolsay', 'kolsay', 'kolsay'];
 
   return (
     <div className="container mt-7">
@@ -59,37 +59,36 @@ const TourInfo = () => {
         </div>
       </div>
 
-
       <div className="mt-16">
         <div>
-          <h2 className='text-2xl font-semibold text-blue-900'>Italy in 21 Days: A Journey Through Art, History, and Culture</h2>
-          <p className='text-gray-600 pt-6'>Embark on a 21-day Italian adventure that takes you from the bustling streets of Rome to the serene landscapes of Tuscany, the romantic canals of Venice, and beyond. With ample time in each destination, this trip offers a perfect balance of exploration, relaxation, and cultural immersion.</p>
+          <h2 className="text-2xl font-semibold text-blue-900">
+            Italy in 21 Days: A Journey Through Art, History, and Culture
+          </h2>
+          <p className="text-gray-600 pt-6">
+            Embark on a 21-day Italian adventure that takes you from the bustling streets of Rome to
+            the serene landscapes of Tuscany, the romantic canals of Venice, and beyond. With ample
+            time in each destination, this trip offers a perfect balance of exploration, relaxation,
+            and cultural immersion.
+          </p>
         </div>
         {/* <div className='py-12'>
           <TopMenu/>
         </div> */}
-        <div className='flex flex-col'>
-         <div className='flex flex-row'>
+        <div className="flex flex-col">
+          <div className="flex flex-row">
             <div>
-              <h3 className='py-7 font-medium text-2xl text-blue-900'>Длительность</h3>
+              <h3 className="py-7 font-medium text-2xl text-blue-900">Длительность</h3>
               <p>21 days in total, starting and ending in London.</p>
-              <div className='grid grid-cols-5 grid-rows-2 gap-3 py-4'>
-                  {locations.map((location)=>(
-                    <div
-                      className="rounded-lg border-2 border-gray-400" 
-                      key={location}
-                    >
-                      <p className='px-3 py-1'>{location}</p>
-                    </div>
-                    
-                  ))}
+              <div className="grid grid-cols-5 grid-rows-2 gap-3 py-4">
+                {locations.map((location) => (
+                  <div className="rounded-lg border-2 border-gray-400" key={location}>
+                    <p className="px-3 py-1">{location}</p>
+                  </div>
+                ))}
               </div>
             </div>
-
           </div>
-          <div>
-
-          </div>
+          <div></div>
         </div>
       </div>
     </div>
