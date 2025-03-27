@@ -540,15 +540,14 @@ export default function ToursPage() {
           <div className="flex-1">
             {/* Заголовок с количеством и фильтром */}
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-medium">{tours.length} tours in Europe</h2>
+              <h2 className="text-lg font-medium">Найдено {tours.length} туров</h2>
               <div className="flex items-center">
-                <span className="mr-2 text-sm">Sort By</span>
+                <span className="mr-2 text-sm">Сортировать по</span>
                 <select className="border-2 border-gray-300 rounded-md p-2 text-sm">
-                  <option>Recommended</option>
-                  <option>Price: Low to High</option>
-                  <option>Price: High to Low</option>
-                  <option>Duration: Short to Long</option>
-                  <option>Rating</option>
+                  <option>Рекомендуемые</option>
+                  <option>Цена: от низкой к высокой</option>
+                  <option>Цена: от высокой к низкой</option>
+                  <option>Рейтинг</option>
                 </select>
               </div>
             </div>
