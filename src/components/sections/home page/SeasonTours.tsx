@@ -52,7 +52,6 @@ const SeasonTours = ({ tours }: SeasonToursProps) => {
       />
 
       <div className="container relative">
-      
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-white">Сезонное предложение</h2>
           <button className="text-white underline">Загрузить больше</button>
@@ -64,21 +63,19 @@ const SeasonTours = ({ tours }: SeasonToursProps) => {
             style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
           >
             {tours.map((tour: BaseTour, index: number) => (
-      
-                <TourCard
-                  key={index}
-                  tour={
-                    {
-                      ...tour,
-                      textColor: 'text-white',
-                      badges: [
-                        'Ограниченное по времени предложение',
-                        `Скидка ${tour.discount || '30%'}`,
-                      ],
-                    } as any
-                  }
-                />
-        
+              <TourCard
+                key={index}
+                tour={
+                  {
+                    ...tour,
+                    textColor: 'text-white',
+                    badges: [
+                      'Ограниченное по времени предложение',
+                      `Скидка ${tour.discount || '30%'}`,
+                    ],
+                  } as any
+                }
+              />
             ))}
           </div>
         </div>

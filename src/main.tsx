@@ -10,6 +10,10 @@ import HomePage from './pages/HomePage.tsx';
 // import ForgotPasswordPage from './pages/auth/ForgotPasswordPage.tsx';
 // import ResetPasswordPage from './pages/auth/ResetPasswordPage.tsx';
 import TermsOfService from './pages/TermsOfService.tsx';
+import Profile from './pages/Profile.tsx';
+import TourInfo from './pages/TourInfo.tsx';
+import ToursPage from './pages/ToursPage.tsx';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -23,6 +27,18 @@ const router = createBrowserRouter([
       {
         path: '/terms',
         element: <TermsOfService />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+      },
+      {
+        path: '/tours',
+        element: <ToursPage/>
+      },
+      {
+        path: '/tour',
+        element: <TourInfo />,
       },
       // {
       //   path: 'auth',

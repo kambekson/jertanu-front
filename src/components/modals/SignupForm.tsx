@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import Button from '../UI/Button';
 
 interface SignupFormProps {
   switchView: (view: 'login' | 'signup' | 'forgot' | 'reset' | 'verify') => void;
@@ -59,38 +61,29 @@ export default function SignupForm({ switchView }: SignupFormProps) {
   };
 
   return step === 'signup' ? (
-    <div className="h-full flex flex-col">
-      <div className="mb-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Создайте аккаунт.</h1>
-        <div className="flex items-center gap-2">
-          <span className="text-gray-600">Уже есть аккаунт?</span>
-          <button
-            onClick={() => switchView('login')}
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            Войти
-          </button>
-        </div>
+    <div>
+      <h2 className="text-3xl font-bold mb-4">Создайте аккаунт</h2>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-gray-600">Уже есть аккаунт?</span>
+        <button onClick={() => switchView('login')} className="text-blue-600 hover:text-blue-800">
+          Войти
+        </button>
       </div>
 
-      {error && <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>}
+      {error && <div className="mb-3 p-3 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-2">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-4">
           <div className="flex space-x-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
               <div className="relative">
-                <User
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                  strokeLinejoin="round"
-                />
                 <input
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Ваше имя"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -99,16 +92,12 @@ export default function SignupForm({ switchView }: SignupFormProps) {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Фамилия</label>
               <div className="relative">
-                <User
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                  strokeLinejoin="round"
-                />
                 <input
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Ваша фамилия"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -118,16 +107,12 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div className="relative">
-              <Mail
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                strokeLinejoin="round"
-              />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Ваш email"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               />
             </div>
@@ -136,16 +121,12 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
             <div className="relative">
-              <Lock
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                strokeLinejoin="round"
-              />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Ваш пароль"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               />
             </div>
@@ -156,16 +137,12 @@ export default function SignupForm({ switchView }: SignupFormProps) {
               Подтвердите пароль
             </label>
             <div className="relative">
-              <Lock
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                strokeLinejoin="round"
-              />
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Повторите пароль"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               />
             </div>
@@ -181,24 +158,25 @@ export default function SignupForm({ switchView }: SignupFormProps) {
           />
           <span className="text-sm text-gray-600">
             Я согласен с{' '}
-            <a
-              href="/terms"
+            <Link
+              to="/terms"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
               условиями использования
-            </a>
+            </Link>
           </span>
         </label>
 
-        <button
+        <Button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed mt-6"
+          variant="primary"
+          className="w-full text-center justify-center"
           disabled={isLoading}
         >
           {isLoading ? 'Загрузка...' : 'Зарегистрироваться'}
-        </button>
+        </Button>
       </form>
     </div>
   ) : (

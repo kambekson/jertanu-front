@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
+import Button from '../UI/Button';
 
 interface LoginFormProps {
   switchView: (view: 'forgot' | 'signup') => void;
@@ -17,21 +18,45 @@ export default function LoginForm({ switchView }: LoginFormProps) {
     setIsLoading(true);
 
     try {
+      console.log('Attempting login with:', { email }); // Don't log password
+
+      // Simplified request matching exactly what works in Postman
       const response = await fetch('http://localhost:3000/api/auth/sign-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
+        // Removed credentials: 'include' as it might interfere with the request
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Ошибка при входе');
+      console.log('Login response status:', response.status);
 
-      // Store both tokens
+      // Log the raw response text for debugging
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+
+      // Parse the JSON manually after logging the raw text
+      const data = responseText ? JSON.parse(responseText) : {};
+      console.log('Login response data:', data);
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Неверный email или пароль. Пожалуйста, проверьте введенные данные.');
+        } else {
+          throw new Error(data.message || 'Ошибка при входе');
+        }
+      }
+
+      // Store tokens consistently across the application
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('refresh_token', data.refresh_token);
 
+      // Also store as 'token' for backward compatibility with Profile page
+      localStorage.setItem('token', data.access_token);
+
+      console.log('Login successful, redirecting to home page');
       window.location.href = '/';
     } catch (err) {
+      console.error('Login error:', err);
       setError(err instanceof Error ? err.message : 'Произошла ошибка при входе');
     } finally {
       setIsLoading(false);
@@ -40,49 +65,54 @@ export default function LoginForm({ switchView }: LoginFormProps) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6 text-center">Вход</h2>
+      <h2 className="text-3xl font-bold mb-6">Добро пожаловать</h2>
+      <div className="flex items-center gap-2 mb-6">
+        <span className="text-gray-600">У вас нет аккаунта?</span>
+        <button onClick={() => switchView('signup')} className="text-blue-600 hover:text-blue-800">
+          Зарегистрироваться
+        </button>
+      </div>
+
       {error && <div className="mb-4 p-2 bg-red-100 text-red-600 rounded">{error}</div>}
+
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-center border rounded p-2">
-            <Mail className="w-5 h-5 text-gray-400 mr-2" />
+        <div className="space-y-4">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
               type="email"
-              placeholder="Email"
-              className="w-full outline-none"
+              placeholder="Ваш email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
             />
           </div>
-          <div className="flex items-center border rounded p-2">
-            <Lock className="w-5 h-5 text-gray-400 mr-2" />
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
             <input
               type="password"
-              placeholder="Пароль"
-              className="w-full outline-none"
+              placeholder="Ваш пароль"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
         </div>
-        <button
+        <Button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+          variant="primary"
+          className="w-full text-center justify-center"
           disabled={isLoading}
         >
           {isLoading ? 'Загрузка...' : 'Войти'}
-        </button>
+        </Button>
       </form>
-      <div className="mt-4 text-center space-y-2">
+      <div className="mt-4 space-y-2">
         <button onClick={() => switchView('forgot')} className="text-blue-500 hover:underline">
           Забыли пароль?
         </button>
-        <p>
-          Нет аккаунта?{' '}
-          <button onClick={() => switchView('signup')} className="text-blue-500 hover:underline">
-            Зарегистрироваться
-          </button>
-        </p>
       </div>
     </div>
   );

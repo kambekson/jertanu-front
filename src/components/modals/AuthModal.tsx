@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
@@ -26,6 +26,8 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
     resolveView(initialMode),
   );
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const modalRef = useRef(null);
 
   // Обновляем view при изменении initialMode
   useEffect(() => {
@@ -62,8 +64,19 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-      <div className="bg-white rounded-[24px] shadow-xl w-[900px] h-[600px] relative flex overflow-hidden">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div
+        className="bg-white rounded-[24px] shadow-xl w-[900px] h-[600px] relative flex overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+        ref={modalRef}
+      >
         <button
           onClick={onClose}
           className="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-colors z-10"

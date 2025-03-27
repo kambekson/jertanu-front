@@ -21,12 +21,19 @@ export const authService = {
     });
 
     if (!response.ok) {
-      throw new Error('Authentication failed');
+      const responseText = await response.text();
+      console.error('Authentication failed:', response.status, responseText);
+
+      const data = responseText ? JSON.parse(responseText) : {};
+      throw new Error(data.message || 'Authentication failed');
     }
 
     const data = await response.json();
+
     localStorage.setItem('access_token', data.access_token);
     localStorage.setItem('refresh_token', data.refresh_token);
+    localStorage.setItem('token', data.access_token);
+
     return data;
   },
 
@@ -45,18 +52,26 @@ export const authService = {
     });
 
     if (!response.ok) {
-      throw new Error('Token refresh failed');
+      const responseText = await response.text();
+      console.error('Token refresh failed:', response.status, responseText);
+
+      const data = responseText ? JSON.parse(responseText) : {};
+      throw new Error(data.message || 'Token refresh failed');
     }
 
     const data = await response.json();
+
     localStorage.setItem('access_token', data.access_token);
     localStorage.setItem('refresh_token', data.refresh_token);
+    localStorage.setItem('token', data.access_token);
+
     return data;
   },
 
   logout(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('token');
   },
 
   getAccessToken(): string | null {
