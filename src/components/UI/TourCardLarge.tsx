@@ -163,7 +163,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
           </div>
         </div>
         <div className="text-right text-blue-500 font-bold">
-          От {tour.price.toLocaleString()} Тг
+          От {tour.price.toLocaleString()} ₸
         </div>
       </div>
     </div>

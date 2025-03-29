@@ -13,6 +13,8 @@ import TermsOfService from './pages/TermsOfService.tsx';
 import Profile from './pages/Profile.tsx';
 import TourInfo from './pages/TourInfo.tsx';
 import ToursPage from './pages/ToursPage.tsx';
+import Booking from './pages/Booking.tsx';
+import Payment from './pages/Payment.tsx';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: '/tour',
         element: <TourInfo />,
+      },
+      {
+        path: '/booking',
+        element: <Booking />,
+      },
+      {
+        path: '/payment',
+        element: <Payment />,
       },
       // {
       //   path: 'auth',
