@@ -15,6 +15,7 @@ import TourInfo from './pages/TourInfo.tsx';
 import ToursPage from './pages/ToursPage.tsx';
 import Booking from './pages/Booking.tsx';
 import Payment from './pages/Payment.tsx';
+import AgencyPage from './pages/AgencyPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
         element: <ToursPage />,
       },
       {
-        path: '/tour',
+        path: '/tour/:id',
         element: <TourInfo />,
       },
       {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: '/payment',
         element: <Payment />,
+      },
+      {
+        path: '/agency',
+        element: <AgencyPage/>,
       },
       // {
       //   path: 'auth',

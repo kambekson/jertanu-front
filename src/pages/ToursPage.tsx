@@ -2,6 +2,7 @@ import toursHero from '../assets/toursHero.jpg';
 import TourSearchBar from '../components/UI/TourSearchBar';
 import { useState, useEffect } from 'react';
 import { TourCardLarge } from '../components/UI/TourCardLarge';
+import { Link } from 'react-router-dom';
 
 // Типы данных для туров
 type Tour = {
@@ -429,63 +430,8 @@ export default function ToursPage() {
               </div>
             </div>
 
-            {/* Accessibility */}
-            <div className="border-2 border-gray-300 rounded-lg p-4">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Accessibility</span>
-                <button className="text-sm">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-chevron-up"
-                  >
-                    <polyline points="18 15 12 9 6 15"></polyline>
-                  </svg>
-                </button>
-              </div>
-              <div className="mt-2 space-y-2">
-                <div className="flex items-center">
-                  <input type="checkbox" id="wheelchair" className="mr-2" />
-                  <label htmlFor="wheelchair" className="text-sm">
-                    Wheelchair Accessible
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input type="checkbox" id="serviceAnimal" className="mr-2" />
-                  <label htmlFor="serviceAnimal" className="text-sm">
-                    Service Animal Friendly
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input type="checkbox" id="listening" className="mr-2" />
-                  <label htmlFor="listening" className="text-sm">
-                    Assistive Listening Devices
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input type="checkbox" id="restrooms" className="mr-2" />
-                  <label htmlFor="restrooms" className="text-sm">
-                    Accessible Restrooms
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input type="checkbox" id="audioGuides" className="mr-2" />
-                  <label htmlFor="audioGuides" className="text-sm">
-                    Audio Guides for the Visually Impaired
-                  </label>
-                </div>
-              </div>
-            </div>
-
             {/* Guests */}
-            <div className="border-2 border-gray-300 rounded-lg p-4">
+            {/* <div className="border-2 border-gray-300 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <span className="font-medium">Guests</span>
                 <button className="text-sm">
@@ -533,7 +479,7 @@ export default function ToursPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Правая колонка с турами */}
@@ -555,7 +501,9 @@ export default function ToursPage() {
             {/* Карточки туров через map */}
             <div className="flex flex-col gap-4">
               {filteredTours.map((tour) => (
-                <TourCardLarge key={tour.id} tour={tour} />
+                <Link to={`/tour/${tour.id}`} key={tour.id}>
+                    <TourCardLarge key={tour.id} tour={tour} />
+                </Link>
               ))}
             </div>
           </div>

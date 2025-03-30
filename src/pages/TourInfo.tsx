@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 
 
 const images = {
-  img1: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', // Coastal town
-  img2: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f', // Florence Duomo
-  img3: 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a', // Venice canal
-  img4: 'https://images.unsplash.com/photo-1519681393784-d120267933ba', // Sunset cityscape
-  img5: 'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd', // Colosseum
+  img1: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&w=500&h=300&q=80', // Coastal town
+  img2: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&w=500&h=300&q=80', // Florence Duomo
+  img3: 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?auto=format&w=500&h=300&q=80', // Venice canal
+  img4: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&w=800&h=600&q=80', // Sunset cityscape
+  img5: 'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&w=500&h=300&q=80', // Colosseum
 };
 
 const itineraryData = [
@@ -139,9 +139,22 @@ const places = ['Алматы', 'Большое Алматинское озер�
 
 
 const TourInfo = () => {
+  const { id } = useParams<{ id: string }>();
   const [selectedDate, setSelectedDate] = useState('03 Июль 2023');
   const [guestCount, setGuestCount] = useState('4 взрослых, 1 ребенок');
   const [roomCount, setRoomCount] = useState('1 стандарт, 2 одноместные');
+  
+  // Preload images to prevent reloading during scroll
+  useEffect(() => {
+    // Preload all gallery images
+    Object.values(images).forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  // Log the ID to confirm it's being received
+  console.log('Tour ID:', id);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -152,6 +165,11 @@ const TourInfo = () => {
             src={images.img4}
             alt="Sunset cityscape"
             className="w-full h-full object-cover rounded-lg"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            width={800}
+            height={600}
           />
         </div>
         <div className="col-span-1 row-span-1 image-container">
@@ -159,6 +177,10 @@ const TourInfo = () => {
             src={images.img1}
             alt="Coastal town"
             className="w-full h-full object-cover rounded-lg"
+            loading="eager"
+            decoding="async"
+            width={500}
+            height={300}
           />
         </div>
         <div className="col-span-1 row-span-1 image-container">
@@ -166,6 +188,10 @@ const TourInfo = () => {
             src={images.img2}
             alt="Florence Duomo"
             className="w-full h-full object-cover rounded-lg"
+            loading="eager"
+            decoding="async"
+            width={500}
+            height={300}
           />
         </div>
         <div className="col-span-1 row-span-1 image-container">
@@ -173,6 +199,10 @@ const TourInfo = () => {
             src={images.img3}
             alt="Venice canal"
             className="w-full h-full object-cover rounded-lg"
+            loading="eager"
+            decoding="async"
+            width={500}
+            height={300}
           />
         </div>
         <div className="col-span-1 row-span-1 image-container relative">
@@ -180,6 +210,10 @@ const TourInfo = () => {
             src={images.img5}
             alt="Colosseum"
             className="w-full h-full object-cover rounded-lg"
+            loading="eager"
+            decoding="async"
+            width={500}
+            height={300}
           />
           <div className="overlay absolute inset-0 flex items-end justify-end p-4">
             <Link to="/tour" className="text-white font-bold text-sm">
