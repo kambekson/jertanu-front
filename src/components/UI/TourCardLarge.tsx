@@ -126,7 +126,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
               <div className="ml-auto">
                 <button className="bg-blue-500 text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-2">
                   <img src={RemainingIcon} alt="Remaining" />
-                   {tour.remaining} осталось мест
+                  {tour.remaining} осталось мест
                 </button>
               </div>
             )}
@@ -162,9 +162,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
             <span>{tour.duration}</span>
           </div>
         </div>
-        <div className="text-right text-blue-500 font-bold">
-          От {tour.price.toLocaleString()} ₸
-        </div>
+        <div className="text-right text-blue-500 font-bold">От {tour.price.toLocaleString()} ₸</div>
       </div>
     </div>
   );

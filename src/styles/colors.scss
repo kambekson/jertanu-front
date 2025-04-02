@@ -1,0 +1,137 @@
+// Color variables from Tailwind configuration
+
+// Neutrals (Grey)
+$grey-50: #f0f3f4;
+$grey-100: #d1dadd;
+$grey-200: #bac8cc;
+$grey-300: #9bb0b5;
+$grey-400: #88a1a6;
+$grey-500: #6a8990;
+$grey-600: #607d83;
+$grey-700: #4b6166;
+$grey-800: #3a4b4f;
+$grey-900: #2d3a3c;
+
+// Primary (Orange)
+$orange-50: #feefea;
+$orange-100: #fdcdbc;
+$orange-200: #fcb59c;
+$orange-300: #fa936f;
+$orange-400: #f97e53;
+$orange-500: #f85e28;
+$orange-600: #e2502c;
+$orange-700: #b0431c;
+$orange-800: #88341c;
+$orange-900: #682711;
+
+// Secondary (Blue)
+$blue-50: #eaebfc;
+$blue-100: #bdc2f4;
+$blue-200: #9da6ef;
+$blue-300: #707ce8;
+$blue-400: #5462e3;
+$blue-500: #293bdc;
+$blue-600: #253bc8;
+$blue-700: #1d2a9f;
+$blue-800: #172079;
+$blue-900: #11195c;
+
+// Function to use the color palette
+@function color($color, $shade) {
+  @if $color == 'grey' {
+    @if $shade == 50 {
+      @return $grey-50;
+    }
+    @if $shade == 100 {
+      @return $grey-100;
+    }
+    @if $shade == 200 {
+      @return $grey-200;
+    }
+    @if $shade == 300 {
+      @return $grey-300;
+    }
+    @if $shade == 400 {
+      @return $grey-400;
+    }
+    @if $shade == 500 {
+      @return $grey-500;
+    }
+    @if $shade == 600 {
+      @return $grey-600;
+    }
+    @if $shade == 700 {
+      @return $grey-700;
+    }
+    @if $shade == 800 {
+      @return $grey-800;
+    }
+    @if $shade == 900 {
+      @return $grey-900;
+    }
+  }
+  @if $color == 'orange' {
+    @if $shade == 50 {
+      @return $orange-50;
+    }
+    @if $shade == 100 {
+      @return $orange-100;
+    }
+    @if $shade == 200 {
+      @return $orange-200;
+    }
+    @if $shade == 300 {
+      @return $orange-300;
+    }
+    @if $shade == 400 {
+      @return $orange-400;
+    }
+    @if $shade == 500 {
+      @return $orange-500;
+    }
+    @if $shade == 600 {
+      @return $orange-600;
+    }
+    @if $shade == 700 {
+      @return $orange-700;
+    }
+    @if $shade == 800 {
+      @return $orange-800;
+    }
+    @if $shade == 900 {
+      @return $orange-900;
+    }
+  }
+  @if $color == 'blue' {
+    @if $shade == 50 {
+      @return $blue-50;
+    }
+    @if $shade == 100 {
+      @return $blue-100;
+    }
+    @if $shade == 200 {
+      @return $blue-200;
+    }
+    @if $shade == 300 {
+      @return $blue-300;
+    }
+    @if $shade == 400 {
+      @return $blue-400;
+    }
+    @if $shade == 500 {
+      @return $blue-500;
+    }
+    @if $shade == 600 {
+      @return $blue-600;
+    }
+    @if $shade == 700 {
+      @return $blue-700;
+    }
+    @if $shade == 800 {
+      @return $blue-800;
+    }
+    @if $shade == 900 {
+      @return $blue-900;
+    }
+  }
+}

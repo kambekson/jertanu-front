@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-
 const images = {
   img1: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&w=500&h=300&q=80', // Coastal town
   img2: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&w=500&h=300&q=80', // Florence Duomo
@@ -18,50 +17,49 @@ const itineraryData = [
       'Парк 28 панфиловцев',
       'Музей',
       'Кок-Тобе',
-      'Горный парк (Алматинский ботанический сад)'
-    ]
+      'Горный парк (Алматинский ботанический сад)',
+    ],
   },
   {
     day: 2,
     title: 'Алматы – Большое Алматинское озеро',
     activities: [
       'Большое Алматинское озеро – это одно из самых красивых природных мест в Алматинской области, окруженное величественными горами',
-      'Пикник или отдых в зоне, оборудованной для туристов'
-    ]
+      'Пикник или отдых в зоне, оборудованной для туристов',
+    ],
   },
   {
     day: 3,
     title: 'Алматы – Чарынский каньон',
     activities: [
-      'Прогулка по Чарынскому каньону. Самая известная часть каньона – "Долина замков, где высечены удивительные скалы, напоминающие замки, башни и другие архитектурные формы'
-    ]
+      'Прогулка по Чарынскому каньону. Самая известная часть каньона – "Долина замков, где высечены удивительные скалы, напоминающие замки, башни и другие архитектурные формы',
+    ],
   },
   {
     day: 4,
     title: 'Алматы – Тургень',
     activities: [
       'Прогулка по Тургеньскому ущелью и посещение Тургенских водопадов',
-      'Можно взять легкий поход, наслаждаться природой и делать фотографии'
-    ]
+      'Можно взять легкий поход, наслаждаться природой и делать фотографии',
+    ],
   },
   {
     day: 5,
     title: 'Алматы – Национальный парк "Алтын Эмель"',
     activities: [
       'Посещение Барханa Көльөй (песчаная дюна высотой до 150 метров)',
-      'Исследование исторических и археологических памятников, таких как петроглифы'
-    ]
+      'Исследование исторических и археологических памятников, таких как петроглифы',
+    ],
   },
   {
     day: 6,
     title: 'Алматы – Капчагайское водохранилище',
     activities: [
       'Отдых на пляжах Капчагайского водохранилища',
-      'Для активных туристов – возможность заняться водными видами спорта, такими как каякинг, катание на водных мотоциклах, рыбалка'
-    ]
-  }
+      'Для активных туристов – возможность заняться водными видами спорта, такими как каякинг, катание на водных мотоциклах, рыбалка',
+    ],
+  },
 ];
-
 
 const reviews = [
   {
@@ -75,79 +73,84 @@ const reviews = [
       'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f',
       'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a',
       'https://images.unsplash.com/photo-1519681393784-d120267933ba',
-      'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd'
-    ]
+      'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd',
+    ],
   },
   {
     id: 2,
     name: 'Алексей Н.',
     date: '2 недели назад',
     rating: 5,
-    text: 'Отдых в Алматы оставил самые положительные впечатления! Город радует сочетанием современности и природы: шикарные виды на горы, красивые парки и м...'
+    text: 'Отдых в Алматы оставил самые положительные впечатления! Город радует сочетанием современности и природы: шикарные виды на горы, красивые парки и м...',
   },
   {
     id: 3,
     name: 'Сергей П.',
     date: '',
     rating: 4,
-    text: 'Прекрасный город для любителей активного отдыха! Мы посетили Чарынский каньон и Тургенские водопады – виды потрясающие, особенно во время рассвета. В Алма...'
+    text: 'Прекрасный город для любителей активного отдыха! Мы посетили Чарынский каньон и Тургенские водопады – виды потрясающие, особенно во время рассвета. В Алма...',
   },
   {
     id: 4,
     name: 'София К.',
     date: '',
     rating: 5,
-    text: 'Алматы – это удивительное место, где сочетаются природа и городская жизнь. Потрясающие виды гор, уютные кафе и богатая культура города не оставят ра...'
-  }
+    text: 'Алматы – это удивительное место, где сочетаются природа и городская жизнь. Потрясающие виды гор, уютные кафе и богатая культура города не оставят ра...',
+  },
 ];
-
 
 const services = [
   {
     title: 'Экскурсовод',
-    description: 'Экскурсовод для каждого направления или объекта включен'
+    description: 'Экскурсовод для каждого направления или объекта включен',
   },
   {
     title: 'Питание',
-    description: 'Завтрак и обед включены'
+    description: 'Завтрак и обед включены',
   },
   {
     title: 'Услуги в номере',
-    description: 'Уборка в номере, прачечная, услуги в номере и т.д.'
+    description: 'Уборка в номере, прачечная, услуги в номере и т.д.',
   },
   {
     title: 'Трансфер',
-    description: 'Все необходимые транспортные средства предоставлены'
+    description: 'Все необходимые транспортные средства предоставлены',
   },
   {
     title: 'Билеты',
-    description: 'Все необходимые билеты включены'
-  }
+    description: 'Все необходимые билеты включены',
+  },
 ];
 
 // Расчет цены
 const priceCalculation = {
-  basePrice: 43560.00,
-  additionalFee: 62280.00,
-  subtotal: 111430.90,
-  tax: 27710.00,
-  total: 351360.00
+  basePrice: 43560.0,
+  additionalFee: 62280.0,
+  subtotal: 111430.9,
+  tax: 27710.0,
+  total: 351360.0,
 };
 
 // Места для посещения
-const places = ['Алматы', 'Большое Алматинское озеро', 'Чарынский каньон', 'Тургень', 'Национальный парк', 'Капчагайское водохранилище'];
-
+const places = [
+  'Алматы',
+  'Большое Алматинское озеро',
+  'Чарынский каньон',
+  'Тургень',
+  'Национальный парк',
+  'Капчагайское водохранилище',
+];
 
 const TourInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [selectedDate, setSelectedDate] = useState('03 Июль 2023');
   const [guestCount, setGuestCount] = useState('4 взрослых, 1 ребенок');
   const [roomCount, setRoomCount] = useState('1 стандарт, 2 одноместные');
-  
+
   // Preload images to prevent reloading during scroll
   useEffect(() => {
     // Preload all gallery images
-    Object.values(images).forEach(src => {
+    Object.values(images).forEach((src) => {
       const img = new Image();
       img.src = src;
     });
@@ -229,9 +232,10 @@ const TourInfo = () => {
           Алматинская область: Путешествие через искусство, историю и культуру
         </h1>
         <p className="text-gray-600 text-sm">
-          Путешествие по Алматинской области – это уникальная возможность насладиться сочетанием живописных гор, древних 
-          памятников и богатой природы. Здесь можно посетить такие природные чудеса, как Чарынский каньон, Большое Алматинское 
-          озеро и Медео, а также погрузиться в атмосферу исторических и культурных достопримечательностей.
+          Путешествие по Алматинской области – это уникальная возможность насладиться сочетанием
+          живописных гор, древних памятников и богатой природы. Здесь можно посетить такие природные
+          чудеса, как Чарынский каньон, Большое Алматинское озеро и Медео, а также погрузиться в
+          атмосферу исторических и культурных достопримечательностей.
         </p>
       </div>
 
@@ -241,7 +245,7 @@ const TourInfo = () => {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Длительность</h2>
             <p className="text-sm mb-4">10 дней захватывающего путешествия по югу Казахстана</p>
-            
+
             <div className="flex flex-wrap gap-2 mb-6">
               {places.map((place, index) => (
                 <div key={index} className="rounded-lg border-2 border-gray-400">
@@ -255,14 +259,26 @@ const TourInfo = () => {
           {/* Plan Section */}
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">План путешествия</h2>
-            
+
             <div className="accordion mb-4">
               <div className="mb-4">
                 <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
                   <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
                     Алматы (7 ночей)
-                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <svg
+                      width="12"
+                      height="6"
+                      viewBox="0 0 12 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L6 5L11 1"
+                        stroke="#666"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </summary>
                   <div className="p-4 pt-0 border-t border-gray-100">
@@ -270,41 +286,81 @@ const TourInfo = () => {
                   </div>
                 </details>
               </div>
-              
+
               <div className="mb-4">
                 <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
                   <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
                     Большое Алматинское озеро (1 день)
-                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <svg
+                      width="12"
+                      height="6"
+                      viewBox="0 0 12 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L6 5L11 1"
+                        stroke="#666"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </summary>
                   <div className="p-4 pt-0 border-t border-gray-100">
-                    <p className="text-sm text-gray-600">Посещение живописного озера, окруженного горными пиками</p>
+                    <p className="text-sm text-gray-600">
+                      Посещение живописного озера, окруженного горными пиками
+                    </p>
                   </div>
                 </details>
               </div>
-              
+
               <div className="mb-4">
                 <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
                   <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
                     Чарынский каньон (1 день)
-                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <svg
+                      width="12"
+                      height="6"
+                      viewBox="0 0 12 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L6 5L11 1"
+                        stroke="#666"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </summary>
                   <div className="p-4 pt-0 border-t border-gray-100">
-                    <p className="text-sm text-gray-600">Прогулка по одному из самых впечатляющих каньонов региона</p>
+                    <p className="text-sm text-gray-600">
+                      Прогулка по одному из самых впечатляющих каньонов региона
+                    </p>
                   </div>
                 </details>
               </div>
-              
+
               <div className="mb-4">
                 <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
                   <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
                     Тургень (1 день)
-                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <svg
+                      width="12"
+                      height="6"
+                      viewBox="0 0 12 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L6 5L11 1"
+                        stroke="#666"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </summary>
                   <div className="p-4 pt-0 border-t border-gray-100">
@@ -312,27 +368,53 @@ const TourInfo = () => {
                   </div>
                 </details>
               </div>
-              
+
               <div className="mb-4">
                 <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
                   <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
                     Национальный парк "Алтын Эмель" (1 день)
-                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <svg
+                      width="12"
+                      height="6"
+                      viewBox="0 0 12 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L6 5L11 1"
+                        stroke="#666"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </summary>
                   <div className="p-4 pt-0 border-t border-gray-100">
-                    <p className="text-sm text-gray-600">Исследование природных и исторических достопримечательностей парка</p>
+                    <p className="text-sm text-gray-600">
+                      Исследование природных и исторических достопримечательностей парка
+                    </p>
                   </div>
                 </details>
               </div>
-              
+
               <div className="mb-4">
                 <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
                   <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
                     Капчагайское водохранилище (1 день)
-                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <svg
+                      width="12"
+                      height="6"
+                      viewBox="0 0 12 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L6 5L11 1"
+                        stroke="#666"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </summary>
                   <div className="p-4 pt-0 border-t border-gray-100">
@@ -351,9 +433,26 @@ const TourInfo = () => {
                 <div key={index} className="bg-gray-50 p-4 rounded-md">
                   <div className="flex items-center mb-2">
                     <div className="w-6 h-6 mr-2 bg-gray-200 rounded-full flex items-center justify-center">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#666" strokeWidth="1.5" strokeMiterlimit="10"/>
-                        <path d="M8 5.5V8.5H11" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                          stroke="#666"
+                          strokeWidth="1.5"
+                          strokeMiterlimit="10"
+                        />
+                        <path
+                          d="M8 5.5V8.5H11"
+                          stroke="#666"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </div>
                     <h3 className="font-medium text-sm">{service.title}</h3>
@@ -379,7 +478,9 @@ const TourInfo = () => {
                     )}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium text-sm mb-2">День {day.day}: {day.title}</h3>
+                    <h3 className="font-medium text-sm mb-2">
+                      День {day.day}: {day.title}
+                    </h3>
                     <ul className="list-disc pl-6 text-sm text-gray-600 space-y-2">
                       {day.activities.map((activity, idx) => (
                         <li key={idx}>{activity}</li>
@@ -403,11 +504,26 @@ const TourInfo = () => {
                       <div className="flex items-center">
                         <h3 className="font-medium mr-2">{review.name}</h3>
                         <div className="flex">
-                          {Array(5).fill(0).map((_, i) => (
-                            <svg key={i} width="16" height="16" viewBox="0 0 16 16" fill={i < review.rating ? "#FFD700" : "none"} xmlns="http://www.w3.org/2000/svg">
-                              <path d="M8 1L10.1244 5.26864L14.5 6.01673L11.25 9.26527L12.0636 14L8 11.7686L3.93636 14L4.75 9.26527L1.5 6.01673L5.87563 5.26864L8 1Z" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          ))}
+                          {Array(5)
+                            .fill(0)
+                            .map((_, i) => (
+                              <svg
+                                key={i}
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill={i < review.rating ? '#FFD700' : 'none'}
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8 1L10.1244 5.26864L14.5 6.01673L11.25 9.26527L12.0636 14L8 11.7686L3.93636 14L4.75 9.26527L1.5 6.01673L5.87563 5.26864L8 1Z"
+                                  stroke="#FFD700"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            ))}
                         </div>
                       </div>
                       <p className="text-xs text-gray-500">{review.date}</p>
@@ -417,7 +533,10 @@ const TourInfo = () => {
                   {review.images && (
                     <div className="flex gap-2 overflow-x-auto">
                       {review.images.map((img, idx) => (
-                        <div key={idx} className="w-16 h-16 flex-shrink-0 bg-gray-200 rounded"></div>
+                        <div
+                          key={idx}
+                          className="w-16 h-16 flex-shrink-0 bg-gray-200 rounded"
+                        ></div>
                       ))}
                     </div>
                   )}
@@ -468,7 +587,7 @@ const TourInfo = () => {
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-2">Дата</h3>
               <div className="relative">
-                <select 
+                <select
                   className="w-full border border-gray-200 rounded-md p-2 pr-8 bg-white"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
@@ -476,17 +595,29 @@ const TourInfo = () => {
                   <option>03 Июль 2023</option>
                 </select>
                 <div className="absolute right-2 top-3 pointer-events-none">
-                  <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg
+                    width="12"
+                    height="6"
+                    viewBox="0 0 12 6"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 1L6 5L11 1"
+                      stroke="#666"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
             </div>
-            
+
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-2">Гости</h3>
               <div className="relative">
-                <select 
+                <select
                   className="w-full border border-gray-200 rounded-md p-2 pr-8 bg-white"
                   value={guestCount}
                   onChange={(e) => setGuestCount(e.target.value)}
@@ -494,17 +625,29 @@ const TourInfo = () => {
                   <option>4 взрослых, 1 ребенок</option>
                 </select>
                 <div className="absolute right-2 top-3 pointer-events-none">
-                  <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg
+                    width="12"
+                    height="6"
+                    viewBox="0 0 12 6"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 1L6 5L11 1"
+                      stroke="#666"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
             </div>
-            
+
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-2">Номер</h3>
               <div className="relative">
-                <select 
+                <select
                   className="w-full border border-gray-200 rounded-md p-2 pr-8 bg-white"
                   value={roomCount}
                   onChange={(e) => setRoomCount(e.target.value)}
@@ -512,8 +655,20 @@ const TourInfo = () => {
                   <option>1 стандарт, 2 одноместные</option>
                 </select>
                 <div className="absolute right-2 top-3 pointer-events-none">
-                  <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L6 5L11 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg
+                    width="12"
+                    height="6"
+                    viewBox="0 0 12 6"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 1L6 5L11 1"
+                      stroke="#666"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
@@ -547,12 +702,8 @@ const TourInfo = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };
 
 export default TourInfo;
-
-

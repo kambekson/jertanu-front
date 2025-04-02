@@ -41,9 +41,9 @@ const Booking: React.FC<BookingProps> = () => {
   const adultPrice = 15000;
   const childPrice = 7000;
   const totalPrice = adultCount * adultPrice + childCount * childPrice;
-  
+
   const handleMainTravelerChange = (field: keyof TravelerInfo, value: string) => {
-    setMainTraveler(prev => ({ ...prev, [field]: value }));
+    setMainTraveler((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleTravelerChange = (index: number, field: keyof TravelerInfo, value: string) => {
@@ -102,27 +102,33 @@ const Booking: React.FC<BookingProps> = () => {
         {/* Steps indicator */}
         <div className="flex justify-between items-center mb-10 px-4 sm:px-8">
           <div className="flex flex-col items-center">
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}>
+            <div
+              className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            >
               1
             </div>
             <span className="text-xs mt-1">Выбор тура</span>
           </div>
           <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
           <div className="flex flex-col items-center">
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 2 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}>
+            <div
+              className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 2 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            >
               2
             </div>
             <span className="text-xs mt-1">Ввод данных</span>
           </div>
           <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
           <div className="flex flex-col items-center">
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 3 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}>
+            <div
+              className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 3 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            >
               3
             </div>
             <span className="text-xs mt-1">Оплата</span>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             {/* Traveler Count Selector */}
@@ -132,14 +138,14 @@ const Booking: React.FC<BookingProps> = () => {
                 <div className="flex-1">
                   <p className="text-sm mb-2">Дети (возраст 0-13)</p>
                   <div className="flex items-center border rounded-lg">
-                    <button 
+                    <button
                       className="px-4 py-2 text-xl"
                       onClick={() => handleChildCountChange(false)}
                     >
                       −
                     </button>
                     <span className="flex-1 text-center">{childCount}</span>
-                    <button 
+                    <button
                       className="px-4 py-2 text-xl"
                       onClick={() => handleChildCountChange(true)}
                     >
@@ -151,14 +157,14 @@ const Booking: React.FC<BookingProps> = () => {
                 <div className="flex-1">
                   <p className="text-sm mb-2">Взрослые</p>
                   <div className="flex items-center border rounded-lg">
-                    <button 
+                    <button
                       className="px-4 py-2 text-xl"
                       onClick={() => handleAdultCountChange(false)}
                     >
                       −
                     </button>
                     <span className="flex-1 text-center">{adultCount}</span>
-                    <button 
+                    <button
                       className="px-4 py-2 text-xl"
                       onClick={() => handleAdultCountChange(true)}
                     >
@@ -169,24 +175,40 @@ const Booking: React.FC<BookingProps> = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Traveler Information Forms */}
             <div className="bg-white rounded-lg border-2 border-gray-300 p-6">
               <div className="mb-4">
                 <h2 className="text-lg font-medium mb-2">Добавить информацию о путешественнике</h2>
                 <div className="flex items-center text-sm text-gray-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
-                  <span>Пожалуйста, обратите внимание: Данные путешественника должны совпадать с данными в удостоверении личности.</span>
+                  <span>
+                    Пожалуйста, обратите внимание: Данные путешественника должны совпадать с данными
+                    в удостоверении личности.
+                  </span>
                 </div>
               </div>
-              
+
               {/* Main Traveler Form */}
               <div className="mb-8">
                 <div className="mb-4">
                   <h3 className="font-medium">Главный путешественник</h3>
-                  <p className="text-sm text-gray-600">Этот путешественник будет контактным лицом для бронирования.</p>
+                  <p className="text-sm text-gray-600">
+                    Этот путешественник будет контактным лицом для бронирования.
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -244,8 +266,10 @@ const Booking: React.FC<BookingProps> = () => {
                       onChange={(e) => handleMainTravelerChange('birthDay', e.target.value)}
                     >
                       <option value="">День</option>
-                      {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                        <option key={day} value={day}>{day}</option>
+                      {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                        <option key={day} value={day}>
+                          {day}
+                        </option>
                       ))}
                     </select>
                     <select
@@ -254,8 +278,10 @@ const Booking: React.FC<BookingProps> = () => {
                       onChange={(e) => handleMainTravelerChange('birthMonth', e.target.value)}
                     >
                       <option value="">Месяц</option>
-                      {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                        <option key={month} value={month}>{month}</option>
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                        <option key={month} value={month}>
+                          {month}
+                        </option>
                       ))}
                     </select>
                     <select
@@ -264,9 +290,13 @@ const Booking: React.FC<BookingProps> = () => {
                       onChange={(e) => handleMainTravelerChange('birthYear', e.target.value)}
                     >
                       <option value="">Год</option>
-                      {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                        <option key={year} value={year}>{year}</option>
-                      ))}
+                      {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(
+                        (year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ),
+                      )}
                     </select>
                   </div>
                 </div>
@@ -297,7 +327,7 @@ const Booking: React.FC<BookingProps> = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Additional Travelers Forms */}
               {travelers.map((traveler, index) => {
                 const isChild = index >= adultCount - 1;
@@ -305,7 +335,10 @@ const Booking: React.FC<BookingProps> = () => {
                   <div key={`traveler-${index}`} className="border-t pt-6 mb-8">
                     <div className="flex justify-between items-center mb-4">
                       <div>
-                        <h3 className="font-medium">Путешественник {index + 1} {isChild && <span className="text-sm text-gray-500">(возраст 0-17)</span>}</h3>
+                        <h3 className="font-medium">
+                          Путешественник {index + 1}{' '}
+                          {isChild && <span className="text-sm text-gray-500">(возраст 0-17)</span>}
+                        </h3>
                         <p className="text-sm text-gray-600">Контакт</p>
                       </div>
                       <button className="text-blue-500 text-sm">Компаньоны</button>
@@ -343,18 +376,24 @@ const Booking: React.FC<BookingProps> = () => {
                           onChange={(e) => handleTravelerChange(index, 'birthDay', e.target.value)}
                         >
                           <option value="">День</option>
-                          {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                            <option key={day} value={day}>{day}</option>
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                            <option key={day} value={day}>
+                              {day}
+                            </option>
                           ))}
                         </select>
                         <select
                           className="p-2 border rounded-lg"
                           value={traveler.birthMonth}
-                          onChange={(e) => handleTravelerChange(index, 'birthMonth', e.target.value)}
+                          onChange={(e) =>
+                            handleTravelerChange(index, 'birthMonth', e.target.value)
+                          }
                         >
                           <option value="">Месяц</option>
-                          {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                            <option key={month} value={month}>{month}</option>
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                            <option key={month} value={month}>
+                              {month}
+                            </option>
                           ))}
                         </select>
                         <select
@@ -363,9 +402,13 @@ const Booking: React.FC<BookingProps> = () => {
                           onChange={(e) => handleTravelerChange(index, 'birthYear', e.target.value)}
                         >
                           <option value="">Год</option>
-                          {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                            <option key={year} value={year}>{year}</option>
-                          ))}
+                          {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(
+                            (year) => (
+                              <option key={year} value={year}>
+                                {year}
+                              </option>
+                            ),
+                          )}
                         </select>
                       </div>
                     </div>
@@ -398,33 +441,55 @@ const Booking: React.FC<BookingProps> = () => {
                   </div>
                 );
               })}
-              
+
               <div className="mt-4">
-                <button 
+                <button
                   className="flex items-center text-blue-500 font-medium"
                   onClick={handleAddTraveler}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
                   </svg>
                   Добавить путешественника
                 </button>
               </div>
             </div>
           </div>
-          
+
           {/* Booking Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg border-2 border-gray-300 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-medium">Актау за 21 день</h3>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
-              
+
               <hr className="my-4" />
-              
+
               <div className="mb-4">
                 <h4 className="text-sm text-gray-600 mb-2">Гости и цены:</h4>
                 <div className="flex justify-between items-center mb-2">
@@ -442,15 +507,15 @@ const Booking: React.FC<BookingProps> = () => {
                   <span>{childCount * childPrice} ₸</span>
                 </div>
               </div>
-              
+
               <hr className="my-4" />
-              
+
               <div className="flex justify-between items-center font-medium">
                 <span>Итоговая цена</span>
                 <span>{totalPrice} ₽</span>
               </div>
-              
-              <button 
+
+              <button
                 className="w-full bg-blue-100 text-blue-500 rounded-lg py-3 mt-4 font-medium hover:bg-blue-200 transition"
                 onClick={handleProceedToPayment}
               >
@@ -459,12 +524,16 @@ const Booking: React.FC<BookingProps> = () => {
             </div>
           </div>
         </div>
-        
+
         {/* FAQ Section */}
         <div className="bg-white rounded-xl p-6 flex justify-between items-center mt-4">
           <div>
-            <p className="font-medium">Есть вопрос? Ознакомьтесь с нашими часто задаваемыми вопросами</p>
-            <p className="text-sm text-gray-600">Или свяжитесь с нашими награжденными экспертами по путешествиям.</p>
+            <p className="font-medium">
+              Есть вопрос? Ознакомьтесь с нашими часто задаваемыми вопросами
+            </p>
+            <p className="text-sm text-gray-600">
+              Или свяжитесь с нашими награжденными экспертами по путешествиям.
+            </p>
           </div>
           <button className="text-blue-500 border border-blue-500 rounded-lg px-4 py-2">
             Посмотреть часто задаваемые вопросы

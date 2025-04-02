@@ -120,13 +120,13 @@ const tours: Tour[] = [
 
 // Массив фильтров для отображения
 const tourFilters = [
-    { id: 'filter1', label: 'Этнографические туры' },
-    { id: 'filter2', label: 'На открытом воздухе' },
-    { id: 'filter3', label: 'Городская жизнь' },
-    { id: 'filter4', label: 'Культурное и наследие' },
-    { id: 'filter5', label: 'Для всей семьи' },
-    { id: 'filter6', label: 'Роскошь и Эксклюзивность' }
-  ];
+  { id: 'filter1', label: 'Этнографические туры' },
+  { id: 'filter2', label: 'На открытом воздухе' },
+  { id: 'filter3', label: 'Городская жизнь' },
+  { id: 'filter4', label: 'Культурное и наследие' },
+  { id: 'filter5', label: 'Для всей семьи' },
+  { id: 'filter6', label: 'Роскошь и Эксклюзивность' },
+];
 
 export default function ToursPage() {
   // Состояния для фильтров
@@ -138,13 +138,11 @@ export default function ToursPage() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [filteredTours, setFilteredTours] = useState<Tour[]>(tours);
 
-  
-
   // Обработчик изменения фильтров
   const handleFilterChange = (filterId: string) => {
-    setSelectedFilters(prevFilters => {
+    setSelectedFilters((prevFilters) => {
       if (prevFilters.includes(filterId)) {
-        return prevFilters.filter(id => id !== filterId);
+        return prevFilters.filter((id) => id !== filterId);
       } else {
         return [...prevFilters, filterId];
       }
@@ -154,17 +152,17 @@ export default function ToursPage() {
   // Эффект для отслеживания изменений в фильтрах
   useEffect(() => {
     console.log('Выбранные фильтры:', selectedFilters);
-    
+
     // Пример фильтрации туров на основе выбранных фильтров
     let filtered = [...tours];
-    
+
     // Проверка на фильтр "Для всей семьи"
     if (selectedFilters.includes('filter5')) {
-      filtered = filtered.filter(tour => tour.isFamilyFriendly);
+      filtered = filtered.filter((tour) => tour.isFamilyFriendly);
     }
-    
+
     // Здесь можно добавить другие правила фильтрации
-    
+
     setFilteredTours(filtered);
   }, [selectedFilters]);
 
@@ -223,9 +221,9 @@ export default function ToursPage() {
               <div className="mt-2 space-y-2">
                 {tourFilters.map((filter) => (
                   <div key={filter.id} className="flex items-center">
-                    <input 
-                      type="checkbox" 
-                      id={filter.id} 
+                    <input
+                      type="checkbox"
+                      id={filter.id}
                       className="mr-2"
                       checked={selectedFilters.includes(filter.id)}
                       onChange={() => handleFilterChange(filter.id)}
@@ -502,7 +500,7 @@ export default function ToursPage() {
             <div className="flex flex-col gap-4">
               {filteredTours.map((tour) => (
                 <Link to={`/tour/${tour.id}`} key={tour.id}>
-                    <TourCardLarge key={tour.id} tour={tour} />
+                  <TourCardLarge key={tour.id} tour={tour} />
                 </Link>
               ))}
             </div>

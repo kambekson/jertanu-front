@@ -1,5 +1,10 @@
+// Import variables
+@use 'variables';
+@use 'colors';
+
 // Import components
 @use 'container';
 @use 'Profile';
-
+@use 'ImageGrid';
+@use 'choose-agent-section';
 // You can add more imports and global styles here

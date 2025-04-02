@@ -53,7 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/agency',
-        element: <AgencyPage/>,
+        element: <AgencyPage />,
       },
       // {
       //   path: 'auth',
