@@ -4,18 +4,20 @@ import './index.css';
 import App from './App.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './pages/ErrorPage.tsx';
-import HomePage from './pages/HomePage.tsx';
+import HomePage from './pages/user/HomePage.tsx';
 // import LoginPage from './pages/auth/LoginPage.tsx';
 // import SignupPage from './pages/auth/SignupPage.tsx';
 // import ForgotPasswordPage from './pages/auth/ForgotPasswordPage.tsx';
 // import ResetPasswordPage from './pages/auth/ResetPasswordPage.tsx';
 import TermsOfService from './pages/TermsOfService.tsx';
-import Profile from './pages/Profile.tsx';
-import TourInfo from './pages/TourInfo.tsx';
+import Profile from './pages/user/Profile.tsx';
+import TourInfo from './pages/user/TourInfo.tsx';
 import ToursPage from './pages/ToursPage.tsx';
-import Booking from './pages/Booking.tsx';
-import Payment from './pages/Payment.tsx';
-import AgencyPage from './pages/AgencyPage.tsx';
+import Booking from './pages/user/Booking.tsx';
+import Payment from './pages/user/Payment.tsx';
+import AgencyPage from './pages/agency/AgencyPage.tsx';
+import AgencyRegister from './pages/agency/AgencyRegister.tsx';
+import AgencyLogin from './pages/agency/AgencyLogin.tsx';
 
 const router = createBrowserRouter([
   {
@@ -52,22 +54,20 @@ const router = createBrowserRouter([
         element: <Payment />,
       },
       {
-        path: '/agency',
+        path: 'agency',
         element: <AgencyPage />,
-        children: [
-          {
-            path: '/agency/login',
-            element: <></>,
-          },
-          {
-            path: '/agency/register',
-            element: <></>,
-          },
-          {
-            path: '/agency/profile',
-            element: <></>,
-          },
-        ],
+      },
+      {
+        path: 'agency/register',
+        element: <AgencyRegister/>,
+      },
+      {
+        path: 'agency/login',
+        element: <AgencyLogin />,
+      },
+      {
+        path: 'agency/profile',
+        element: <></>,
       },
       
       // {

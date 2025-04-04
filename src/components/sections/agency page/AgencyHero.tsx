@@ -2,8 +2,11 @@ import jertanuLogo from '../../../assets/jertanu-logo-white.svg';
 import Button from '../../UI/Button';
 import agencyHeroBg from '../../../assets/hero-agency-bg.png';
 import ClientScreen from "../../../assets/client-snap.png"
+import { useNavigate } from 'react-router-dom';
 
 export default function AgencyHero() {
+  const navigate = useNavigate();
+
   return (
     <div className="relative w-full overflow-hidden">
       <div className="absolute inset-0">
@@ -17,7 +20,22 @@ export default function AgencyHero() {
         <div className="text-white max-w-lg w-full md:w-1/2 mb-8 md:mb-0">
           <img src={jertanuLogo} alt="JerTanu Logo" className="h-10 sm:h-12 md:h-16 mb-4 md:mb-6" />
           <p className="text-lg sm:text-xl mb-6 sm:mb-8">Лучшие возможности для подбора тура и роста продаж</p>
-          <Button variant="secondary" className="w-full sm:w-auto">Зарегистрироваться</Button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button 
+              variant="secondary" 
+              className="w-full sm:w-auto"
+              onClick={() => navigate('/agency/register')}
+            >
+              Зарегистрироваться
+            </Button>
+            <Button 
+              variant="neutral" 
+              className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-gray-900"
+              onClick={() => navigate('/agency/login')}
+            >
+              Войти
+            </Button>
+          </div>
         </div>
         <div className="w-full md:w-1/2 flex justify-center">
           <div className="relative w-full max-w-md">

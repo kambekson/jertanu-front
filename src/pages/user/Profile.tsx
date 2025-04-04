@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Profile.scss';
-import avatarPlaceholder from '../assets/avatar-placeholder.svg';
-import Button from '../components/UI/Button';
+import '../../styles/Profile.scss';
+import avatarPlaceholder from '../../assets/avatar-placeholder.svg';
+import Button from '../../components/UI/Button';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:3000/api';
@@ -28,7 +28,6 @@ const Profile: React.FC = () => {
     year: '',
     phone: '',
     email: '',
-    address: '',
   });
 
   const [loading, setLoading] = useState(true);
@@ -105,7 +104,6 @@ const Profile: React.FC = () => {
           year,
           phone: userData.profile.phoneNumber || '',
           email: userData.email || '',
-          address: '', // Server doesn't provide address field
         });
 
         setLoading(false);
@@ -170,7 +168,6 @@ const Profile: React.FC = () => {
         year,
         phone: userData.profile.phoneNumber || '',
         email: userData.email || '',
-        address: '',
       });
 
       setLoading(false);
@@ -312,15 +309,27 @@ const Profile: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Загрузка данных пользователя...</div>;
+    return (
+      <div className="profile-page-container">
+        <div className="loading-container">
+          <div className="loading">Загрузка данных пользователя...</div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return (
+      <div className="profile-page-container">
+        <div className="error-container">
+          <div className="error">{error}</div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
+    <div className="profile-page-container">
       <div className="profile-container">
         <div className="profile-sidebar">
           <div className="profile-avatar-section">
@@ -535,7 +544,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div className="profile-section">
-                <h2>Адрес</h2>
+                <h2>Контактная информация</h2>
 
                 <div className="form-row">
                   <div className="form-group">
@@ -548,19 +557,6 @@ const Profile: React.FC = () => {
                       onChange={handleChange}
                       className="form-control"
                       placeholder="Введите email"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="address">Адрес</label>
-                    <input
-                      type="text"
-                      id="address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      className="form-control"
-                      placeholder="Введите адрес"
                     />
                   </div>
                 </div>

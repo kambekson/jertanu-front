@@ -1,11 +1,11 @@
-import Hero from '../components/sections/home page/Hero.tsx';
-import HotTours from '../components/sections/home page/HotTours.tsx';
-import PopularCities from '../components/sections/home page/PopularCities.tsx';
-import heroimg1 from '../assets/hero1.png';
-import heroimg2 from '../assets/hero2.png';
-import heroimg3 from '../assets/hero3.png';
-import heroimg4 from '../assets/hero4.png';
-import SeasonTours from '../components/sections/home page/SeasonTours.tsx';
+import Hero from '../../components/sections/home page/Hero.tsx';
+import HotTours from '../../components/sections/home page/HotTours.tsx';
+import PopularCities from '../../components/sections/home page/PopularCities.tsx';
+import heroimg1 from '../../assets/hero1.png';
+import heroimg2 from '../../assets/hero2.png';
+import heroimg3 from '../../assets/hero3.png';
+import heroimg4 from '../../assets/hero4.png';
+import SeasonTours from '../../components/sections/home page/SeasonTours.tsx';
 
 const tours = [
   {

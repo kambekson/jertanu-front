@@ -3,7 +3,7 @@ import AuthModal from '../modals/AuthModal';
 import Button from '../UI/Button';
 import logo from '../../assets/jertanu-logo.svg';
 import { User, Heart, Calendar, LogOut } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const [isAuthOpen, setAuthOpen] = useState(false);
@@ -13,6 +13,7 @@ export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const isAgencyPage = location.pathname === '/agency';
 
   const API_URL = 'http://localhost:3000/api';
@@ -163,8 +164,12 @@ export default function Header() {
           <div className="flex gap-3">
             <Button
               onClick={() => {
-                setAuthMode('register');
-                setAuthOpen(true);
+                if (isAgencyPage) {
+                  navigate('/agency/register');
+                } else {
+                  setAuthMode('register');
+                  setAuthOpen(true);
+                }
               }}
               variant="neutral"
             >
