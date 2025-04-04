@@ -64,15 +64,15 @@ export default function ChooseAgency() {
 
   return (
     <div>
-      <div className="container mx-auto px-4 py-8 sm:py-12">
+      <div className="container">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-blue-800 mb-6 sm:mb-8 text-center md:text-left">Почему выбирают JerTanu</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mt-6 sm:mt-8 mb-8 sm:mb-16">
+          <h2 className="text-3xl font-bold text-blue-800 mb-8">Почему выбирают JerTanu</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-15 mb-30">
             <Feature
               icon={
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-10 w-10 sm:h-12 sm:w-12"
+                  className="h-12 w-12"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -86,7 +86,7 @@ export default function ChooseAgency() {
               icon={
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-10 w-10 sm:h-12 sm:w-12"
+                  className="h-12 w-12"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -100,7 +100,7 @@ export default function ChooseAgency() {
               icon={
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-10 w-10 sm:h-12 sm:w-12"
+                  className="h-12 w-12"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -114,7 +114,7 @@ export default function ChooseAgency() {
               icon={
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-10 w-10 sm:h-12 sm:w-12"
+                  className="h-12 w-12"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -129,26 +129,18 @@ export default function ChooseAgency() {
       </div>
 
       <div className="bg-white relative">
-        <img 
-          src={chooseBg} 
-          alt="Background" 
-          className="w-full object-cover h-[600px] sm:h-[800px] md:h-[1000px] lg:h-[1200px]" 
-        />
+        <img src={chooseBg} alt="Background" className="h-[968px] w-full" />
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <img 
-            src={planeBg} 
-            alt="Plane icon" 
-            className="w-20 h-auto sm:w-28 md:w-36"
-          />
+          <img src={planeBg} alt="Plane icon" />
         </div>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-start pt-16 sm:pt-20 md:pt-24 px-4">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
+        <div className="absolute inset-0 flex flex-col items-center">
+          <h2 className="text-3xl font-bold text-white text-center mb-4 mt-24">
             Как начать сотрудничество
             <br />с JerTanu
           </h2>
 
-          <div ref={timelineRef} className="relative w-full max-w-7xl mx-auto">
+          <div ref={timelineRef} className="relative w-full">
             <div 
               className={`absolute left-1/2 top-0 bottom-0 w-px bg-white opacity-50 transform -translate-x-1/2
                 ${timelineVisible ? 'h-full' : 'h-0'} 
@@ -156,17 +148,15 @@ export default function ChooseAgency() {
               style={{ transitionDelay: '200ms' }}
             ></div>
 
-            <div className="space-y-6 md:space-y-12">
-              {stepsData.map((step) => (
-                <Step
-                  key={step.number}
-                  number={step.number}
-                  isRight={step.isRight}
-                  title={step.title}
-                  description={step.description}
-                />
-              ))}
-            </div>
+            {stepsData.map((step) => (
+              <Step
+                key={step.number}
+                number={step.number}
+                isRight={step.isRight}
+                title={step.title}
+                description={step.description}
+              />
+            ))}
           </div>
         </div>
       </div>
