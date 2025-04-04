@@ -15,49 +15,56 @@ export default function Header() {
   const location = useLocation();
   const isAgencyPage = location.pathname === '/agency';
 
+  const API_URL = 'http://localhost:3000/api';
+
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('access_token');
-      if (token) {
-        try {
-          console.log('Checking authentication with token');
-          const response = await fetch('http://localhost:3000/api/auth/me', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
 
-          if (!response.ok) {
-            console.error('Authentication check failed:', response.status);
-            if (response.status === 401) {
-              // Clear tokens on auth failure
-              localStorage.removeItem('access_token');
-              localStorage.removeItem('refresh_token');
-              localStorage.removeItem('token');
-              setIsLoggedIn(false);
-              return;
-            }
-          }
+      try {
+        console.log('Checking authentication with token');
+        const response = await fetch(`${API_URL}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-          const userData = await response.json();
-          console.log('User data received:', userData);
-          if (userData.profile && userData.profile.firstName) {
-            setUserFullName(userData.profile.firstName);
-          } else if (userData.firstName) {
-            setUserFullName(userData.firstName);
-          } else if (userData.profile && userData.profile.fullName) {
-            // Если есть только полное имя, попробуем взять первое слово (имя)
-            const firstName = userData.profile.fullName.split(' ')[0] || '';
-            setUserFullName(firstName);
-          } else {
-            console.error('Profile or name data not found in userData:', userData);
-            setUserFullName('Пользователь');
+        if (!response.ok) {
+          console.error('Authentication check failed:', response.status);
+          if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('token');
+            setIsLoggedIn(false);
+            setUserFullName('');
+            return;
           }
-          setIsLoggedIn(true);
-        } catch (error) {
-          console.error('Error checking authentication:', error);
-          setIsLoggedIn(false);
+          throw new Error('Failed to fetch user data');
         }
+
+        const userData = await response.json();
+        console.log('User data received:', userData);
+
+        // Получение имени из данных профиля как в Profile компоненте
+        let firstName = '';
+        if (userData.profile?.firstName) {
+          firstName = userData.profile.firstName;
+        } else if (userData.firstName) {
+          firstName = userData.firstName;
+        } else {
+          firstName = 'Пользователь';
+        }
+
+        setUserFullName(firstName);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+        setIsLoggedIn(false);
+        setUserFullName('');
       }
     };
 
@@ -84,6 +91,9 @@ export default function Header() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setUserFullName('');
+    setIsDropdownOpen(false);
     window.location.reload();
   };
 
