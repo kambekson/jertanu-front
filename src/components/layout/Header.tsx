@@ -14,7 +14,7 @@ export default function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const isAgencyPage = location.pathname === '/agency';
+  const isAgencyPage = location.pathname.startsWith('/agency');
 
   const API_URL = 'http://localhost:3000/api';
 
@@ -107,9 +107,11 @@ export default function Header() {
           </Link>
           <div className="nav">
             <ul className="flex ">
-              <li className="px-2 font-normal font-base">
-                <Link to="/tours">Направления</Link>
-              </li>
+              {!isAgencyPage && (
+                <li className="px-2 font-normal font-base">
+                  <Link to="/tours">Направления</Link>
+                </li>
+              )}
               {!isLoggedIn && (
                 <li className="px-2 font-normal font-base">
                   {isAgencyPage ? (
@@ -177,8 +179,12 @@ export default function Header() {
             </Button>
             <Button
               onClick={() => {
-                setAuthMode('login');
-                setAuthOpen(true);
+                if (isAgencyPage) {
+                  navigate('/agency/login');
+                } else {
+                  setAuthMode('login');
+                  setAuthOpen(true);
+                }
               }}
               variant="primary"
             >

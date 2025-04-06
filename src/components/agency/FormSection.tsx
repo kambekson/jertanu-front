@@ -12,9 +12,12 @@ export interface FormField {
 
 export interface FormSectionProps {
   fields: FormField[];
-  onNext?: () => void;
+  onNext?: ((e: React.FormEvent) => void) | (() => void);
   buttonText?: string;
   showPrivacyPolicy?: boolean;
+  onChange?: (fieldId: string, value: string) => void;
+  formData?: Record<string, string>;
+  loading?: boolean;
 }
 
 const FormSection: React.FC<FormSectionProps> = ({
@@ -22,9 +25,25 @@ const FormSection: React.FC<FormSectionProps> = ({
   onNext,
   buttonText = 'Далее',
   showPrivacyPolicy = false,
+  onChange,
+  formData = {},
+  loading = false,
 }) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onNext) {
+      onNext(e);
+    }
+  };
+
+  const handleInputChange = (fieldId: string, value: string) => {
+    if (onChange) {
+      onChange(fieldId, value);
+    }
+  };
+
   return (
-    <form className="space-y-6 h-[500px] min-h-[500px] flex flex-col">
+    <form className="space-y-6 h-[500px] min-h-[500px] flex flex-col" onSubmit={handleSubmit}>
       <div className="flex-grow">
         {fields.map((field, index) => (
           <Input
@@ -34,6 +53,8 @@ const FormSection: React.FC<FormSectionProps> = ({
             placeholder={field.placeholder}
             type={field.type || 'text'}
             className={index === 0 ? 'mb-6' : 'mt-6'}
+            value={formData[field.id] || ''}
+            onChange={(e) => handleInputChange(field.id, e.target.value)}
           />
         ))}
         
@@ -43,6 +64,7 @@ const FormSection: React.FC<FormSectionProps> = ({
               type="checkbox"
               id="privacyPolicy"
               className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              required
             />
             <label htmlFor="privacyPolicy" className="ml-2 text-gray-700">
               Я принимаю <Link to="/terms" className="text-blue-600 hover:underline">политику конфиденциальности</Link>
@@ -54,10 +76,11 @@ const FormSection: React.FC<FormSectionProps> = ({
       <div>
         <Button 
           variant="primary" 
-          onClick={onNext} 
+          type="submit"
           className="w-full py-3"
+          disabled={loading}
         >
-          {buttonText}
+          {loading ? 'Загрузка...' : buttonText}
         </Button>
       </div>
     </form>

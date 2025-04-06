@@ -42,6 +42,12 @@ const sectionsConfig: SectionConfig[] = [
         label: 'ФИО руководителя (юридического лица)',
         placeholder: 'ФИО',
       },
+      {
+        id: 'description',
+        label: 'Описание компании',
+        placeholder: 'Краткое описание вашей компании',
+        type: 'textarea',
+      },
     ],
   },
   {

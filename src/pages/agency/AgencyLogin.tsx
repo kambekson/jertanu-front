@@ -14,23 +14,14 @@ const AgencyLogin = () => {
     setIsLoading(true);
 
     try {
-      console.log('Attempting agency login with:', { email }); // Don't log password
-
-      const response = await fetch('http://localhost:3000/api/auth/sign-in/agency', {
+      const response = await fetch('http://localhost:3000/api/auth/sign-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
-      console.log('Login response status:', response.status);
-
-      // Log the raw response text for debugging
       const responseText = await response.text();
-      console.log('Raw response:', responseText);
-
-      // Parse the JSON manually after logging the raw text
       const data = responseText ? JSON.parse(responseText) : {};
-      console.log('Login response data:', data);
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -39,8 +30,6 @@ const AgencyLogin = () => {
           throw new Error(data.message || 'Ошибка при входе');
         }
       }
-
-      // Store tokens consistently across the application
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('token', data.access_token);
