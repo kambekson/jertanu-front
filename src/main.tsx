@@ -18,6 +18,15 @@ import Payment from './pages/user/Payment.tsx';
 import AgencyPage from './pages/agency/AgencyPage.tsx';
 import AgencyRegister from './pages/agency/AgencyRegister.tsx';
 import AgencyLogin from './pages/agency/AgencyLogin.tsx';
+import AgencyProfile from './pages/agency/AgencyProfile.tsx';
+import MyTours from './pages/agency/MyTours.tsx';
+import EditTour from './pages/agency/EditTour.tsx';
+import AddTour from './pages/agency/AddTour.tsx';
+import Requests from './pages/agency/Requests.tsx';
+import Statistics from './pages/agency/Statistics.tsx';
+import Ads from './pages/agency/Ads.tsx';
+import Promos from './pages/agency/Promos.tsx';
+import HotTours from './pages/agency/HotTours.tsx';
 
 const router = createBrowserRouter([
   {
@@ -67,7 +76,39 @@ const router = createBrowserRouter([
       },
       {
         path: 'agency/profile',
-        element: <></>,
+        element: <AgencyProfile />,
+      },
+      {
+        path: 'agency/my-tours',
+        element: <MyTours />,
+      },
+      {
+        path: 'agency/hot-tours',
+        element: <HotTours />,
+      },
+      {
+        path: 'agency/tour/edit/:id',
+        element: <EditTour />,
+      },
+      {
+        path: 'agency/tour/add',
+        element: <AddTour />,
+      },
+      {
+        path: 'agency/requests',
+        element: <Requests />,
+      },
+      {
+        path: 'agency/statistics',
+        element: <Statistics />,
+      },
+      {
+        path: 'agency/ads',
+        element: <Ads />,
+      },
+      {
+        path: 'agency/promos',
+        element: <Promos />,
       },
       
       // {
