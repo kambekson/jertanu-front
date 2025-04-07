@@ -1,6 +1,6 @@
 import { useState, useRef, DragEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Plus, X, Upload } from 'lucide-react';
+import { ArrowLeft, X, Upload } from 'lucide-react';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 
@@ -20,7 +20,6 @@ interface TourImage {
 interface TourStatus {
   id: string;
   title: string;
-  color: string;
   description: string;
 }
 
@@ -30,7 +29,10 @@ interface TourFormData {
   images: TourImage[];
   price: number;
   discountPrice?: number;
-  dates: string;
+  startDate: string; 
+  endDate: string;
+  city: string;
+  type: string;
   isActive: boolean;
   services: string[];
   itinerary: ItineraryStop[];
@@ -75,61 +77,54 @@ const tourStatuses: TourStatus[] = [
   {
     id: 'seasonal',
     title: 'Сезонный тур',
-    color: 'bg-orange-100 text-orange-800',
     description: 'Тур доступен только в определенный сезон'
   },
   {
     id: 'hot',
     title: 'Горячий тур',
-    color: 'bg-red-100 text-red-800',
     description: 'Специальное предложение с ограниченным временем'
   },
   {
     id: 'new_destination',
     title: 'Новое направление',
-    color: 'bg-green-100 text-green-800',
     description: 'Недавно добавленный маршрут'
   },
 ];
 
-const defaultItinerary: ItineraryStop[] = [
+interface TourType {
+  id: string;
+  title: string;
+  description: string;
+}
+
+const tourTypes: TourType[] = [
   {
-    id: '1',
-    location: 'День 1: Алматы',
-    description: 'Посещение основных достопримечательностей города:\n- Парк 28 панфиловцев\n- Музей\n- Кок-Тобе\n- Горный парк (Алматинский ботанический сад)',
-    duration: '1 день'
+    id: 'ethno',
+    title: 'Этнографический',
+    description: 'Погружение в культуру и традиции'
   },
   {
-    id: '2',
-    location: 'День 2: Алматы – Большое Алматинское озеро',
-    description: 'Большое Алматинское озеро – это одно из самых красивых природных мест в Алматинской области, окруженное величественными горами.\n- Пикник или отдых в зоне, оборудованной для туристов',
-    duration: '1 день'
+    id: 'nature',
+    title: 'Природа',
+    description: 'Путешествие по природным достопримечательностям'
   },
   {
-    id: '3',
-    location: 'День 3: Алматы – Чарынский каньон',
-    description: 'Прогулка по Чарынскому каньону. Самая известная часть каньона – "Долина замков", где высечены удивительные скалы, напоминающие замки, башни и другие архитектурные формы',
-    duration: '1 день'
+    id: 'adventure',
+    title: 'Приключенческий',
+    description: 'Активный отдых и экстремальные развлечения'
   },
   {
-    id: '4',
-    location: 'День 4: Алматы – Тургень',
-    description: 'Прогулка по Тургеньскому ущелью и посещение Тургенских водопадов.\n- Легкий поход\n- Наслаждение природой\n- Фотосессия',
-    duration: '1 день'
+    id: 'cultural',
+    title: 'Культурный',
+    description: 'Посещение исторических и культурных объектов'
   },
   {
-    id: '5',
-    location: 'День 5: Алматы – Национальный парк "Алтын Эмель"',
-    description: '- Посещение Барханa Көльөй (песчаная дюна высотой до 150 метров)\n- Исследование исторических и археологических памятников\n- Осмотр петроглифов',
-    duration: '1 день'
-  },
-  {
-    id: '6',
-    location: 'День 6: Алматы – Капчагайское водохранилище',
-    description: '- Отдых на пляжах Капчагайского водохранилища\n- Возможность заняться водными видами спорта (каякинг, катание на водных мотоциклах)\n- Рыбалка',
-    duration: '1 день'
+    id: 'gastronomy',
+    title: 'Гастрономический',
+    description: 'Знакомство с национальной кухней'
   }
 ];
+
 
 export default function AddTour() {
   const navigate = useNavigate();
@@ -143,10 +138,13 @@ export default function AddTour() {
     images: [],
     price: 0,
     discountPrice: undefined,
-    dates: '',
+    startDate: '',
+    endDate: '',
+    city: '',
+    type: '', 
     isActive: true,
     services: [],
-    itinerary: defaultItinerary,
+    itinerary: [],
     statuses: []
   });
 
@@ -283,22 +281,91 @@ export default function AddTour() {
     setLoading(true);
 
     try {
-      // Here you would typically:
-      // 1. Upload images to your server
-      // 2. Get back the URLs
-      // 3. Submit the form data with image URLs
+      // Валидация числовых полей
+      if (isNaN(formData.price) || formData.price <= 0) {
+        throw new Error('Цена должна быть положительным числом');
+      }
+      if (formData.discountPrice && (isNaN(formData.discountPrice) || formData.discountPrice <= 0)) {
+        throw new Error('Цена со скидкой должна быть положительным числом');
+      }
+      if (formData.discountPrice && formData.discountPrice >= formData.price) {
+        throw new Error('Цена со скидкой должна быть меньше обычной цены');
+      }
+
+      // Получаем токен из localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Не авторизован');
+      }
+
+      // Подготовка данных для отправки
+      const serviceNames = formData.services.map(serviceId => {
+        const service = serviceOptions.find(s => s.id === serviceId);
+        return service ? service.title : serviceId;
+      });
+
+      // Преобразование итинерария в формат API
+      const itineraryForApi = formData.itinerary.map(stop => ({
+        location: stop.location,
+        description: stop.description,
+        duration: stop.duration
+      }));
+
+      // Получение статуса тура
+      const status = formData.statuses.length > 0 ? formData.statuses[0] : 'seasonal';
+
+      // Загрузка изображений и получение URL
+      // В реальном приложении здесь будет загрузка файлов на сервер
+      // и получение URL для каждого изображения
+      const imageUrls = formData.images.length > 0 
+        ? ['https://example.com/placeholder-image.jpg'] 
+        : [''];
+
+      // Создание объекта данных для API
+      const tourData = {
+        title: formData.title,
+        description: formData.description,
+        city: formData.city,
+        price: formData.price,
+        discountPrice: formData.discountPrice,
+        type: formData.type,
+        status: status,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        isActive: formData.isActive,
+        services: serviceNames,
+        itinerary: itineraryForApi,
+        images: imageUrls
+      };
+
+      console.log('Отправка данных на API:', tourData);
+
+      // Отправка данных на сервер
+      const response = await fetch('http://localhost:3000/api/tours', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(tourData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка при создании тура: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Тур успешно создан:', result);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Cleanup preview URLs
+      // Очистка превью изображений
       formData.images.forEach(img => {
         URL.revokeObjectURL(img.preview);
       });
 
       navigate('/agency/my-tours');
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Ошибка при отправке формы:', error);
+      alert('Произошла ошибка при создании тура. Пожалуйста, попробуйте снова.');
     } finally {
       setLoading(false);
     }
@@ -323,6 +390,7 @@ export default function AddTour() {
                 <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-4">
                   <Input
                     id="title"
+                    name="title"
                     label="Название тура"
                     placeholder="Например: Тур на Чарынский каньон"
                     value={formData.title}
@@ -330,21 +398,68 @@ export default function AddTour() {
                   />
 
                   <Input
-                    id="dates"
-                    label="Даты проведения"
-                    placeholder="Например: 12 - 14 апреля"
-                    value={formData.dates}
+                    id="city"
+                    name="city"
+                    label="Город"
+                    placeholder="Например: Алматы"
+                    value={formData.city}
                     onChange={handleInputChange}
                   />
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      id="startDate"
+                      name="startDate"
+                      label="Дата начала"
+                      placeholder="ГГГГ-ММ-ДД"
+                      type="date"
+                      value={formData.startDate}
+                      onChange={handleInputChange}
+                    />
+
+                    <Input
+                      id="endDate"
+                      name="endDate"
+                      label="Дата окончания"
+                      placeholder="ГГГГ-ММ-ДД"
+                      type="date"
+                      value={formData.endDate}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+
                   <Input
                     id="description"
+                    name="description"
                     label="Описание"
                     placeholder="Подробное описание тура..."
                     type="textarea"
                     value={formData.description}
                     onChange={handleInputChange}
                   />
+                </div>
+
+                {/* Tour Type */}
+                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Тип тура</h3>
+                  <div className="space-y-3">
+                    {tourTypes.map((type) => (
+                      <div key={type.id} className="flex items-start">
+                        <input
+                          type="radio"
+                          id={`type_${type.id}`}
+                          name="type"
+                          checked={formData.type === type.id}
+                          onChange={() => setFormData({...formData, type: type.id})}
+                          className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded-full focus:ring-blue-500"
+                        />
+                        <label htmlFor={`type_${type.id}`} className="ml-3">
+                          <span className="block text-sm font-medium text-gray-700">{type.title}</span>
+                          <span className="block text-sm text-gray-500">{type.description}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Statuses */}
@@ -413,6 +528,7 @@ export default function AddTour() {
                   <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-3">
                     <Input
                       id="location"
+                      name="location"
                       label=""
                       placeholder="Например: День 1: Алматы"
                       value={newStop.location}
@@ -421,6 +537,7 @@ export default function AddTour() {
 
                     <Input
                       id="stopDescription"
+                      name="description"
                       label=""
                       placeholder="Описание остановки..."
                       type="textarea"
@@ -430,6 +547,7 @@ export default function AddTour() {
 
                     <Input
                       id="duration"
+                      name="duration"
                       label=""
                       placeholder="Например: 1 день"
                       value={newStop.duration}
@@ -502,6 +620,7 @@ export default function AddTour() {
                 <div className="space-y-4">
                   <Input
                     id="price"
+                    name="price"
                     label="Цена (₸)"
                     placeholder="50000"
                     type="number"
@@ -511,6 +630,7 @@ export default function AddTour() {
 
                   <Input
                     id="discountPrice"
+                    name="discountPrice"
                     label="Цена со скидкой (₸, необязательно)"
                     placeholder="45000"
                     type="number"

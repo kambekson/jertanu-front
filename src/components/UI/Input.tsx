@@ -7,6 +7,7 @@ export interface InputProps {
   type?: string;
   className?: string;
   value?: string;
+  name?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
@@ -17,6 +18,7 @@ const Input: React.FC<InputProps> = ({
   type = 'text',
   className = '',
   value = '',
+  name,
   onChange,
 }) => {
   return (
@@ -27,6 +29,7 @@ const Input: React.FC<InputProps> = ({
       {type === 'textarea' ? (
         <textarea
           id={id}
+          name={name || id}
           placeholder={placeholder}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px]"
           value={value}
@@ -36,6 +39,7 @@ const Input: React.FC<InputProps> = ({
         <input
           type={type}
           id={id}
+          name={name || id}
           placeholder={placeholder}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           value={value}
@@ -46,4 +50,4 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-export default Input; 
+export default Input;

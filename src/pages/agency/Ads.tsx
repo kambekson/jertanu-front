@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { LogOut, Volume2 } from 'lucide-react';
 import Button from '../../components/UI/Button';
 import AgencySidebar from '../../components/layout/AgencySidebar';
 
