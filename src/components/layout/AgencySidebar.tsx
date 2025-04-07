@@ -157,7 +157,7 @@ const AgencySidebar = () => {
               )}
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link 
               to="/agency/calendar" 
               className={`flex items-center px-4 py-3 ${isActive('/agency/calendar') ? 'border-l-4 border-blue-500 bg-blue-50' : 'hover:bg-gray-50'}`}
@@ -175,7 +175,7 @@ const AgencySidebar = () => {
                 </svg>
               )}
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
       

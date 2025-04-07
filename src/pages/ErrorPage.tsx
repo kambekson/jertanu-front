@@ -28,6 +28,7 @@ export default function ErrorPage404() {
           >
             На главную
           </button>
+          
         </div>
       </div>
     </div>

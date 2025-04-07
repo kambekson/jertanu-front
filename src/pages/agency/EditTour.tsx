@@ -12,7 +12,42 @@ interface TourFormData {
   discountPrice?: number;
   dates: string;
   isActive: boolean;
+  services: string[];
 }
+
+interface ServiceOption {
+  id: string;
+  title: string;
+  description: string;
+}
+
+const serviceOptions: ServiceOption[] = [
+  {
+    id: 'guide',
+    title: 'Экскурсовод',
+    description: 'Экскурсовод для каждого направления или объекта включен'
+  },
+  {
+    id: 'food',
+    title: 'Питание',
+    description: 'Завтрак и обед включены'
+  },
+  {
+    id: 'room_service',
+    title: 'Услуги в номере',
+    description: 'Уборка в номере, прачечная, услуги в номере и т.д.'
+  },
+  {
+    id: 'transfer',
+    title: 'Трансфер',
+    description: 'Все необходимые транспортные средства предоставлены'
+  },
+  {
+    id: 'tickets',
+    title: 'Билеты',
+    description: 'Все необходимые билеты включены'
+  }
+];
 
 export default function EditTour() {
   const { id } = useParams();
@@ -25,7 +60,8 @@ export default function EditTour() {
     price: 0,
     discountPrice: undefined,
     dates: '',
-    isActive: true
+    isActive: true,
+    services: []
   });
 
   useEffect(() => {
@@ -39,7 +75,8 @@ export default function EditTour() {
         price: 20900,
         discountPrice: 18900,
         dates: '12 - 14 апреля',
-        isActive: true
+        isActive: true,
+        services: ['guide', 'food', 'transfer'] // Пример предварительно выбранных услуг
       };
       
       setFormData(mockTourData);
@@ -52,10 +89,21 @@ export default function EditTour() {
     
     if (type === 'checkbox') {
       const target = e.target as HTMLInputElement;
-      setFormData({
-        ...formData,
-        [name]: target.checked
-      });
+      if (name === 'isActive') {
+        setFormData({
+          ...formData,
+          isActive: target.checked
+        });
+      } else if (name.startsWith('service_')) {
+        const serviceId = name.replace('service_', '');
+        const updatedServices = target.checked
+          ? [...formData.services, serviceId]
+          : formData.services.filter(id => id !== serviceId);
+        setFormData({
+          ...formData,
+          services: updatedServices
+        });
+      }
     } else if (name === 'price' || name === 'discountPrice') {
       setFormData({
         ...formData,
@@ -148,6 +196,34 @@ export default function EditTour() {
                     } as React.ChangeEvent<HTMLInputElement>);
                   }}
                 />
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Включенные услуги
+                  </label>
+                  <div className="space-y-4">
+                    {serviceOptions.map((service) => (
+                      <div key={service.id} className="flex items-start">
+                        <div className="flex items-center h-5">
+                          <input
+                            type="checkbox"
+                            id={`service_${service.id}`}
+                            name={`service_${service.id}`}
+                            checked={formData.services.includes(service.id)}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="ml-3">
+                          <label htmlFor={`service_${service.id}`} className="font-medium text-gray-700">
+                            {service.title}
+                          </label>
+                          <p className="text-gray-500 text-sm">{service.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
               
               <div className="space-y-4">
@@ -208,7 +284,7 @@ export default function EditTour() {
                     id="isActive"
                     name="isActive"
                     checked={formData.isActive}
-                    onChange={(e) => setFormData({...formData, isActive: e.target.checked})}
+                    onChange={handleInputChange}
                     className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <label htmlFor="isActive" className="ml-2 block text-sm text-gray-700">

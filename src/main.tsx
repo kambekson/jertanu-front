@@ -5,10 +5,6 @@ import App from './App.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './pages/ErrorPage.tsx';
 import HomePage from './pages/user/HomePage.tsx';
-// import LoginPage from './pages/auth/LoginPage.tsx';
-// import SignupPage from './pages/auth/SignupPage.tsx';
-// import ForgotPasswordPage from './pages/auth/ForgotPasswordPage.tsx';
-// import ResetPasswordPage from './pages/auth/ResetPasswordPage.tsx';
 import TermsOfService from './pages/TermsOfService.tsx';
 import Profile from './pages/user/Profile.tsx';
 import TourInfo from './pages/user/TourInfo.tsx';
@@ -110,28 +106,6 @@ const router = createBrowserRouter([
         path: 'agency/promos',
         element: <Promos />,
       },
-      
-      // {
-      //   path: 'auth',
-      //   children: [
-      //     {
-      //       path: 'login',
-      //       element: <LoginPage />,
-      //     },
-      //     {
-      //       path: 'signup',
-      //       element: <SignupPage />,
-      //     },
-      //     {
-      //       path: 'forgot-password',
-      //       element: <ForgotPasswordPage />,
-      //     },
-      //     {
-      //       path: 'reset-password',
-      //       element: <ResetPasswordPage />,
-      //     },
-      //   ],
-      // },
     ],
   },
 ]);
