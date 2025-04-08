@@ -4,6 +4,7 @@ import Button from '../UI/Button';
 import logo from '../../assets/jertanu-logo.svg';
 import { User, Heart, Calendar, LogOut } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { apiService } from '../../services/apiService';
 
 export default function Header() {
   const [isAuthOpen, setAuthOpen] = useState(false);
@@ -28,26 +29,7 @@ export default function Header() {
 
       try {
         console.log('Checking authentication with token');
-        const response = await fetch(`${API_URL}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          console.error('Authentication check failed:', response.status);
-          if (response.status === 401) {
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
-            localStorage.removeItem('token');
-            setIsLoggedIn(false);
-            setUserFullName('');
-            return;
-          }
-          throw new Error('Failed to fetch user data');
-        }
-
-        const userData = await response.json();
+        const userData = await apiService.get('/users/me');
         console.log('User data received:', userData);
 
         // Получение имени из данных профиля как в Profile компоненте
@@ -89,13 +71,15 @@ export default function Header() {
   }, [isDropdownOpen]);
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setUserFullName('');
-    setIsDropdownOpen(false);
-    window.location.reload();
+    // Используем функцию logout из authService
+    import('./../../services/authService').then(module => {
+      const { authService } = module;
+      authService.logout();
+      setIsLoggedIn(false);
+      setUserFullName('');
+      setIsDropdownOpen(false);
+      window.location.reload();
+    });
   };
 
   return (
@@ -112,13 +96,14 @@ export default function Header() {
                   <Link to="/tours">Направления</Link>
                 </li>
               )}
-              {!isLoggedIn && (
+              {!isLoggedIn && isAgencyPage && (
                 <li className="px-2 font-normal font-base">
-                  {isAgencyPage ? (
-                    <Link to="/">Для туристов</Link>
-                  ) : (
-                    <Link to="/agency">Для турагентств</Link>
-                  )}
+                  <Link to="/">Для туристов</Link>
+                </li>
+              )}
+              {!isLoggedIn && !isAgencyPage && (
+                <li className="px-2 font-normal font-base">
+                  <Link to="/agency">Для турагентств</Link>
                 </li>
               )}
             </ul>

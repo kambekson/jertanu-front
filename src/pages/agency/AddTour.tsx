@@ -1,8 +1,10 @@
-import { useState, useRef, DragEvent } from 'react';
+import { useState, useRef, DragEvent, useEffect, RefObject } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, X, Upload } from 'lucide-react';
 import Button from '../../components/UI/Button';
-import Input from '../../components/UI/Input';
+import Input, { InputProps } from '../../components/UI/Input';
+import DatePicker from '../../components/UI/DatePicker';
+import { apiService } from '../../services/apiService';
 
 interface ItineraryStop {
   id: string;
@@ -43,6 +45,17 @@ interface ServiceOption {
   id: string;
   title: string;
   description: string;
+}
+
+interface TourType {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface InputWithRefProps extends InputProps {
+  inputRef?: React.RefObject<HTMLInputElement>;
+  onFocus?: () => void;
 }
 
 const serviceOptions: ServiceOption[] = [
@@ -91,11 +104,7 @@ const tourStatuses: TourStatus[] = [
   },
 ];
 
-interface TourType {
-  id: string;
-  title: string;
-  description: string;
-}
+
 
 const tourTypes: TourType[] = [
   {
@@ -131,6 +140,25 @@ export default function AddTour() {
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+
+  const cities = [
+    "Абай", "Акколь", "Аксай", "Аксу", "Актау", "Актобе", "Алатау", "Алга", "Алматы",
+    "Алтай", "Арал", "Аркалык", "Арыс", "Астана", "Атбасар", "Атырау", "Аягоз",
+    "Байконыр", "Балхаш", "Булаево", "Державинск", "Ерейментау", "Есик", "Есиль",
+    "Жанаозен", "Жанатас", "Жаркент", "Жезказган", "Жем", "Жетысай", "Житикара",
+    "Зайсан", "Казалинск", "Кандыагаш", "Караганды", "Каражал", "Каратау",
+    "Каркаралинск", "Каскелен", "Кентау", "Кокшетау", "Конаев", "Костанай", "Косшы",
+    "Кулсары", "Курчатов", "Кызылорда", "Ленгер", "Лисаковск", "Макинск", "Семей",
+    "Сергеевка", "Серебрянск", "Степногорск", "Степняк", "Тайынша", "Талгар",
+    "Талдыкорган", "Тараз", "Текели", "Темир", "Темиртау", "Тобыл", "Туркестан",
+    "Уральск", "Усть-Каменогорск", "Ушарал", "Уштобе", "Форт-Шевченко", "Хромтау",
+    "Шалкар", "Шар", "Шардара", "Шахтинск", "Шемонаиха", "Шу", "Шымкент", "Щучинск",
+    "Экибастуз", "Эмба"
+  ];
 
   const [formData, setFormData] = useState<TourFormData>({
     title: '',
@@ -138,8 +166,8 @@ export default function AddTour() {
     images: [],
     price: 0,
     discountPrice: undefined,
-    startDate: '',
-    endDate: '',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
     city: '',
     type: '', 
     isActive: true,
@@ -154,6 +182,15 @@ export default function AddTour() {
     description: '',
     duration: ''
   });
+
+  // Update form data when dates change
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0]
+    }));
+  }, [startDate, endDate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -178,13 +215,27 @@ export default function AddTour() {
     } else if (name === 'price' || name === 'discountPrice') {
       setFormData({
         ...formData,
-        [name]: value === '' ? undefined : parseInt(value, 10)
+        [name]: value === '' ? 0 : isNaN(parseInt(value, 10)) ? 0 : parseInt(value, 10)
       });
     } else {
       setFormData({
         ...formData,
         [name]: value
       });
+
+      // Handle city suggestions
+      if (name === 'city') {
+        if (value) {
+          const filteredSuggestions = cities.filter(city => 
+            city.toLowerCase().includes(value.toLowerCase())
+          );
+          setSuggestions(filteredSuggestions);
+          setShowSuggestions(true);
+        } else {
+          setSuggestions([]);
+          setShowSuggestions(false);
+        }
+      }
     }
   };
 
@@ -276,27 +327,90 @@ export default function AddTour() {
     }));
   };
 
+  const handleCitySelect = (city: string) => {
+    setFormData({
+      ...formData,
+      city
+    });
+    setShowSuggestions(false);
+  };
+
+  // For city input ref
+  const cityInputRef = useRef<HTMLDivElement>(null);
+
+  // Handle city input focus
+  const handleCityFocus = () => {
+    if (formData.city) {
+      const filteredSuggestions = cities.filter(city => 
+        city.toLowerCase().includes(formData.city.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions(cities);
+    }
+    setShowSuggestions(true);
+  };
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cityInputRef.current && !cityInputRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Prevent form submission from date picker
+  const preventFormSubmission = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
+    
     try {
+      // Валидация перед отправкой формы
+      if (formData.title.trim() === '') {
+        throw new Error('Название тура не может быть пустым');
+      }
+      
+      if (formData.city.trim() === '') {
+        throw new Error('Укажите город');
+      }
+      
+      if (formData.type === '') {
+        throw new Error('Выберите тип тура');
+      }
+      
+      if (formData.description.trim() === '') {
+        throw new Error('Добавьте описание тура');
+      }
+      
+      if (formData.itinerary.length === 0) {
+        throw new Error('Добавьте хотя бы одну точку маршрута');
+      }
+
       // Валидация числовых полей
-      if (isNaN(formData.price) || formData.price <= 0) {
+      if (formData.price === undefined || isNaN(formData.price) || formData.price <= 0) {
         throw new Error('Цена должна быть положительным числом');
       }
-      if (formData.discountPrice && (isNaN(formData.discountPrice) || formData.discountPrice <= 0)) {
+      
+      if (formData.discountPrice !== undefined && (isNaN(formData.discountPrice) || formData.discountPrice <= 0)) {
         throw new Error('Цена со скидкой должна быть положительным числом');
       }
-      if (formData.discountPrice && formData.discountPrice >= formData.price) {
+      
+      if (formData.discountPrice !== undefined && formData.discountPrice >= formData.price) {
         throw new Error('Цена со скидкой должна быть меньше обычной цены');
       }
 
-      // Получаем токен из localStorage
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Не авторизован');
-      }
+      // After validation, proceed with form submission
+      setLoading(true);
 
       // Подготовка данных для отправки
       const serviceNames = formData.services.map(serviceId => {
@@ -314,13 +428,6 @@ export default function AddTour() {
       // Получение статуса тура
       const status = formData.statuses.length > 0 ? formData.statuses[0] : 'seasonal';
 
-      // Загрузка изображений и получение URL
-      // В реальном приложении здесь будет загрузка файлов на сервер
-      // и получение URL для каждого изображения
-      const imageUrls = formData.images.length > 0 
-        ? ['https://example.com/placeholder-image.jpg'] 
-        : [''];
-
       // Создание объекта данных для API
       const tourData = {
         title: formData.title,
@@ -334,20 +441,31 @@ export default function AddTour() {
         endDate: formData.endDate,
         isActive: formData.isActive,
         services: serviceNames,
-        itinerary: itineraryForApi,
-        images: imageUrls
+        itinerary: itineraryForApi
       };
 
       console.log('Отправка данных на API:', tourData);
+      console.log('Количество изображений:', formData.images.length);
 
-      // Отправка данных на сервер
+      // Отправка данных на сервер через FormData
+      const formDataForSubmit = new FormData();
+      formDataForSubmit.append('data', JSON.stringify(tourData));
+      formData.images.forEach(image => {
+        formDataForSubmit.append('images', image.file);
+      });
+
+      // Используем fetch напрямую, так как apiService не поддерживает FormData
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        throw new Error('Не найден токен авторизации');
+      }
+
       const response = await fetch('http://localhost:3000/api/tours', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(tourData)
+        body: formDataForSubmit
       });
 
       if (!response.ok) {
@@ -365,83 +483,318 @@ export default function AddTour() {
       navigate('/agency/my-tours');
     } catch (error) {
       console.error('Ошибка при отправке формы:', error);
-      alert('Произошла ошибка при создании тура. Пожалуйста, попробуйте снова.');
+      // Show a more specific error message
+      alert(error instanceof Error ? error.message : 'Произошла ошибка при создании тура. Пожалуйста, попробуйте снова.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="container mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <div className="flex items-center mb-6">
-            <Link to="/agency/my-tours" className="mr-4 text-gray-600 hover:text-gray-800">
-              <ArrowLeft size={24} />
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Добавление нового тура</h1>
+    <div className="min-h-screen bg-gray-100 py-8 px-4">
+      <div className="container mx-auto max-w-6xl">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Link 
+                to="/agency/my-tours" 
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft size={24} className="text-gray-600" />
+              </Link>
+              <h1 className="text-2xl font-bold text-gray-900">Новый тур</h1>
+            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left Column */}
-              <div className="space-y-6">
-                {/* Text Fields */}
-                <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-4">
-                  <Input
-                    id="title"
-                    name="title"
-                    label="Название тура"
-                    placeholder="Например: Тур на Чарынский каньон"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                  />
-
-                  <Input
-                    id="city"
-                    name="city"
-                    label="Город"
-                    placeholder="Например: Алматы"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                  />
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Basic Info Card */}
+                <div className="bg-gray-50 rounded-lg p-6 space-y-6">
+                  <div className="space-y-4">
                     <Input
-                      id="startDate"
-                      name="startDate"
-                      label="Дата начала"
-                      placeholder="ГГГГ-ММ-ДД"
-                      type="date"
-                      value={formData.startDate}
+                      id="title"
+                      name="title"
+                      label="Название тура"
+                      placeholder="Например: Тур на Чарынский каньон"
+                      value={formData.title}
                       onChange={handleInputChange}
                     />
+    
+                    <div className="relative" ref={cityInputRef}>
+                      <div className="space-y-1">
+                        <label htmlFor="city" className="block text-gray-700 mb-1">
+                          Город
+                        </label>
+                        <input
+                          type="text"
+                          id="city"
+                          name="city"
+                          placeholder="Например: Алматы"
+                          value={formData.city}
+                          onChange={handleInputChange}
+                          onFocus={handleCityFocus}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      
+                      {showSuggestions && suggestions.length > 0 && (
+                        <div className="absolute z-10 w-full mt-1 bg-white shadow-lg max-h-60 rounded-md overflow-auto">
+                          <ul className="py-1">
+                            {suggestions.map((city, index) => (
+                              <li 
+                                key={index}
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                onClick={() => handleCitySelect(city)}
+                              >
+                                {city}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
 
                     <Input
-                      id="endDate"
-                      name="endDate"
-                      label="Дата окончания"
-                      placeholder="ГГГГ-ММ-ДД"
-                      type="date"
-                      value={formData.endDate}
+                      id="description"
+                      name="description"
+                      label="Описание"
+                      placeholder="Подробное описание тура..."
+                      type="textarea"
+                      value={formData.description}
                       onChange={handleInputChange}
                     />
                   </div>
 
-                  <Input
-                    id="description"
-                    name="description"
-                    label="Описание"
-                    placeholder="Подробное описание тура..."
-                    type="textarea"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="startDate" className="block text-gray-700 mb-1">
+                        Дата начала
+                      </label>
+                      <div 
+                        className="w-full p-3 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500"
+                        onClick={preventFormSubmission}
+                      >
+                        <DatePicker 
+                          selectedDate={startDate} 
+                          setSelectedDate={setStartDate} 
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label htmlFor="endDate" className="block text-gray-700 mb-1">
+                        Дата окончания
+                      </label>
+                      <div 
+                        className="w-full p-3 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500"
+                        onClick={preventFormSubmission}
+                      >
+                        <DatePicker 
+                          selectedDate={endDate} 
+                          setSelectedDate={setEndDate} 
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Tour Type */}
-                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Тип тура</h3>
+                {/* Itinerary Card */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-gray-900">Маршрут</h3>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {formData.itinerary.map((stop) => (
+                      <div 
+                        key={stop.id} 
+                        className="bg-gray-50 rounded-lg p-4 relative hover:shadow-md transition-shadow"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => removeItineraryStop(stop.id)}
+                          className="absolute top-2 right-2 p-1 hover:bg-gray-200 rounded-full transition-colors"
+                        >
+                          <X size={20} className="text-gray-500" />
+                        </button>
+                        <h4 className="text-sm font-medium text-gray-900 pr-8">{stop.location}</h4>
+                        <p className="text-sm text-gray-600 mt-1 whitespace-pre-line">{stop.description}</p>
+                        <p className="text-sm text-gray-500 mt-1">Длительность: {stop.duration}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                    <Input
+                      id="location"
+                      name="location"
+                      label="Локация"
+                      placeholder="Например: День 1: Алматы"
+                      value={newStop.location}
+                      onChange={handleNewStopChange}
+                    />
+                    <Input
+                      id="stopDescription"
+                      name="description"
+                      label="Описание"
+                      placeholder="Описание остановки..."
+                      type="textarea"
+                      value={newStop.description}
+                      onChange={handleNewStopChange}
+                    />
+                    <Input
+                      id="duration"
+                      name="duration"
+                      label="Длительность"
+                      placeholder="Например: 1 день"
+                      value={newStop.duration}
+                      onChange={handleNewStopChange}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={addItineraryStop}
+                      className="w-full"
+                    >
+                      Добавить остановку
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Services Card */}
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Услуги</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {serviceOptions.map((service) => (
+                      <div key={service.id} className="flex items-start">
+                        <input
+                          type="checkbox"
+                          id={`service_${service.id}`}
+                          name={`service_${service.id}`}
+                          checked={formData.services.includes(service.id)}
+                          onChange={handleInputChange}
+                          className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <label htmlFor={`service_${service.id}`} className="ml-3">
+                          <span className="block text-sm font-medium text-gray-700">{service.title}</span>
+                          <span className="block text-sm text-gray-500">{service.description}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-6">
+              
+                {/* Images Card */}
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Фотографии</h3>
+                  <div
+                    className={`border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition-colors ${
+                      isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:bg-gray-50'
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      className="hidden"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => e.target.files && handleImageUpload(e.target.files)}
+                    />
+                    <Upload className="mx-auto h-10 w-10 text-gray-400" />
+                    <p className="mt-2 text-sm text-gray-600">Перетащите или выберите фотографии</p>
+                    <p className="mt-1 text-xs text-gray-500">PNG, JPG, WEBP до 10МБ</p>
+                  </div>
+
+                  {formData.images.length > 0 && (
+                    <div className="mt-4 space-y-3">
+                      {formData.images.map((image) => (
+                        <div key={image.id} className="relative group rounded-md overflow-hidden">
+                          <img
+                            src={image.preview}
+                            alt="Preview"
+                            className="w-full h-32 object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(image.id)}
+                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Pricing & Status Card */}
+                <div className="bg-gray-50 rounded-lg p-6 space-y-6">
+                  <div className="space-y-4">
+                    <Input
+                      id="price"
+                      name="price"
+                      label="Цена (₸)"
+                      placeholder="50000"
+                      type="number"
+                      value={formData.price === 0 ? '' : formData.price.toString()}
+                      onChange={handleInputChange}
+                    />
+                    <Input
+                      id="discountPrice"
+                      name="discountPrice"
+                      label="Цена со скидкой (₸)"
+                      placeholder="45000"
+                      type="number"
+                      value={formData.discountPrice === 0 ? '' : formData.discountPrice?.toString() || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        name="isActive"
+                        checked={formData.isActive}
+                        onChange={handleInputChange}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label className="text-sm text-gray-700">Активный тур</label>
+                    </div>
+
+                    <div className="space-y-3">
+                      {tourStatuses.map((status) => (
+                        <div key={status.id} className="flex items-start">
+                          <input
+                            type="checkbox"
+                            id={`status_${status.id}`}
+                            checked={formData.statuses.includes(status.id)}
+                            onChange={() => handleStatusChange(status.id)}
+                            className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <label htmlFor={`status_${status.id}`} className="ml-3">
+                            <span className="block text-sm font-medium text-gray-700">{status.title}</span>
+                            <span className="block text-sm text-gray-500">{status.description}</span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                 {/* Tour Type Card */}
+                 <div className="bg-gray-50 rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Тип тура</h3>
                   <div className="space-y-3">
                     {tourTypes.map((type) => (
                       <div key={type.id} className="flex items-start">
@@ -461,210 +814,21 @@ export default function AddTour() {
                     ))}
                   </div>
                 </div>
-
-                {/* Statuses */}
-                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Статус тура</h3>
-                  <div className="space-y-3">
-                    {tourStatuses.map((status) => (
-                      <div key={status.id} className="flex items-start">
-                        <input
-                          type="checkbox"
-                          id={`status_${status.id}`}
-                          checked={formData.statuses.includes(status.id)}
-                          onChange={() => handleStatusChange(status.id)}
-                          className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <label htmlFor={`status_${status.id}`} className="ml-3">
-                          <span className="block text-sm font-medium text-gray-700">{status.title}</span>
-                          <span className="block text-sm text-gray-500">{status.description}</span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Services */}
-                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Включенные услуги</h3>
-                  <div className="space-y-3">
-                    {serviceOptions.map((service) => (
-                      <div key={service.id} className="flex items-start">
-                        <input
-                          type="checkbox"
-                          id={`service_${service.id}`}
-                          name={`service_${service.id}`}
-                          checked={formData.services.includes(service.id)}
-                          onChange={handleInputChange}
-                          className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <label htmlFor={`service_${service.id}`} className="ml-3">
-                          <span className="block text-sm font-medium text-gray-700">{service.title}</span>
-                          <span className="block text-sm text-gray-500">{service.description}</span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Itinerary */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium text-gray-900">План путешествия</h3>
-                  {formData.itinerary.map((stop) => (
-                    <div key={stop.id} className="bg-gray-50 p-4 rounded-lg shadow-sm relative">
-                      <button
-                        type="button"
-                        onClick={() => removeItineraryStop(stop.id)}
-                        className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-                      >
-                        <X size={20} />
-                      </button>
-                      <h4 className="text-sm font-medium text-gray-900">{stop.location}</h4>
-                      <p className="text-sm text-gray-600 mt-1 whitespace-pre-line">{stop.description}</p>
-                      <p className="text-sm text-gray-500 mt-1">Длительность: {stop.duration}</p>
-                    </div>
-                  ))}
-
-                  <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-3">
-                    <Input
-                      id="location"
-                      name="location"
-                      label=""
-                      placeholder="Например: День 1: Алматы"
-                      value={newStop.location}
-                      onChange={handleNewStopChange}
-                    />
-
-                    <Input
-                      id="stopDescription"
-                      name="description"
-                      label=""
-                      placeholder="Описание остановки..."
-                      type="textarea"
-                      value={newStop.description}
-                      onChange={handleNewStopChange}
-                    />
-
-                    <Input
-                      id="duration"
-                      name="duration"
-                      label=""
-                      placeholder="Например: 1 день"
-                      value={newStop.duration}
-                      onChange={handleNewStopChange}
-                    />
-
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={addItineraryStop}
-                    >
-                      Добавить остановку
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column */}
-              <div className="space-y-6">
-                {/* Image Upload */}
-                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Фотографии тура</h3>
-                  <div
-                    className={`border-2 border-dashed rounded-md p-6 text-center ${
-                      isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white'
-                    }`}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      className="hidden"
-                      multiple
-                      accept="image/*"
-                      onChange={(e) => e.target.files && handleImageUpload(e.target.files)}
-                    />
-                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                    <p className="mt-2 text-sm text-gray-600">
-                      Перетащите фотографии сюда или нажмите для выбора
-                    </p>
-                    <p className="mt-1 text-xs text-gray-500">PNG, JPG, WEBP до 10МБ</p>
-                  </div>
-
-                  {formData.images.length > 0 && (
-                    <div className="mt-4 grid grid-cols-2 gap-4">
-                      {formData.images.map((image) => (
-                        <div key={image.id} className="relative group">
-                          <img
-                            src={image.preview}
-                            alt="Preview"
-                            className="w-full h-40 object-cover rounded-md shadow-sm"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(image.id)}
-                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Pricing */}
-                <div className="space-y-4">
-                  <Input
-                    id="price"
-                    name="price"
-                    label="Цена (₸)"
-                    placeholder="50000"
-                    type="number"
-                    value={formData.price.toString()}
-                    onChange={handleInputChange}
-                  />
-
-                  <Input
-                    id="discountPrice"
-                    name="discountPrice"
-                    label="Цена со скидкой (₸, необязательно)"
-                    placeholder="45000"
-                    type="number"
-                    value={formData.discountPrice?.toString() || ''}
-                    onChange={handleInputChange}
-                  />
-
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="isActive"
-                      checked={formData.isActive}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                    />
-                    <label className="ml-2 text-sm text-gray-700">Активный тур</label>
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* Form Actions */}
-            <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
+            {/* Footer */}
+            <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-4">
               <Link to="/agency/my-tours">
-                <Button variant="neutral">Отмена</Button>
+                <Button variant="neutral" className="px-6">Отмена</Button>
               </Link>
-              <Button type="submit" variant="primary" disabled={loading}>
-                {loading ? (
-                  'Сохранение...'
-                ) : (
-                  <span>
-                    Создать тур
-                  </span>
-                )}
+              <Button 
+                type="submit" 
+                variant="primary" 
+                disabled={loading}
+                className="px-6"
+              >
+                {loading ? 'Сохранение...' : 'Создать тур'}
               </Button>
             </div>
           </form>

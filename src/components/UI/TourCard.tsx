@@ -35,10 +35,12 @@ const TourCard = ({ tour }: { tour: Tour }) => {
         <div className="py-1">
           <div className="flex justify-between items-center">
             <h3 className={`font-bold text-lg ${tour.textColor || ''}`}>{tour.title}</h3>
-            <div className="flex items-center mt-2">
-              <FaStar className={tour.textColor || 'text-black'} />
-              <span className={`ml-1 ${tour.textColor || ''}`}>{tour.rating}</span>
-            </div>
+            {tour.rating > 0 && (
+              <div className="flex items-center mt-2">
+                <FaStar className={tour.textColor || 'text-black'} />
+                <span className={`ml-1 ${tour.textColor || ''}`}>{tour.rating}</span>
+              </div>
+            )}
           </div>
           <p className={tour.textColor || 'text-gray-600'}>{tour.city}</p>
           <div className="flex justify-between items-center">

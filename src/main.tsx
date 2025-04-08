@@ -23,6 +23,7 @@ import Statistics from './pages/agency/Statistics.tsx';
 import Ads from './pages/agency/Ads.tsx';
 import Promos from './pages/agency/Promos.tsx';
 import HotTours from './pages/agency/HotTours.tsx';
+import AboutAgency from './pages/agency/AboutAgency.tsx';
 
 const router = createBrowserRouter([
   {
@@ -106,6 +107,10 @@ const router = createBrowserRouter([
         path: 'agency/promos',
         element: <Promos />,
       },
+      {
+        path: 'agency/about',
+        element: <AboutAgency />,
+      }
     ],
   },
 ]);

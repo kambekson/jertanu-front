@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Mail, LogOut } from 'lucide-react';
+import { authService } from '../../services/authService';
 
 interface User {
   id: number;
@@ -221,7 +222,7 @@ const AgencySidebar = () => {
         <button 
           className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-red-50 border-t border-gray-100"
           onClick={() => {
-            localStorage.removeItem('token');
+            authService.logout();
             localStorage.removeItem('user');
             window.location.href = '/agency/login';
           }}

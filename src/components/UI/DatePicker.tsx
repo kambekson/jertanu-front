@@ -3,9 +3,11 @@ import { useState, useEffect, useRef } from 'react';
 export default function DatePicker({
   selectedDate,
   setSelectedDate,
+  className = '',
 }: {
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
+  className?: string;
 }) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -50,14 +52,18 @@ export default function DatePicker({
     return days;
   };
 
-  const prevMonth = () => {
+  const prevMonth = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setCurrentMonth(currentMonth === 0 ? 11 : currentMonth - 1);
     if (currentMonth === 0) {
       setCurrentYear(currentYear - 1);
     }
   };
 
-  const nextMonth = () => {
+  const nextMonth = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setCurrentMonth(currentMonth === 11 ? 0 : currentMonth + 1);
     if (currentMonth === 11) {
       setCurrentYear(currentYear + 1);
@@ -106,28 +112,38 @@ export default function DatePicker({
     };
   }, []);
 
+  const handleDateClick = (date: Date, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedDate(date);
+    setShowCalendar(false);
+  };
+
   return (
-    <div className="relative" ref={calendarRef}>
-      <label
-        htmlFor="calendar"
-        className="block overflow-hidden rounded border border-transparent px-3 focus-within:bg-orange-50 w-52"
-      >
-        <span className="text-xs font-medium text-gray-700">Дата</span>
-        <input
-          type="text"
-          value={selectedDate ? formatDate(selectedDate) : ''}
-          placeholder="Выберите дату"
-          id="calendar"
-          readOnly
-          className="w-full border-none p-0 focus:border-transparent focus:ring-0 focus:outline-hidden sm:text-base"
-          onClick={() => setShowCalendar(!showCalendar)}
-        />
-      </label>
+    <div className={`relative ${className}`} ref={calendarRef}>
+      <input
+        type="text"
+        value={selectedDate ? formatDate(selectedDate) : ''}
+        placeholder="Выберите дату"
+        readOnly
+        className="w-full bg-transparent border-none p-0 focus:border-transparent focus:ring-0 focus:outline-none text-sm"
+        onClick={(e) => {
+          e.preventDefault();
+          setShowCalendar(!showCalendar);
+        }}
+      />
 
       {showCalendar && (
-        <div className="absolute top-12 left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-50">
+        <div 
+          className="absolute top-10 left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-50 w-64"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="flex justify-between items-center mb-4">
-            <button onClick={prevMonth} className="p-2 text-gray-600 hover:text-gray-900">
+            <button 
+              onClick={prevMonth} 
+              className="p-2 text-gray-600 hover:text-gray-900"
+              type="button"
+            >
               <svg
                 width="24"
                 height="25"
@@ -138,16 +154,20 @@ export default function DatePicker({
                 <path
                   d="M15 18.5L9 12.5L15 6.5"
                   stroke="#3A4B4F"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </button>
             <h2 className="text-lg font-medium">
               {getMonthName(currentMonth)} {currentYear}
             </h2>
-            <button onClick={nextMonth} className="p-2 text-gray-600 hover:text-gray-900">
+            <button 
+              onClick={nextMonth} 
+              className="p-2 text-gray-600 hover:text-gray-900"
+              type="button"
+            >
               <svg
                 width="24"
                 height="25"
@@ -158,9 +178,9 @@ export default function DatePicker({
                 <path
                   d="M9 18.5L15 12.5L9 6.5"
                   stroke="#3A4B4F"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </button>
@@ -184,10 +204,7 @@ export default function DatePicker({
                   ${isToday(dayObj.date) ? 'bg-gray-200' : ''}
                   ${isSelected(dayObj.date) ? 'bg-blue-500 text-white' : 'hover:bg-orange-200'}
                 `}
-                  onClick={() => {
-                    setSelectedDate(dayObj.date);
-                    setShowCalendar(false);
-                  }}
+                  onClick={(e) => handleDateClick(dayObj.date, e)}
                 >
                   {dayObj.date.getDate()}
                 </div>

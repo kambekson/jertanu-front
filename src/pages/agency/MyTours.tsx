@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Plus, LogOut, Edit, Eye, Trash2 } from 'lucide-react';
 import Button from '../../components/UI/Button';
 import AgencySidebar from '../../components/layout/AgencySidebar';
+import { apiService } from '../../services/apiService';
 
 interface TourCardProps {
   id: number;
@@ -11,6 +12,7 @@ interface TourCardProps {
   price: number;
   isActive: boolean;
   onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 interface User {
@@ -38,15 +40,23 @@ interface User {
   };
 }
 
+interface Tour {
+  id: number;
+  title: string;
+  imageUrls?: string[] | null;
+  price: number;
+  isActive: boolean;
+}
+
 const TourCard: React.FC<TourCardProps> = ({ 
   id,
   title, 
   imageUrl, 
   price, 
   isActive,
-  onEdit
+  onEdit,
+  onDelete
 }) => {
-  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   
   return (
@@ -72,49 +82,28 @@ const TourCard: React.FC<TourCardProps> = ({
       </div>
       
       <div className="p-4 border-t border-gray-100">
-        <button 
-          className="flex items-center text-gray-500 text-sm hover:text-gray-700"
-          onClick={() => setExpanded(!expanded)}
-        >
-          <span>Подробнее</span>
-          <svg 
-            className={`ml-1 w-4 h-4 transition-transform ${expanded ? 'rotate-180' : ''}`} 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
+        <div className="flex gap-2">
+          <Button 
+            variant="neutral" 
+            className="text-sm"
+            onClick={() => onEdit(id)}
           >
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-        
-        {expanded && (
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <p className="text-sm text-gray-600 mb-2">
-              Дополнительная информация о туре будет здесь...
-            </p>
-            <div className="flex gap-2 mt-4">
-              <Button 
-                variant="neutral" 
-                className="text-sm"
-                onClick={() => onEdit(id)}
-              >
-                <Edit size={14} className="mr-1" />
-                Редактировать
-              </Button>
-              <Button variant="neutral" className="text-sm">
-                <Eye size={14} className="mr-1" />
-                Просмотр
-              </Button>
-              <Button variant="neutral" className="text-sm text-red-500">
-                <Trash2 size={14} className="mr-1" />
-                Удалить
-              </Button>
-            </div>
-          </div>
-        )}
+            <Edit size={14} className="mr-1" />
+            Редактировать
+          </Button>
+          <Button variant="neutral" className="text-sm">
+            <Eye size={14} className="mr-1" />
+            Просмотр
+          </Button>
+          <Button 
+            variant="neutral" 
+            className="text-sm text-red-500"
+            onClick={() => onDelete(id)}
+          >
+            <Trash2 size={14} className="mr-1" />
+            Удалить
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -122,6 +111,10 @@ const TourCard: React.FC<TourCardProps> = ({
 
 export default function MyTours() {
   const [user, setUser] = useState<User | null>(null);
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -135,6 +128,25 @@ export default function MyTours() {
       }
     }
   }, []);
+  
+  // Функция для загрузки списка туров
+  const fetchTours = async () => {
+    try {
+      setLoading(true);
+      const data = await apiService.get('/tours/agency/my');
+      setTours(data);
+      setError(null);
+    } catch (err) {
+      console.error('Ошибка при загрузке туров:', err);
+      setError(err instanceof Error ? err.message : 'Произошла ошибка при загрузке туров');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTours();
+  }, []);
 
   // Обработчик для кнопки "Редактировать"
   const handleEditTour = (id: number) => {
@@ -146,44 +158,59 @@ export default function MyTours() {
     navigate('/agency/tour/add');
   };
 
-  // Временные данные для демонстрации
-  const myTours = [
-    {
-      id: 1,
-      title: 'Чарынский каньон',
-      imageUrl: 'https://images.unsplash.com/photo-1594059487253-28077a2170c4?q=80&w=1000',
-      price: 20900,
-      isActive: true
-    },
-    {
-      id: 2,
-      title: 'Достопримечательности столицы',
-      imageUrl: 'https://images.unsplash.com/photo-1598935898639-81304079b70b?q=80&w=1000',
-      price: 100750,
-      isActive: true
-    },
-    {
-      id: 3,
-      title: 'Озеро Кольсай',
-      imageUrl: 'https://images.unsplash.com/photo-1622130557904-50e33fc886f9?q=80&w=1000',
-      price: 90900,
-      isActive: true
-    },
-    {
-      id: 4,
-      title: 'Озеро Кайынды',
-      imageUrl: 'https://images.unsplash.com/photo-1573125716783-5268669b8166?q=80&w=1000',
-      price: 50890,
-      isActive: true
-    },
-    {
-      id: 5,
-      title: 'Большой тур в Алматинскую область',
-      imageUrl: 'https://images.unsplash.com/photo-1598935898639-81304079b70b?q=80&w=1000',
-      price: 69890,
-      isActive: false
+  // Обработчик для кнопки "Удалить"
+  const handleDeleteTour = async (id: number) => {
+    if (!window.confirm('Вы уверены, что хотите удалить этот тур?')) {
+      return;
     }
-  ];
+
+    setDeleteLoading(true);
+    try {
+      await apiService.delete(`/tours/${id}`);
+      // Обновляем список туров после успешного удаления
+      await fetchTours();
+      alert('Тур успешно удален');
+    } catch (err) {
+      console.error('Ошибка при удалении тура:', err);
+      alert(err instanceof Error ? err.message : 'Произошла ошибка при удалении тура');
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-blue-50">
+        <div className="container mx-auto py-4 px-2">
+          <div className="flex flex-col md:flex-row">
+            <AgencySidebar />
+            <div className="w-full md:w-3/4">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="text-center">Загрузка туров...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-blue-50">
+        <div className="container mx-auto py-4 px-2">
+          <div className="flex flex-col md:flex-row">
+            <AgencySidebar />
+            <div className="w-full md:w-3/4">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="text-center text-red-500">{error}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -200,6 +227,7 @@ export default function MyTours() {
                 <Button 
                   variant="primary"
                   onClick={handleAddTour}
+                  disabled={deleteLoading}
                 >
                   <Plus size={16} className="mr-2" />
                   Добавить
@@ -207,17 +235,23 @@ export default function MyTours() {
               </div>
               
               <div className="space-y-4">
-                {myTours.map(tour => (
+                {tours.map(tour => (
                   <TourCard 
                     key={tour.id}
                     id={tour.id}
                     title={tour.title}
-                    imageUrl={tour.imageUrl}
+                    imageUrl={tour.imageUrls && tour.imageUrls.length > 0 ? tour.imageUrls[0] : 'https://placehold.co/600x400?text=No+Image'}
                     price={tour.price}
                     isActive={tour.isActive}
                     onEdit={handleEditTour}
+                    onDelete={handleDeleteTour}
                   />
                 ))}
+                {tours.length === 0 && (
+                  <div className="text-center text-gray-500 py-8">
+                    У вас пока нет созданных туров
+                  </div>
+                )}
               </div>
             </div>
           </div>

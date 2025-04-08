@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import TourCard from '../../UI/TourCard';
+import { Link } from 'react-router-dom';
 
 export interface Tour {
   img: string;
   city: string;
   title: string;
   rating: number;
+  totalReviews: number;
   dates: string;
   price: number;
   isNew?: boolean;
@@ -32,10 +34,10 @@ const HotTours = ({ tours }: { tours: Tour[] }) => {
   return (
     <div className="container">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="font-bold text-2xl">Популярные предложения</h1>
-        <a href="#" className="text-xl font-medium text-gray-500">
-          Посмотреть все
-        </a>
+        <h1 className="font-bold text-2xl">Горячие предложения</h1>
+        <Link to="/tours">
+          <span className="text-xl font-medium text-gray-500">Посмотреть все</span>
+        </Link>
       </div>
 
       <div className="relative overflow-hidden">
