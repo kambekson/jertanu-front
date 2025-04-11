@@ -32,12 +32,17 @@ export default function Header() {
         const userData = await apiService.get('/users/me');
         console.log('User data received:', userData);
 
+        // Сохраняем данные пользователя в localStorage
+        localStorage.setItem('user', JSON.stringify(userData));
+
         // Получение имени из данных профиля как в Profile компоненте
         let firstName = '';
         if (userData.profile?.firstName) {
           firstName = userData.profile.firstName;
         } else if (userData.firstName) {
           firstName = userData.firstName;
+        } else if (userData.profile?.companyName) {
+          firstName = userData.profile.companyName;
         } else {
           firstName = 'Пользователь';
         }

@@ -129,14 +129,7 @@ export default function Footer() {
             <a href="#" className="hover:text-gray-300">
               Политика конфиденциальности
             </a>
-            <div className="flex items-center">
-              <span className="mr-2">🌐</span>
-              <select className="bg-gray-700 text-white rounded px-2 py-1">
-                <option>Русский</option>
-                <option>English (US)</option>
-                <option>Қазақша</option>
-              </select>
-            </div>
+            
           </div>
         </div>
       </div>

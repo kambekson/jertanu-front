@@ -67,7 +67,7 @@ const AgencySidebar = () => {
           </div>
           <div>
             <h3 className="font-medium text-lg">{user?.profile?.companyName || 'Админ'}</h3>
-            <p className="text-sm text-gray-600">{user?.email || 'kaz.touragent@gmail.com'}</p>
+            <p className="text-sm text-gray-600">{user?.email || 'touragent@gmail.com'}</p>
           </div>
         </div>
       </div>

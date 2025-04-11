@@ -166,10 +166,50 @@ export default function MyTours() {
 
     setDeleteLoading(true);
     try {
-      await apiService.delete(`/tours/${id}`);
-      // Обновляем список туров после успешного удаления
+      console.log('Удаление тура с ID:', id);
+      
+      // Используем fetch напрямую, чтобы получить полный доступ к ответу
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        throw new Error('Не найден токен авторизации');
+      }
+      
+      // Обратите внимание на исправленный URL - явно указываем полный путь API
+      const url = `http://localhost:3000/api/tours/${id}`;
+      console.log('Отправка DELETE запроса на URL:', url);
+      
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('Статус ответа:', response.status);
+      
+      if (!response.ok) {
+        let errorMessage = `Ошибка сервера: ${response.status}`;
+        try {
+          const errorText = await response.text();
+          console.error('Текст ошибки:', errorText);
+          if (errorText) {
+            try {
+              const errorJson = JSON.parse(errorText);
+              errorMessage = errorJson.message || errorMessage;
+            } catch {
+              errorMessage = `${errorMessage} - ${errorText}`;
+            }
+          }
+        } catch (parseError) {
+          console.error('Не удалось прочитать текст ошибки', parseError);
+        }
+        
+        throw new Error(errorMessage);
+      }
+      
       await fetchTours();
-      alert('Тур успешно удален');
+      console.log('Тур успешно удален');
     } catch (err) {
       console.error('Ошибка при удалении тура:', err);
       alert(err instanceof Error ? err.message : 'Произошла ошибка при удалении тура');

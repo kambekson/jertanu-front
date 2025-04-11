@@ -10,21 +10,31 @@ import StarIcon from '../../assets/icons/StarIcon.svg';
 import HotelStarIcon from '../../assets/icons/HotelStarIcon.svg';
 import LocationIcon from '../../assets/icons/LocationIcon.svg';
 import DurationIcon from '../../assets/icons/DurationIcon.svg';
+import SeasonalIcon from '../../assets/icons/SeasonalIcon.svg';
+import NewDestinationIcon from '../../assets/icons/NewDestinationIcon.svg';
+import RegularIcon from '../../assets/icons/RegularIcon.svg';
+import GuideIcon from '../../assets/icons/GuideIcon.svg';
+import TicketsIcon from '../../assets/icons/TicketsIcon.svg';
 
 type Tour = {
   id: number;
   title: string;
-  image: string;
+  imageUrls: string;
   price: number;
-  isFamilyFriendly: boolean;
-  departureDates: string[];
-  features: string[];
-  rating: number;
-  reviewCount: number;
+  discountPrice?: number;
+  status: string;
+  startDate: string;
+  endDate: string;
+  city: string;
+  type: string;
+  isActive: boolean;
+  services: string[];
+  averageRating: number;
+  totalReviews: number;
+  maxParticipants: number;
   hotelStar: number;
   location: string;
   duration: string;
-  remaining?: number;
 };
 
 interface TourCardLargeProps {
@@ -39,11 +49,11 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
   };
 
   return (
-    <div key={tour.id} className="border-2 border-gray-300 rounded-lg overflow-hidden mb-4">
+    <div className="border-2 border-gray-300 rounded-lg overflow-hidden mb-4">
       <div className="flex border-b border-gray-300">
         <div className="relative w-48 h-48 px-3 pt-3">
           <img
-            src={tour.image}
+            src={tour.imageUrls}
             alt={tour.title}
             className="h-full w-full object-cover rounded-lg"
           />
@@ -58,55 +68,64 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
           </button>
         </div>
 
-        {/* Информация справа */}
         <div className="flex-1 py-3 pl-1 pr-3">
           <div className="flex justify-between">
             <div>
-              <h3 className="text-2xl font-medium ">{tour.title}</h3>
+              <h3 className="text-2xl font-medium">{tour.title}</h3>
               <div
-                className={`inline-block ${tour.isFamilyFriendly ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'} text-sm py-1 px-3 rounded-full mt-4 mb-3`}
+                className={`inline-block ${
+                  tour.status === 'hot'
+                    ? 'bg-orange-100 text-orange-700'
+                    : tour.status === 'seasonal'
+                    ? 'bg-green-100 text-green-700'
+                    : tour.status === 'new_destination'
+                    ? 'bg-blue-100 text-blue-700'
+                    : tour.status === 'regular'
+                    ? 'bg-gray-100 text-gray-700'
+                    : 'bg-orange-50 text-orange-600'
+                } text-sm py-1 px-3 rounded-full mt-4 mb-3`}
               >
-                {tour.isFamilyFriendly ? (
+                {tour.status === 'hot' ? (
                   <span className="flex items-center gap-2">
-                    <img src={FamilyIcon} alt="Family friendly" />
-                    Для всей семьи
+                    Горящий тур
+                  </span>
+                ) : tour.status === 'seasonal' ? (
+                  <span className="flex items-center gap-2">
+                    Сезонный тур
+                  </span>
+                ) : tour.status === 'new_destination' ? (
+                  <span className="flex items-center gap-2">
+                    Новое направление
+                  </span>
+                ) : tour.status === 'regular' ? (
+                  <span className="flex items-center gap-2">
+                    Регулярный тур
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    <img src={AdultIcon} alt="For adults" />
-                    Для взрослых
                   </span>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="">
+          <div>
             <p className="text-sm text-gray-500">Даты проведения</p>
             <div className="flex gap-2 my-1.5">
-              {tour.departureDates.slice(0, 2).map((date, dateIndex) => (
-                <span key={dateIndex} className="text-sm">
-                  {date}
-                </span>
-              ))}
-              {tour.departureDates.length > 2 && (
-                <span className="text-sm text-blue-500">
-                  +{tour.departureDates.length - 2} more
-                </span>
-              )}
+              {tour.startDate} - {tour.endDate}
             </div>
           </div>
 
           <div className="flex gap-2 mt-4">
-            {tour.features.includes('hotel') && (
-              <div className="bg-blue-50 text-blue-900 text-xs px-3 py-1.5 rounded-full flex items-center ">
+            {tour.services?.includes('hotel') && (
+              <div className="bg-blue-50 text-blue-900 text-xs px-3 py-1.5 rounded-full flex items-center">
                 <span className="mr-1 flex gap-2 items-center">
                   <img src={HotelIcon} alt="Hotel" />
                   Отель
                 </span>
               </div>
             )}
-            {tour.features.includes('transfer') && (
+            {tour.services?.includes('transfer') && (
               <div className="bg-blue-50 text-blue-900 text-xs px-3 py-1.5 rounded-full flex items-center">
                 <span className="mr-1 flex gap-2 items-center">
                   <img src={TransferIcon} alt="Transfer" />
@@ -114,7 +133,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
                 </span>
               </div>
             )}
-            {tour.features.includes('meal') && (
+            {tour.services?.includes('food') && (
               <div className="bg-blue-50 text-blue-900 text-xs px-3 py-1.5 rounded-full flex items-center">
                 <span className="mr-1 flex gap-2 items-center">
                   <img src={MealIcon} alt="Meal" />
@@ -122,12 +141,28 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
                 </span>
               </div>
             )}
-            {tour.remaining && (
+            {tour.services?.includes('guide') && (
+              <div className="bg-blue-50 text-blue-900 text-xs px-3 py-1.5 rounded-full flex items-center">
+                <span className="mr-1 flex gap-2 items-center">
+                  <img src={GuideIcon} alt="Guide" />
+                  Экскурсовод
+                </span>
+              </div>
+            )}
+            {tour.services?.includes('tickets') && (
+              <div className="bg-blue-50 text-blue-900 text-xs px-3 py-1.5 rounded-full flex items-center">
+                <span className="mr-1 flex gap-2 items-center">
+                  <img src={TicketsIcon} alt="Tickets" />
+                  Билеты
+                </span>
+              </div>
+            )}
+            {tour.maxParticipants && (
               <div className="ml-auto">
-                <button className="bg-blue-500 text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-2">
+                <span className="bg-blue-500 text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-2">
                   <img src={RemainingIcon} alt="Remaining" />
-                  {tour.remaining} осталось мест
-                </button>
+                  {tour.maxParticipants} осталось мест
+                </span>
               </div>
             )}
           </div>
@@ -140,7 +175,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
               <img src={StarIcon} alt="Rating" />
             </span>
             <span>
-              {tour.rating} ({tour.reviewCount} отзывов)
+              {tour.averageRating} ({tour.totalReviews} отзывов)
             </span>
           </div>
           <div className="flex items-center">
@@ -162,7 +197,9 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
             <span>{tour.duration}</span>
           </div>
         </div>
-        <div className="text-right text-blue-500 font-bold">От {tour.price.toLocaleString()} ₸</div>
+        <div className="text-right text-blue-500 font-bold">
+          От {tour.price.toLocaleString()} ₸
+        </div>
       </div>
     </div>
   );

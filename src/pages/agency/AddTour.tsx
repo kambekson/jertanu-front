@@ -39,6 +39,7 @@ interface TourFormData {
   services: string[];
   itinerary: ItineraryStop[];
   statuses: string[];
+  maxParticipants: number;
 }
 
 interface ServiceOption {
@@ -70,9 +71,9 @@ const serviceOptions: ServiceOption[] = [
     description: 'Завтрак и обед включены'
   },
   {
-    id: 'room_service',
-    title: 'Услуги в номере',
-    description: 'Уборка в номере, прачечная, услуги в номере и т.д.'
+    id: 'hotel',
+    title: 'Отель',
+    description: 'Отель включен в тур'
   },
   {
     id: 'transfer',
@@ -104,8 +105,6 @@ const tourStatuses: TourStatus[] = [
   },
 ];
 
-
-
 const tourTypes: TourType[] = [
   {
     id: 'ethno',
@@ -134,6 +133,20 @@ const tourTypes: TourType[] = [
   }
 ];
 
+const cities = [
+  "Абай", "Акколь", "Аксай", "Аксу", "Актау", "Актобе", "Алатау", "Алга", "Алматы",
+  "Алтай", "Арал", "Аркалык", "Арыс", "Астана", "Атбасар", "Атырау", "Аягоз",
+  "Байконыр", "Балхаш", "Булаево", "Державинск", "Ерейментау", "Есик", "Есиль",
+  "Жанаозен", "Жанатас", "Жаркент", "Жезказган", "Жем", "Жетысай", "Житикара",
+  "Зайсан", "Казалинск", "Кандыагаш", "Караганды", "Каражал", "Каратау",
+  "Каркаралинск", "Каскелен", "Кентау", "Кокшетау", "Конаев", "Костанай", "Косшы",
+  "Кулсары", "Курчатов", "Кызылорда", "Ленгер", "Лисаковск", "Макинск", "Семей",
+  "Сергеевка", "Серебрянск", "Степногорск", "Степняк", "Тайынша", "Талгар",
+  "Талдыкорган", "Тараз", "Текели", "Темир", "Темиртау", "Тобыл", "Туркестан",
+  "Уральск", "Усть-Каменогорск", "Ушарал", "Уштобе", "Форт-Шевченко", "Хромтау",
+  "Шалкар", "Шар", "Шардара", "Шахтинск", "Шемонаиха", "Шу", "Шымкент", "Щучинск",
+  "Экибастуз", "Эмба"
+];
 
 export default function AddTour() {
   const navigate = useNavigate();
@@ -145,20 +158,6 @@ export default function AddTour() {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
 
-  const cities = [
-    "Абай", "Акколь", "Аксай", "Аксу", "Актау", "Актобе", "Алатау", "Алга", "Алматы",
-    "Алтай", "Арал", "Аркалык", "Арыс", "Астана", "Атбасар", "Атырау", "Аягоз",
-    "Байконыр", "Балхаш", "Булаево", "Державинск", "Ерейментау", "Есик", "Есиль",
-    "Жанаозен", "Жанатас", "Жаркент", "Жезказган", "Жем", "Жетысай", "Житикара",
-    "Зайсан", "Казалинск", "Кандыагаш", "Караганды", "Каражал", "Каратау",
-    "Каркаралинск", "Каскелен", "Кентау", "Кокшетау", "Конаев", "Костанай", "Косшы",
-    "Кулсары", "Курчатов", "Кызылорда", "Ленгер", "Лисаковск", "Макинск", "Семей",
-    "Сергеевка", "Серебрянск", "Степногорск", "Степняк", "Тайынша", "Талгар",
-    "Талдыкорган", "Тараз", "Текели", "Темир", "Темиртау", "Тобыл", "Туркестан",
-    "Уральск", "Усть-Каменогорск", "Ушарал", "Уштобе", "Форт-Шевченко", "Хромтау",
-    "Шалкар", "Шар", "Шардара", "Шахтинск", "Шемонаиха", "Шу", "Шымкент", "Щучинск",
-    "Экибастуз", "Эмба"
-  ];
 
   const [formData, setFormData] = useState<TourFormData>({
     title: '',
@@ -173,7 +172,8 @@ export default function AddTour() {
     isActive: true,
     services: [],
     itinerary: [],
-    statuses: []
+    statuses: [],
+    maxParticipants: 10
   });
 
   const [newStop, setNewStop] = useState<ItineraryStop>({
@@ -212,7 +212,7 @@ export default function AddTour() {
           services: updatedServices
         });
       }
-    } else if (name === 'price' || name === 'discountPrice') {
+    } else if (name === 'price' || name === 'discountPrice' || name === 'maxParticipants') {
       setFormData({
         ...formData,
         [name]: value === '' ? 0 : isNaN(parseInt(value, 10)) ? 0 : parseInt(value, 10)
@@ -409,6 +409,10 @@ export default function AddTour() {
         throw new Error('Цена со скидкой должна быть меньше обычной цены');
       }
 
+      if (formData.maxParticipants <= 0) {
+        throw new Error('Максимальное количество участников должно быть больше 0');
+      }
+
       // After validation, proceed with form submission
       setLoading(true);
 
@@ -441,7 +445,8 @@ export default function AddTour() {
         endDate: formData.endDate,
         isActive: formData.isActive,
         services: serviceNames,
-        itinerary: itineraryForApi
+        itinerary: itineraryForApi,
+        maxParticipants: formData.maxParticipants
       };
 
       console.log('Отправка данных на API:', tourData);
@@ -756,6 +761,15 @@ export default function AddTour() {
                       placeholder="45000"
                       type="number"
                       value={formData.discountPrice === 0 ? '' : formData.discountPrice?.toString() || ''}
+                      onChange={handleInputChange}
+                    />
+                    <Input
+                      id="maxParticipants"
+                      name="maxParticipants"
+                      label="Максимальное количество участников"
+                      placeholder="10"
+                      type="number"
+                      value={formData.maxParticipants.toString()}
                       onChange={handleInputChange}
                     />
                   </div>

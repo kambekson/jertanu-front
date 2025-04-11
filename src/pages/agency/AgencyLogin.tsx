@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/UI/Button';
+import { apiService } from '../../services/apiService';
 
 const AgencyLogin = () => {
   const [email, setEmail] = useState('');
@@ -34,6 +35,26 @@ const AgencyLogin = () => {
       localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('token', data.access_token);
       localStorage.setItem('agency_login', 'true');
+
+      // Получаем данные пользователя и сохраняем их в localStorage
+      try {
+        console.log('Fetching user data...');
+        const userData = await fetch('http://localhost:3000/api/users/me', {
+          headers: {
+            'Authorization': `Bearer ${data.access_token}`
+          }
+        });
+        
+        if (userData.ok) {
+          const userInfo = await userData.json();
+          console.log('User data received:', userInfo);
+          localStorage.setItem('user', JSON.stringify(userInfo));
+        } else {
+          console.error('Failed to fetch user data:', userData.status);
+        }
+      } catch (userError) {
+        console.error('Error fetching user data:', userError);
+      }
 
       console.log('Agency login successful, redirecting to agency profile page');
       window.location.href = '/agency/profile';
