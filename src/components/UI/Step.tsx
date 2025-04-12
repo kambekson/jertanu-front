@@ -48,7 +48,7 @@ export default function Step({ number, isRight = false, title, description }: St
   return (
     <div
       ref={stepRef}
-      className={`flex items-start ${isRight ? 'flex-row-reverse' : ''} gap-8 max-w-5xl mx-auto my-12 relative
+      className={`flex items-start ${isRight ? 'flex-row-reverse' : ''} gap-8 max-w-5xl mx-auto mt-12 relative
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
         transition-all duration-700 ease-out`}
       style={{ transitionDelay: `${animationDelay}ms` }}

@@ -12,7 +12,7 @@ export default function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'rounded-lg px-4 py-2 flex items-center gap-2';
+  const baseClasses = 'rounded-lg px-4 py-2 flex items-center justify-center gap-2';
 
   const variantClasses = {
     primary: 'bg-blue-400 text-white hover:bg-blue-700 font-medium',

@@ -18,10 +18,6 @@ const imageMap = {
   'default': heroimg1
 };
 
-//Функция для получения изображения по названию города
-const getImageByCity = (city: string) => {
-  return imageMap[city] || imageMap['default'];
-};
 
 export default function HomePage() {
   const [tours, setTours] = useState([]);
@@ -41,6 +37,7 @@ export default function HomePage() {
         
         // Преобразование данных API в формат, ожидаемый компонентами
         const formattedTours = data.map((tour: any) => ({
+          id: tour.id,
           img: (tour.imageUrls && tour.imageUrls.length > 0) ? tour.imageUrls[0] : '',
           city: tour.city,
           title: tour.title,

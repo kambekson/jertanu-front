@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import StepsIndicator from '../../components/UI/StepsIndicator';
 
 interface TravelerInfo {
   firstName: string;
   lastName: string;
   email?: string;
   phone?: string;
-  nationality: string;
   birthDay: string;
   birthMonth: string;
   birthYear: string;
@@ -22,7 +22,6 @@ const initialTravelerInfo: TravelerInfo = {
   lastName: '',
   email: '',
   phone: '',
-  nationality: '',
   birthDay: '',
   birthMonth: '',
   birthYear: '',
@@ -31,16 +30,21 @@ const initialTravelerInfo: TravelerInfo = {
 
 const Booking: React.FC<BookingProps> = () => {
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const guestCount = Number(queryParams.get('guestCount')) || 1;
+  const price = Number(queryParams.get('price')) || 0;
+  const title = queryParams.get('title') || '';
+  
   const [activeStep, setActiveStep] = useState<number>(2);
-  const [adultCount, setAdultCount] = useState<number>(1);
-  const [childCount, setChildCount] = useState<number>(0);
+  const [travellerCount, setTravellerCount] = useState<number>(guestCount);
   const [mainTraveler, setMainTraveler] = useState<TravelerInfo>({ ...initialTravelerInfo });
-  const [travelers, setTravelers] = useState<TravelerInfo[]>([]);
-
-  // Price constants
-  const adultPrice = 15000;
-  const childPrice = 7000;
-  const totalPrice = adultCount * adultPrice + childCount * childPrice;
+  const [travelers, setTravelers] = useState<TravelerInfo[]>(() => {
+    return guestCount > 1 
+      ? Array(guestCount - 1).fill({ ...initialTravelerInfo })
+      : [];
+  });
+  const totalPrice = travellerCount * price;
 
   const handleMainTravelerChange = (field: keyof TravelerInfo, value: string) => {
     setMainTraveler((prev) => ({ ...prev, [field]: value }));
@@ -53,35 +57,15 @@ const Booking: React.FC<BookingProps> = () => {
   };
 
   const handleAdultCountChange = (increment: boolean) => {
-    if (increment && adultCount < 10) {
-      setAdultCount(adultCount + 1);
-      if (adultCount >= travelers.length + 1) {
+    if (increment && travellerCount < 10) {
+      setTravellerCount(travellerCount + 1);
+      if (travellerCount >= travelers.length + 1) {
         setTravelers([...travelers, { ...initialTravelerInfo }]);
       }
-    } else if (!increment && adultCount > 1) {
-      setAdultCount(adultCount - 1);
-      if (travelers.length > 0 && adultCount <= travelers.length + 1) {
+    } else if (!increment && travellerCount > 1) {
+      setTravellerCount(travellerCount - 1);
+      if (travelers.length > 0 && travellerCount <= travelers.length + 1) {
         setTravelers(travelers.slice(0, -1));
-      }
-    }
-  };
-
-  const handleChildCountChange = (increment: boolean) => {
-    if (increment && childCount < 10) {
-      setChildCount(childCount + 1);
-      if (childCount === 0) {
-        setTravelers([...travelers, { ...initialTravelerInfo }]);
-      }
-    } else if (!increment && childCount > 0) {
-      setChildCount(childCount - 1);
-      if (childCount === 1) {
-        const newTravelers = [...travelers];
-        if (adultCount <= 1) {
-          setTravelers([]);
-        } else {
-          newTravelers.pop();
-          setTravelers(newTravelers);
-        }
       }
     }
   };
@@ -93,69 +77,31 @@ const Booking: React.FC<BookingProps> = () => {
 
   const handleAddTraveler = () => {
     setTravelers([...travelers, { ...initialTravelerInfo }]);
-    setAdultCount(adultCount + 1);
+    setTravellerCount(travellerCount + 1);
   };
 
   return (
     <div className="bg-gray-100 min-h-screen pb-10">
       <div className="container mx-auto px-4 py-6">
         {/* Steps indicator */}
-        <div className="flex justify-between items-center mb-10 px-4 sm:px-8">
-          <div className="flex flex-col items-center">
-            <div
-              className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-            >
-              1
-            </div>
-            <span className="text-xs mt-1">Выбор тура</span>
-          </div>
-          <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
-          <div className="flex flex-col items-center">
-            <div
-              className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 2 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-            >
-              2
-            </div>
-            <span className="text-xs mt-1">Ввод данных</span>
-          </div>
-          <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
-          <div className="flex flex-col items-center">
-            <div
-              className={`w-6 h-6 rounded-full flex items-center justify-center ${activeStep >= 3 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-            >
-              3
-            </div>
-            <span className="text-xs mt-1">Оплата</span>
-          </div>
-        </div>
+        <StepsIndicator 
+          activeStep={activeStep} 
+          steps={[
+            { number: 1, label: 'Выбор тура' },
+            { number: 2, label: 'Ввод данных' },
+            { number: 3, label: 'Оплата' }
+          ]}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             {/* Traveler Count Selector */}
             <div className="bg-white rounded-lg border-2 border-gray-300 p-6 mb-4">
-              <h2 className="text-lg font-medium mb-4">Сколько людей путешествуют?</h2>
+              <h2 className="text-lg font-medium mb-4">Количество путешественников ( {guestCount} )</h2>
+              <h3 className='mb-2'> Вы можете поменять количество путешествинников</h3>
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
-                  <p className="text-sm mb-2">Дети (возраст 0-13)</p>
-                  <div className="flex items-center border rounded-lg">
-                    <button
-                      className="px-4 py-2 text-xl"
-                      onClick={() => handleChildCountChange(false)}
-                    >
-                      −
-                    </button>
-                    <span className="flex-1 text-center">{childCount}</span>
-                    <button
-                      className="px-4 py-2 text-xl"
-                      onClick={() => handleChildCountChange(true)}
-                    >
-                      +
-                    </button>
-                  </div>
-                  <p className="text-sm text-blue-600 mt-1">{childPrice} ₸</p>
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm mb-2">Взрослые</p>
+                  <p className="text-sm mb-2">Укажите количество</p>
                   <div className="flex items-center border rounded-lg">
                     <button
                       className="px-4 py-2 text-xl"
@@ -163,7 +109,7 @@ const Booking: React.FC<BookingProps> = () => {
                     >
                       −
                     </button>
-                    <span className="flex-1 text-center">{adultCount}</span>
+                    <span className="flex-1 text-center">{travellerCount}</span>
                     <button
                       className="px-4 py-2 text-xl"
                       onClick={() => handleAdultCountChange(true)}
@@ -171,7 +117,7 @@ const Booking: React.FC<BookingProps> = () => {
                       +
                     </button>
                   </div>
-                  <p className="text-sm text-blue-600 mt-1">{adultPrice} ₸</p>
+                  <p className="text-bold font-bold text-blue-600 mt-1">{price} ₸</p>
                 </div>
               </div>
             </div>
@@ -330,14 +276,13 @@ const Booking: React.FC<BookingProps> = () => {
 
               {/* Additional Travelers Forms */}
               {travelers.map((traveler, index) => {
-                const isChild = index >= adultCount - 1;
+    
                 return (
                   <div key={`traveler-${index}`} className="border-t pt-6 mb-8">
                     <div className="flex justify-between items-center mb-4">
                       <div>
                         <h3 className="font-medium">
                           Путешественник {index + 1}{' '}
-                          {isChild && <span className="text-sm text-gray-500">(возраст 0-17)</span>}
                         </h3>
                         <p className="text-sm text-gray-600">Контакт</p>
                       </div>
@@ -471,21 +416,7 @@ const Booking: React.FC<BookingProps> = () => {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg border-2 border-gray-300 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-medium">Актау за 21 день</h3>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                <h3 className="font-medium">{title}</h3>
               </div>
 
               <hr className="my-4" />
@@ -494,17 +425,13 @@ const Booking: React.FC<BookingProps> = () => {
                 <h4 className="text-sm text-gray-600 mb-2">Гости и цены:</h4>
                 <div className="flex justify-between items-center mb-2">
                   <div className="flex items-center">
-                    <span className="mr-2">{adultCount}</span>
-                    <span>Взрослые</span>
+                    <span className="mr-2">{travellerCount}</span>
+                    <span>Путешественникa</span>
                   </div>
-                  <span>{adultCount * adultPrice} ₸</span>
+                  <span>{totalPrice} ₸</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <span className="mr-2">{childCount}</span>
-                    <span>Дети</span>
-                  </div>
-                  <span>{childCount * childPrice} ₸</span>
+                  
                 </div>
               </div>
 
@@ -517,7 +444,7 @@ const Booking: React.FC<BookingProps> = () => {
 
               <button
                 className="w-full bg-blue-100 text-blue-500 rounded-lg py-3 mt-4 font-medium hover:bg-blue-200 transition"
-                onClick={handleProceedToPayment}
+                // onClick={handleProceedToPayment}
               >
                 Перейти к оплате
               </button>

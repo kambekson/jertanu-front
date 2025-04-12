@@ -35,7 +35,10 @@ const AgencyLogin = () => {
       localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('token', data.access_token);
       localStorage.setItem('agency_login', 'true');
-
+      
+      // Clear any regular user login flag
+      localStorage.removeItem('user_type');
+      
       // Получаем данные пользователя и сохраняем их в localStorage
       try {
         console.log('Fetching user data...');

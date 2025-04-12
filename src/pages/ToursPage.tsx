@@ -5,8 +5,6 @@ import { TourCardLarge } from '../components/UI/TourCardLarge';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/apiService';
 
-
-// Enum для типов туров
 enum TourType {
   ETHNO = 'ethno',
   NATURE = 'nature',
@@ -17,7 +15,7 @@ enum TourType {
 }
 
 // Типы данных для туров
-type Tour = {
+export type Tour = {
   id: number;
   title: string;
   imageUrls: string;

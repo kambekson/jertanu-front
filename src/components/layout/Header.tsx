@@ -29,6 +29,20 @@ export default function Header() {
 
       try {
         console.log('Checking authentication with token');
+        
+        // Проверка соответствия типа аккаунта текущей странице
+        const isAgencyUser = localStorage.getItem('agency_login') === 'true';
+        const isRegularUser = localStorage.getItem('user_type') === 'user';
+        
+        // Если пользователь находится на странице не своего типа аккаунта, перенаправляем
+        if (isAgencyUser && !isAgencyPage) {
+          navigate('/agency');
+          return;
+        } else if (isRegularUser && isAgencyPage) {
+          navigate('/');
+          return;
+        }
+        
         const userData = await apiService.get('/users/me');
         console.log('User data received:', userData);
 

@@ -314,9 +314,67 @@ export const apiService = {
    */
   async patchDirectJson(url: string, data: any): Promise<any> {
     console.log(`[API PATCH JSON] URL: ${url}`);
-    console.log('[API PATCH JSON] Data:', JSON.stringify(data, null, 2));
+    console.log('[API PATCH JSON] Данные для отправки:', data);
+    console.log('[API PATCH JSON] isActive в данных:', data.isActive);
     
     try {
+      // Получаем текущий токен доступа
+      const token = localStorage.getItem('access_token');
+      
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      
+      const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+      
+      const response = await fetch(fullUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[API PATCH JSON] Error: ${response.status} ${errorText}`);
+        throw new Error(`API request failed: ${response.status} ${errorText}`);
+      }
+      
+      // Проверяем Content-Type для определения типа ответа
+      const contentType = response.headers.get('content-type');
+      console.log(`[API PATCH JSON] Response content-type: ${contentType}`);
+      
+      if (contentType && contentType.includes('application/json')) {
+        const jsonResult = await response.json();
+        console.log('[API PATCH JSON] JSON response:', jsonResult);
+        return jsonResult;
+      }
+      
+      console.log('[API PATCH JSON] Non-JSON response received');
+      return null;
+    } catch (error) {
+      console.error('[API PATCH JSON] Error:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * POST запрос к API с FormData
+   */
+  async postFormData(url: string, formData: FormData): Promise<any> {
+    console.log(`[API POST FORM] URL: ${url}`);
+    console.log('[API POST FORM] FormData contents:');
+    
+    for (const pair of formData.entries()) {
+      console.log(`  ${pair[0]}: ${pair[1] instanceof File ? `File: ${pair[1].name} (${pair[1].size} bytes)` : 
+        (typeof pair[1] === 'string' && pair[1].length > 100 ? 
+          `${pair[1].substring(0, 100)}...` : pair[1])}`);
+    }
+    
+    try {
+      // Прямой вызов fetch без использования this.fetch для полного контроля над запросом
       const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
       const token = localStorage.getItem('access_token');
       
@@ -324,59 +382,34 @@ export const apiService = {
         throw new Error('No authentication token found');
       }
       
-      console.log(`[API PATCH JSON] Sending to: ${fullUrl}`);
-      
-      // Создаем заголовки согласно примеру из Postman
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      };
-      
-      console.log(`[API PATCH JSON] Headers: ${JSON.stringify(headers)}`);
-      
       const response = await fetch(fullUrl, {
-        method: 'PATCH',
-        headers: headers,
-        body: JSON.stringify(data)
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
       });
       
-      console.log(`[API PATCH JSON] Response status: ${response.status}`);
-      
       if (!response.ok) {
-        let errorDetail;
-        try {
-          errorDetail = await response.text();
-        } catch (e) {
-          errorDetail = 'Could not read error response';
-        }
-        
-        console.error(`[API PATCH JSON] Error: ${response.status} ${errorDetail}`);
-        throw new Error(`API request failed: ${response.status} ${errorDetail}`);
+        const errorText = await response.text();
+        console.error(`[API POST FORM] Error: ${response.status} ${errorText}`);
+        throw new Error(`API request failed: ${response.status} ${errorText}`);
       }
       
-      // Проверяем Content-Type ответа
+      // Проверяем Content-Type для определения типа ответа
       const contentType = response.headers.get('content-type');
-      console.log(`[API PATCH JSON] Response content-type: ${contentType}`);
+      console.log(`[API POST FORM] Response content-type: ${contentType}`);
       
       if (contentType && contentType.includes('application/json')) {
-        try {
-          const jsonResult = await response.json();
-          console.log('[API PATCH JSON] JSON response:', jsonResult);
-          return jsonResult;
-        } catch (e) {
-          console.error('[API PATCH JSON] Error parsing JSON:', e);
-          throw new Error('Failed to parse JSON response');
-        }
+        const jsonResult = await response.json();
+        console.log('[API POST FORM] JSON response:', jsonResult);
+        return jsonResult;
       }
       
-      // Если ответ не JSON
-      const textResult = await response.text();
-      console.log('[API PATCH JSON] Text response length:', textResult.length);
-      console.log('[API PATCH JSON] Text response (truncated):', textResult.substring(0, 100));
-      
-      return { success: true, message: 'Request completed successfully' };
+      console.log('[API POST FORM] Non-JSON response received');
+      return null;
     } catch (error) {
-      console.error('[API PATCH JSON] Error:', error);
+      console.error('[API POST FORM] Error:', error);
       throw error;
     }
   }

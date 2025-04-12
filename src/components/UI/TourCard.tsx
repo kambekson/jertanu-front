@@ -1,6 +1,7 @@
 import { FaStar } from 'react-icons/fa';
 
 interface Tour {
+  id: number;
   img: string;
   city: string;
   isNew?: boolean;

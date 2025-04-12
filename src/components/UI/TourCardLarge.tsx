@@ -1,41 +1,16 @@
 import { Heart } from 'lucide-react';
 import React, { useState } from 'react';
-import FamilyIcon from '../../assets/icons/FamilyIcon.svg';
-import AdultIcon from '../../assets/icons/AdultIcon.svg';
 import HotelIcon from '../../assets/icons/HotelIcon.svg';
 import TransferIcon from '../../assets/icons/TransferIcon.svg';
 import MealIcon from '../../assets/icons/MealIcon.svg';
 import RemainingIcon from '../../assets/icons/RemainingIcon.svg';
 import StarIcon from '../../assets/icons/StarIcon.svg';
-import HotelStarIcon from '../../assets/icons/HotelStarIcon.svg';
 import LocationIcon from '../../assets/icons/LocationIcon.svg';
 import DurationIcon from '../../assets/icons/DurationIcon.svg';
-import SeasonalIcon from '../../assets/icons/SeasonalIcon.svg';
-import NewDestinationIcon from '../../assets/icons/NewDestinationIcon.svg';
-import RegularIcon from '../../assets/icons/RegularIcon.svg';
 import GuideIcon from '../../assets/icons/GuideIcon.svg';
 import TicketsIcon from '../../assets/icons/TicketsIcon.svg';
-
-type Tour = {
-  id: number;
-  title: string;
-  imageUrls: string;
-  price: number;
-  discountPrice?: number;
-  status: string;
-  startDate: string;
-  endDate: string;
-  city: string;
-  type: string;
-  isActive: boolean;
-  services: string[];
-  averageRating: number;
-  totalReviews: number;
-  maxParticipants: number;
-  hotelStar: number;
-  location: string;
-  duration: string;
-};
+import {Tour} from '../../pages/ToursPage'
+import { calculateDuration, formatDate } from '../../utils/dateUtils';
 
 interface TourCardLargeProps {
   tour: Tour;
@@ -53,7 +28,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
       <div className="flex border-b border-gray-300">
         <div className="relative w-48 h-48 px-3 pt-3">
           <img
-            src={tour.imageUrls}
+            src={tour.imageUrls[0]}
             alt={tour.title}
             className="h-full w-full object-cover rounded-lg"
           />
@@ -112,7 +87,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
           <div>
             <p className="text-sm text-gray-500">Даты проведения</p>
             <div className="flex gap-2 my-1.5">
-              {tour.startDate} - {tour.endDate}
+              {formatDate(tour.startDate)} - {formatDate(tour.endDate)}
             </div>
           </div>
 
@@ -180,21 +155,15 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
           </div>
           <div className="flex items-center">
             <span className="p-1.5 bg-gray-100 mr-2 rounded-lg">
-              <img src={HotelStarIcon} alt="Hotel star" />
-            </span>
-            <span>{tour.hotelStar} звездочный отель</span>
-          </div>
-          <div className="flex items-center">
-            <span className="p-1.5 bg-gray-100 mr-2 rounded-lg">
               <img src={LocationIcon} alt="Location" />
             </span>
-            <span>{tour.location}</span>
+            <span>{tour.city}</span>
           </div>
           <div className="flex items-center">
             <span className="p-1.5 bg-gray-100 mr-2 rounded-lg">
               <img src={DurationIcon} alt="Duration" />
             </span>
-            <span>{tour.duration}</span>
+            <span>{calculateDuration(tour.startDate, tour.endDate)}</span>
           </div>
         </div>
         <div className="text-right text-blue-500 font-bold">

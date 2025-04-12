@@ -9,7 +9,6 @@ interface FeatureCardProps {
 export default function FeatureCard({ number, title, description }: FeatureCardProps) {
   return (
     <div className="flex">
-      <div className="rounded-br rounded-tr w-1 h-12 bg-blue-500 hidden sm:block"></div>
       <div className="bg-gray-100 p-4 sm:p-6 md:p-8 my-3 rounded-lg w-full">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="flex items-center">

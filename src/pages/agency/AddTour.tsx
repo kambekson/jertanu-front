@@ -2,9 +2,13 @@ import { useState, useRef, DragEvent, useEffect, RefObject } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, X, Upload } from 'lucide-react';
 import Button from '../../components/UI/Button';
-import Input, { InputProps } from '../../components/UI/Input';
+import Input from '../../components/UI/Input';
 import DatePicker from '../../components/UI/DatePicker';
-import { apiService } from '../../services/apiService';
+import { serviceOptions } from '../../data/serviceOptions';
+import { tourStatuses } from '../../data/tourStatuses';
+import { tourTypes } from '../../data/tourTypes';
+import { cities } from '../../data/cities';
+
 
 interface ItineraryStop {
   id: string;
@@ -17,12 +21,6 @@ interface TourImage {
   id: string;
   file: File;
   preview: string;
-}
-
-interface TourStatus {
-  id: string;
-  title: string;
-  description: string;
 }
 
 interface TourFormData {
@@ -41,112 +39,6 @@ interface TourFormData {
   statuses: string[];
   maxParticipants: number;
 }
-
-interface ServiceOption {
-  id: string;
-  title: string;
-  description: string;
-}
-
-interface TourType {
-  id: string;
-  title: string;
-  description: string;
-}
-
-interface InputWithRefProps extends InputProps {
-  inputRef?: React.RefObject<HTMLInputElement>;
-  onFocus?: () => void;
-}
-
-const serviceOptions: ServiceOption[] = [
-  {
-    id: 'guide',
-    title: 'Экскурсовод',
-    description: 'Экскурсовод для каждого направления или объекта включен'
-  },
-  {
-    id: 'food',
-    title: 'Питание',
-    description: 'Завтрак и обед включены'
-  },
-  {
-    id: 'hotel',
-    title: 'Отель',
-    description: 'Отель включен в тур'
-  },
-  {
-    id: 'transfer',
-    title: 'Трансфер',
-    description: 'Все необходимые транспортные средства предоставлены'
-  },
-  {
-    id: 'tickets',
-    title: 'Билеты',
-    description: 'Все необходимые билеты включены'
-  }
-];
-
-const tourStatuses: TourStatus[] = [
-  {
-    id: 'seasonal',
-    title: 'Сезонный тур',
-    description: 'Тур доступен только в определенный сезон'
-  },
-  {
-    id: 'hot',
-    title: 'Горячий тур',
-    description: 'Специальное предложение с ограниченным временем'
-  },
-  {
-    id: 'new_destination',
-    title: 'Новое направление',
-    description: 'Недавно добавленный маршрут'
-  },
-];
-
-const tourTypes: TourType[] = [
-  {
-    id: 'ethno',
-    title: 'Этнографический',
-    description: 'Погружение в культуру и традиции'
-  },
-  {
-    id: 'nature',
-    title: 'Природа',
-    description: 'Путешествие по природным достопримечательностям'
-  },
-  {
-    id: 'adventure',
-    title: 'Приключенческий',
-    description: 'Активный отдых и экстремальные развлечения'
-  },
-  {
-    id: 'cultural',
-    title: 'Культурный',
-    description: 'Посещение исторических и культурных объектов'
-  },
-  {
-    id: 'gastronomy',
-    title: 'Гастрономический',
-    description: 'Знакомство с национальной кухней'
-  }
-];
-
-const cities = [
-  "Абай", "Акколь", "Аксай", "Аксу", "Актау", "Актобе", "Алатау", "Алга", "Алматы",
-  "Алтай", "Арал", "Аркалык", "Арыс", "Астана", "Атбасар", "Атырау", "Аягоз",
-  "Байконыр", "Балхаш", "Булаево", "Державинск", "Ерейментау", "Есик", "Есиль",
-  "Жанаозен", "Жанатас", "Жаркент", "Жезказган", "Жем", "Жетысай", "Житикара",
-  "Зайсан", "Казалинск", "Кандыагаш", "Караганды", "Каражал", "Каратау",
-  "Каркаралинск", "Каскелен", "Кентау", "Кокшетау", "Конаев", "Костанай", "Косшы",
-  "Кулсары", "Курчатов", "Кызылорда", "Ленгер", "Лисаковск", "Макинск", "Семей",
-  "Сергеевка", "Серебрянск", "Степногорск", "Степняк", "Тайынша", "Талгар",
-  "Талдыкорган", "Тараз", "Текели", "Темир", "Темиртау", "Тобыл", "Туркестан",
-  "Уральск", "Усть-Каменогорск", "Ушарал", "Уштобе", "Форт-Шевченко", "Хромтау",
-  "Шалкар", "Шар", "Шардара", "Шахтинск", "Шемонаиха", "Шу", "Шымкент", "Щучинск",
-  "Экибастуз", "Эмба"
-];
 
 export default function AddTour() {
   const navigate = useNavigate();

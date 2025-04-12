@@ -3,6 +3,7 @@ import TourCard from '../../UI/TourCard';
 import { Link } from 'react-router-dom';
 
 export interface Tour {
+  id: number;
   img: string;
   city: string;
   title: string;
@@ -46,7 +47,9 @@ const HotTours = ({ tours }: { tours: Tour[] }) => {
           style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
         >
           {tours.map((tour: Tour, index: number) => (
-            <TourCard key={index} tour={tour} />
+            <Link key={index} to={`/tour/${tour.id}`}>
+              <TourCard tour={tour} />
+            </Link>
           ))}
         </div>
       </div>

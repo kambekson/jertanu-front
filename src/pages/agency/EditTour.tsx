@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef, DragEvent } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Upload, X } from 'lucide-react';
+import { ArrowLeft, Upload, X } from 'lucide-react';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import DatePicker from '../../components/UI/DatePicker';
 import { apiService } from '../../services/apiService';
+import { serviceOptions } from '../../data/serviceOptions';
+import { tourStatuses } from '../../data/tourStatuses';
+import { tourTypes } from '../../data/tourTypes';
+import { cities } from '../../data/cities';
 
 interface ItineraryStop {
   id: string;
@@ -19,17 +23,12 @@ interface TourImage {
   preview: string;
 }
 
-interface TourStatus {
-  id: string;
-  title: string;
-  description: string;
-}
-
 interface TourFormData {
   title: string;
   description: string;
   images: TourImage[];
   existingImages: string[];
+  imagesToDelete: string[];
   price: number;
   discountPrice?: number;
   startDate: string; 
@@ -43,91 +42,28 @@ interface TourFormData {
   maxParticipants: number;
 }
 
-interface ServiceOption {
-  id: string;
-  title: string;
-  description: string;
-}
-
-const serviceOptions: ServiceOption[] = [
-  {
-    id: 'guide',
-    title: 'Экскурсовод',
-    description: 'Экскурсовод для каждого направления или объекта включен'
-  },
-  {
-    id: 'food',
-    title: 'Питание',
-    description: 'Завтрак и обед включены'
-  },
-  {
-    id: 'hotel',
-    title: 'Отель',
-    description: 'Отель включен в стоимость'
-  },
-  {
-    id: 'transfer',
-    title: 'Трансфер',
-    description: 'Все необходимые транспортные средства предоставлены'
-  },
-  {
-    id: 'tickets',
-    title: 'Билеты',
-    description: 'Все необходимые билеты включены'
+// Функция для получения текущих изображений тура с сервера
+const getCurrentTourImages = async (tourId: number): Promise<string[]> => {
+  try {
+    const tourData = await apiService.get(`/tours/${tourId}`);
+    console.log('Получены текущие данные тура:', tourData);
+    
+    // Проверяем, есть ли у тура изображения
+    if (tourData && tourData.imageUrls) {
+      // Преобразуем в массив, если получена строка
+      const urls = Array.isArray(tourData.imageUrls) 
+        ? tourData.imageUrls 
+        : [tourData.imageUrls];
+      
+      console.log('Текущие изображения тура:', urls);
+      return urls;
+    }
+    return [];
+  } catch (error) {
+    console.error('Ошибка при получении текущих изображений:', error);
+    return [];
   }
-];
-
-const tourStatuses: TourStatus[] = [
-  {
-    id: 'seasonal',
-    title: 'Сезонный тур',
-    description: 'Тур доступен только в определенный сезон'
-  },
-  {
-    id: 'hot',
-    title: 'Горячий тур',
-    description: 'Специальное предложение с ограниченным временем'
-  },
-  {
-    id: 'new_destination',
-    title: 'Новое направление',
-    description: 'Недавно добавленный маршрут'
-  },
-];
-
-const tourTypes: TourType[] = [
-  {
-    id: 'ethno',
-    title: 'Этнографический',
-    description: 'Погружение в культуру и традиции'
-  },
-  {
-    id: 'nature',
-    title: 'Природа',
-    description: 'Путешествие по природным достопримечательностям'
-  },
-  {
-    id: 'adventure',
-    title: 'Приключенческий',
-    description: 'Активный отдых и экстремальные развлечения'
-  },
-  {
-    id: 'cultural',
-    title: 'Культурный',
-    description: 'Посещение исторических и культурных объектов'
-  },
-  {
-    id: 'gastronomy',
-    title: 'Гастрономический',
-    description: 'Знакомство с национальной кухней'
-  }
-];
-
-interface TourType {
-  id: string;
-  title: string;
-  description: string;
-}
+};
 
 export default function EditTour() {
   const { id } = useParams();
@@ -143,27 +79,12 @@ export default function EditTour() {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const cityInputRef = useRef<HTMLDivElement>(null);
-
-  const cities = [
-    "Абай", "Акколь", "Аксай", "Аксу", "Актау", "Актобе", "Алатау", "Алга", "Алматы",
-    "Алтай", "Арал", "Аркалык", "Арыс", "Астана", "Атбасар", "Атырау", "Аягоз",
-    "Байконыр", "Балхаш", "Булаево", "Державинск", "Ерейментау", "Есик", "Есиль",
-    "Жанаозен", "Жанатас", "Жаркент", "Жезказган", "Жем", "Жетысай", "Житикара",
-    "Зайсан", "Казалинск", "Кандыагаш", "Караганды", "Каражал", "Каратау",
-    "Каркаралинск", "Каскелен", "Кентау", "Кокшетау", "Конаев", "Костанай", "Косшы",
-    "Кулсары", "Курчатов", "Кызылорда", "Ленгер", "Лисаковск", "Макинск", "Семей",
-    "Сергеевка", "Серебрянск", "Степногорск", "Степняк", "Тайынша", "Талгар",
-    "Талдыкорган", "Тараз", "Текели", "Темир", "Темиртау", "Тобыл", "Туркестан",
-    "Уральск", "Усть-Каменогорск", "Ушарал", "Уштобе", "Форт-Шевченко", "Хромтау",
-    "Шалкар", "Шар", "Шардара", "Шахтинск", "Шемонаиха", "Шу", "Шымкент", "Щучинск",
-    "Экибастуз", "Эмба"
-  ];
-
   const [formData, setFormData] = useState<TourFormData>({
     title: '',
     description: '',
     images: [],
     existingImages: [],
+    imagesToDelete: [],
     price: 0,
     discountPrice: undefined,
     startDate: new Date().toISOString().split('T')[0],
@@ -206,6 +127,7 @@ export default function EditTour() {
         console.log('Fetching tour with ID:', numericId);
         
         const tourData = await apiService.get(`/tours/${numericId}`);
+        console.log('Fetched tour data:', tourData);
         
         // Парсим даты
         let startDateObj = new Date();
@@ -233,20 +155,20 @@ export default function EditTour() {
         const statusList = tourData.status ? [tourData.status] : [];
         
         // Получаем список сервисов
-        const serviceList = tourData.services ? 
-          tourData.services.map((serviceName: string) => {
-            const service = serviceOptions.find(s => s.title === serviceName);
-            return service ? service.id : serviceName.toLowerCase().replace(/\s/g, '_');
-          }) : [];
+        const serviceList = tourData.services || [];
         
         // Создаем превью для существующих изображений
-        const existingImages = tourData.imageUrls || [];
+        const existingImages = Array.isArray(tourData.imageUrls) ? tourData.imageUrls : 
+                              (tourData.imageUrls ? [tourData.imageUrls] : []);
+        
+        console.log('Existing images:', existingImages);
         
         setFormData({
           title: tourData.title || '',
           description: tourData.description || '',
           images: [],
           existingImages: existingImages,
+          imagesToDelete: [],
           price: tourData.price || 0,
           discountPrice: tourData.discountPrice,
           startDate: startDateObj.toISOString().split('T')[0],
@@ -270,62 +192,13 @@ export default function EditTour() {
     fetchTourData();
   }, [id]);
 
-  // Сохраняем форму в localStorage при изменении
-  useEffect(() => {
-    if (id && formData.title) {
-      try {
-        // Сохраняем только данные без объектов File
-        const dataForSave = {
-          ...formData,
-          images: [] // Не сохраняем файлы, только существующие изображения
-        };
-        localStorage.setItem(`tour_edit_backup_${id}`, JSON.stringify(dataForSave));
-      } catch (e) {
-        console.error('Ошибка при сохранении резервной копии формы:', e);
-      }
-    }
-  }, [formData, id]);
-
-  // Загружаем резервную копию формы, если есть
-  useEffect(() => {
-    if (id && loading && !formData.title) {
-      try {
-        const savedData = localStorage.getItem(`tour_edit_backup_${id}`);
-        if (savedData) {
-          const parsedData = JSON.parse(savedData);
-          // Проверяем, что это не старые данные
-          if (parsedData.title) {
-            console.log('Найдена резервная копия данных формы');
-            // Предлагаем восстановить только если есть что восстанавливать
-            // и form не была уже заполнена из API
-            if (window.confirm('Найдена несохраненная версия этого тура. Восстановить данные?')) {
-              setFormData(parsedData);
-              
-              // Восстанавливаем даты
-              if (parsedData.startDate) {
-                setStartDate(new Date(parsedData.startDate));
-              }
-              if (parsedData.endDate) {
-                setEndDate(new Date(parsedData.endDate));
-              }
-            } else {
-              // Пользователь отказался, удаляем резервную копию
-              localStorage.removeItem(`tour_edit_backup_${id}`);
-            }
-          }
-        }
-      } catch (e) {
-        console.error('Ошибка при загрузке резервной копии формы:', e);
-      }
-    }
-  }, [id, loading, formData]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
     if (type === 'checkbox') {
       const target = e.target as HTMLInputElement;
       if (name === 'isActive') {
+        console.log(`Checkbox isActive changed: ${target.checked}`);
         setFormData({
           ...formData,
           isActive: target.checked
@@ -449,7 +322,8 @@ export default function EditTour() {
   const removeExistingImage = (imageUrl: string) => {
     setFormData(prev => ({
       ...prev,
-      existingImages: prev.existingImages.filter(url => url !== imageUrl)
+      existingImages: prev.existingImages.filter(url => url !== imageUrl),
+      imagesToDelete: [...prev.imagesToDelete, imageUrl]
     }));
   };
 
@@ -554,94 +428,117 @@ export default function EditTour() {
       setLoading(false);
       setSaving(true);
       setError(null);
-
+      
       // Подготовка данных для отправки
-      const serviceNames = formData.services.map(serviceId => {
-        const service = serviceOptions.find(s => s.id === serviceId);
-        return service ? service.title : serviceId;
-      });
-
+      const serviceNames = formData.services;
+      
       // Преобразование итинерария в формат API
       const itineraryForApi = formData.itinerary.map(stop => ({
         location: stop.location,
         description: stop.description,
         duration: stop.duration
       }));
-
+      
       // Получение статуса тура
       const status = formData.statuses.length > 0 ? formData.statuses[0] : 'seasonal';
-
+      
       // Преобразуем id в число для запроса, если это возможно
       const numericId = parseInt(id);
       console.log('Отправка данных на API по ID:', numericId);
-
+      console.log('Значение isActive перед отправкой:', formData.isActive);
+      
       try {
-        // Подготовка FormData для отправки
-        const formDataForSubmit = new FormData();
-
-        // Создаем полную структуру данных для API, идентичную успешному примеру из Postman
-        const apiTourData = {
-          id: numericId,
-          title: formData.title,
-          description: formData.description,
-          city: formData.city,
-          price: formData.price,
-          discountPrice: formData.discountPrice,
-          type: formData.type,
-          status: status,
-          startDate: new Date(formData.startDate).toISOString(),
-          endDate: new Date(formData.endDate).toISOString(),
-          isActive: formData.isActive,
-          services: serviceNames,
-          itinerary: itineraryForApi,
-          maxParticipants: formData.maxParticipants,
-          imageUrls: formData.existingImages
-        };
+        // Получаем актуальные URL изображений с сервера
+        const currentImageUrls = await getCurrentTourImages(numericId);
+        console.log('Получены актуальные URL изображений:', currentImageUrls);
         
-        console.log('Данные для отправки:', JSON.stringify(apiTourData, null, 2));
+        // Фильтруем изображения, которые были удалены через UI
+        const updatedImageUrls = currentImageUrls.filter(url => 
+          !formData.imagesToDelete.includes(url) && formData.existingImages.includes(url)
+        );
+                
+        // Есть ли новые изображения для загрузки
+        const hasNewImages = formData.images.length > 0;
+ 
         
-        // Добавляем данные в FormData с тем же ключом 'data', как в Postman
-        formDataForSubmit.append('data', JSON.stringify(apiTourData));
-        
-        // Добавляем новые изображения точно так же, как в примере Postman - с ключом 'images'
-        formData.images.forEach((image, index) => {
-          if (image.file) {
-            console.log(`Добавление изображения ${index} в FormData с ключом 'images'`);
-            formDataForSubmit.append('images', image.file);
-          }
-        });
-
-        // Логирование всего содержимого formData для отладки
-        console.log('FormData entries:');
-        for (const pair of formDataForSubmit.entries()) {
-          console.log(`${pair[0]}: ${pair[1] instanceof File ? 
-            `File: ${pair[1].name} (${pair[1].size} bytes)` : 
-            (typeof pair[1] === 'string' && pair[1].length > 100 ? 
-              `${pair[1].substring(0, 100)}...` : pair[1])}`);
-        }
-
-        // Используем специальный метод для отправки FormData с PATCH
-        console.log('Отправка PATCH запроса на сервер с FormData...');
-        
-        try {
-          // Сначала пробуем отправить через FormData (как в примере form-data из Postman)
-          const tourResult = await apiService.patchFormData(`/tours/${numericId}`, formDataForSubmit);
-          console.log('Тур успешно обновлен (FormData метод):', tourResult);
-        } catch (formDataError) {
-          console.error('Ошибка при отправке через FormData:', formDataError);
-          
-          // Если FormData не сработал, пробуем отправить напрямую через JSON (как в примере JSON из Postman)
-          console.log('Попытка отправки через JSON...');
-          
-          // Удаляем из данных все, что относится к файлам
-          const jsonData = {
-            ...apiTourData,
-            // Не отправляем новые изображения через JSON
+        if (hasNewImages) {
+          // Если есть новые изображения, сохраняем текущие данные тура без изображений
+          const basicTourData = {
+            id: numericId,
+            title: formData.title,
+            description: formData.description,
+            city: formData.city,
+            price: formData.price,
+            discountPrice: formData.discountPrice,
+            type: formData.type,
+            status: status,
+            startDate: new Date(formData.startDate).toISOString(),
+            endDate: new Date(formData.endDate).toISOString(),
+            isActive: formData.isActive,
+            services: serviceNames,
+            itinerary: itineraryForApi,
+            maxParticipants: formData.maxParticipants
           };
           
-          // Пробуем отправить через JSON
-          const jsonResult = await apiService.patchDirectJson(`/tours/${numericId}`, jsonData);
-          console.log('Тур успешно обновлен (JSON метод):', jsonResult);
+          console.log('Сохраняем основные данные тура без изображений:', basicTourData);
+          console.log('isActive в отправляемых данных:', basicTourData.isActive);
+          
+          // Сначала обновляем основные данные тура без изображений
+          await apiService.patchDirectJson(`/tours/${numericId}`, basicTourData);
+          console.log('Базовые данные тура успешно обновлены');
+          
+          // Затем отправляем запрос с изображениями и текущими URL
+          const formDataForImages = new FormData();
+          
+          // Создаем объект данных только для изображений
+          const imageData = {
+            id: numericId,
+            // Передаем текущие URL изображений, чтобы сохранить их
+            imageUrls: updatedImageUrls
+          };
+          
+          console.log('Данные для изображений:', imageData);
+          
+          // Добавляем JSON строку в FormData под ключом 'data'
+          formDataForImages.append('data', JSON.stringify(imageData));
+          
+          // Добавляем новые изображения в FormData
+          formData.images.forEach((image, index) => {
+            if (image.file) {
+              console.log(`Добавление изображения ${index} в FormData`);
+              formDataForImages.append('images', image.file);
+            }
+          });
+          
+          // Отправляем PATCH запрос только с изображениями
+          const result = await apiService.patchFormData(`/tours/${numericId}`, formDataForImages);
+          console.log('Изображения успешно обновлены:', result);
+        } else {
+          // Если нет новых изображений, отправляем обычный JSON-запрос со всеми данными
+          const fullTourData = {
+            id: numericId,
+            title: formData.title,
+            description: formData.description,
+            city: formData.city,
+            price: formData.price,
+            discountPrice: formData.discountPrice,
+            type: formData.type,
+            status: status,
+            startDate: new Date(formData.startDate).toISOString(),
+            endDate: new Date(formData.endDate).toISOString(),
+            isActive: formData.isActive,
+            services: serviceNames,
+            itinerary: itineraryForApi,
+            maxParticipants: formData.maxParticipants,
+            imageUrls: updatedImageUrls
+          };
+          
+          console.log('Отправка полных данных тура без новых изображений:', fullTourData);
+          console.log('isActive в отправляемых данных:', fullTourData.isActive);
+          
+          // Отправляем все данные тура включая существующие изображения
+          const result = await apiService.patchDirectJson(`/tours/${numericId}`, fullTourData);
+          console.log('Тур успешно обновлен:', result);
         }
         
         // Очистка превью изображений
@@ -677,8 +574,7 @@ export default function EditTour() {
         // Устанавливаем состояние успеха
         setSuccess(true);
         
-        // Устанавливаем флаг обновления в sessionStorage, чтобы страница 
-        // со списком туров знала, что нужно обновить данные
+        // Устанавливаем флаг обновления в sessionStorage
         sessionStorage.setItem('tours_updated', 'true');
         sessionStorage.setItem('last_updated_tour_id', numericId.toString());
         
@@ -686,6 +582,7 @@ export default function EditTour() {
         setTimeout(() => {
           navigate('/agency/my-tours');
         }, 1500);
+        
       } catch (error) {
         console.error('Ошибка при отправке формы:', error);
         setError(error instanceof Error ? error.message : 'Произошла ошибка при обновлении тура. Пожалуйста, попробуйте снова.');
@@ -694,89 +591,6 @@ export default function EditTour() {
     } catch (error) {
       console.error('Ошибка валидации:', error);
       setError(error instanceof Error ? error.message : 'Произошла ошибка при валидации формы. Пожалуйста, проверьте введенные данные.');
-      setSaving(false);
-    }
-  };
-
-  // Обработчик для сохранения только текстовых данных, без изображений (аварийный вариант)
-  const handleSaveJsonOnly = async () => {
-    if (!id) {
-      setError('ID тура не найден');
-      return;
-    }
-    
-    try {
-      setSaving(true);
-      setError(null);
-      
-      // Подготовка данных для отправки (только текстовые данные)
-      const serviceNames = formData.services.map(serviceId => {
-        const service = serviceOptions.find(s => s.id === serviceId);
-        return service ? service.title : serviceId;
-      });
-      
-      const itineraryForApi = formData.itinerary.map(stop => ({
-        location: stop.location,
-        description: stop.description,
-        duration: stop.duration
-      }));
-      
-      const status = formData.statuses.length > 0 ? formData.statuses[0] : 'seasonal';
-      const numericId = parseInt(id);
-      
-      // Создаем данные для API
-      const jsonData = {
-        id: numericId,
-        title: formData.title,
-        description: formData.description,
-        city: formData.city,
-        price: formData.price,
-        discountPrice: formData.discountPrice,
-        type: formData.type,
-        status: status,
-        startDate: new Date(formData.startDate).toISOString(),
-        endDate: new Date(formData.endDate).toISOString(),
-        isActive: formData.isActive,
-        services: serviceNames,
-        itinerary: itineraryForApi,
-        maxParticipants: formData.maxParticipants,
-        imageUrls: formData.existingImages
-      };
-      
-      console.log('Отправка только JSON данных:', JSON.stringify(jsonData, null, 2));
-      
-      // Отправляем напрямую через JSON
-      const result = await apiService.patchDirectJson(`/tours/${numericId}`, jsonData);
-      console.log('Тур успешно обновлен (только JSON):', result);
-      
-      // Очистка кэша и установка флагов для обновления списка
-      try {
-        if ('caches' in window) {
-          await caches.delete('api-cache');
-        }
-        
-        sessionStorage.removeItem(`tour_${numericId}`);
-        localStorage.removeItem(`tour_${numericId}`);
-        localStorage.removeItem(`tour_edit_backup_${id}`);
-        sessionStorage.removeItem('agency_tours');
-        localStorage.removeItem('agency_tours');
-        sessionStorage.setItem('tours_updated', 'true');
-        sessionStorage.setItem('last_updated_tour_id', numericId.toString());
-        
-        console.log('Локальный кэш очищен');
-      } catch (cacheError) {
-        console.error('Ошибка при очистке кэша:', cacheError);
-      }
-      
-      // Устанавливаем состояние успеха и перенаправляем
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/agency/my-tours');
-      }, 1500);
-    } catch (error) {
-      console.error('Ошибка при отправке JSON данных:', error);
-      setError(error instanceof Error ? error.message : 'Произошла ошибка при обновлении тура.');
-    } finally {
       setSaving(false);
     }
   };
@@ -1029,7 +843,7 @@ export default function EditTour() {
                   {formData.existingImages.length > 0 && (
                     <div className="mb-4">
                       <h4 className="text-sm font-medium text-gray-800 mb-2">Текущие изображения:</h4>
-                      <div className="space-y-3">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {formData.existingImages.map((imageUrl, index) => (
                           <div key={index} className="relative group rounded-md overflow-hidden">
                             <img
@@ -1073,25 +887,28 @@ export default function EditTour() {
                     <p className="mt-1 text-xs text-gray-500">PNG, JPG, WEBP до 10МБ</p>
                   </div>
 
+                  {/* New Images Preview */}
                   {formData.images.length > 0 && (
-                    <div className="mt-4 space-y-3">
+                    <div className="mt-4">
                       <h4 className="text-sm font-medium text-gray-800 mb-2">Новые изображения:</h4>
-                      {formData.images.map((image) => (
-                        <div key={image.id} className="relative group rounded-md overflow-hidden">
-                          <img
-                            src={image.preview}
-                            alt="Preview"
-                            className="w-full h-32 object-cover"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(image.id)}
-                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
-                      ))}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {formData.images.map((image) => (
+                          <div key={image.id} className="relative group rounded-md overflow-hidden">
+                            <img
+                              src={image.preview}
+                              alt="Preview"
+                              className="w-full h-32 object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(image.id)}
+                              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1128,16 +945,18 @@ export default function EditTour() {
                     />
                   </div>
 
+                  {/* Выбор статуса */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
+                        id="isActive"
                         name="isActive"
                         checked={formData.isActive}
                         onChange={handleInputChange}
                         className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                       />
-                      <label className="text-sm text-gray-700">Активный тур</label>
+                      <label htmlFor="isActive" className="text-sm text-gray-700">Активный тур</label>
                     </div>
 
                     <div className="space-y-3">
@@ -1192,17 +1011,6 @@ export default function EditTour() {
               </Link>
               
               <Button 
-                type="button" 
-                variant="secondary"
-                onClick={handleSaveJsonOnly}
-                disabled={saving}
-                className="px-6"
-                title="Сохранить только текстовые данные (без новых изображений)"
-              >
-                {saving ? 'Сохранение...' : 'Сохранить только текст'}
-              </Button>
-              
-              <Button 
                 type="submit" 
                 variant="primary" 
                 disabled={loading || saving}
@@ -1216,4 +1024,4 @@ export default function EditTour() {
       </div>
     </div>
   );
-} 
+}

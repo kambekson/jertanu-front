@@ -72,6 +72,9 @@ export const authService = {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('token');
+    localStorage.removeItem('user_type');
+    localStorage.removeItem('agency_login');
+    localStorage.removeItem('user');
   },
 
   getAccessToken(): string | null {

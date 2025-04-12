@@ -147,7 +147,7 @@ export default function ChooseAgency() {
                 transition-all duration-1000 ease-in-out`}
               style={{ transitionDelay: '200ms' }}
             ></div>
-
+            
             {stepsData.map((step) => (
               <Step
                 key={step.number}
@@ -157,6 +157,7 @@ export default function ChooseAgency() {
                 description={step.description}
               />
             ))}
+
           </div>
         </div>
       </div>
