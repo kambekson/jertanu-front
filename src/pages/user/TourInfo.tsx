@@ -331,11 +331,11 @@ if (!tours.length) {
                 </div>
               ))}
             </div>
-            <div className="mt-4 text-center">
+            {/* <div className="mt-4 text-center">
               <button className="text-sm text-gray-600 border border-gray-300 rounded-md px-4 py-2">
                 Все отзывы
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Ratings Section */}

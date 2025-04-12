@@ -21,7 +21,10 @@ export default function Hero() {
           {images.map((item, index) => (
             <div
               key={index}
-              className={`w-full h-[580px] relative ${index > 0 ? 'hidden md:block' : ''}`}
+              className={`w-full h-[580px] relative ${
+                index >= 1 && index < 2 ? 'hidden md:block' : 
+                index >= 2 ? 'hidden lg:block' : ''
+              }`}
             >
               <img
                 src={item.img}
@@ -35,6 +38,7 @@ export default function Hero() {
           ))}
         </div>
       </div>
+      
       <TourSearchBar />
     </div>
   );

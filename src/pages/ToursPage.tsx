@@ -14,6 +14,7 @@ enum TourType {
   OTHER = 'other'
 }
 
+
 // Типы данных для туров
 export type Tour = {
   id: number;

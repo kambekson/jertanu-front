@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { cities } from '../../data/cities';
 
 // Autocomplete component
 const AutocompleteInput = ({
@@ -11,14 +12,7 @@ const AutocompleteInput = ({
   const [inputValue, setInputValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState([
-    'Астана',
-    'Алматы',
-    'Шымкент',
-    'Караганда',
-    'Актобе',
-    'Тараз',
-    'Павлодар',
-    'Усть-Каменогорск',
+    ...cities.map((city) => city),
   ]);
   const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -72,7 +66,7 @@ const AutocompleteInput = ({
       <div className="relative">
         <label
           htmlFor="autocomplete-input"
-          className="block overflow-hidden rounded border border-transparent px-3 focus-within:bg-orange-50 w-52"
+          className="block overflow-hidden rounded border border-transparent px-3 focus-within:bg-orange-50 w-full"
         >
           <span className="text-xs font-medium text-gray-700">{inputlabel}</span>
 
@@ -83,7 +77,7 @@ const AutocompleteInput = ({
             onChange={handleInputChange}
             onFocus={() => setIsOpen(true)}
             placeholder={placeholder}
-            className="w-full border-none p-0 focus:border-transparent focus:ring-0 focus:outline-hidden sm:text-base"
+            className="w-full border-none p-0 focus:border-transparent focus:ring-0 focus:outline-hidden sm:text-sm"
           />
         </label>
         <button
