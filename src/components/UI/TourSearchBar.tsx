@@ -8,18 +8,17 @@ export default function TourSearchBar() {
   return (
     <div className="absolute top-[85%] md:top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-3 md:py-4 px-3 md:px-6 bg-white rounded-xl md:rounded-2xl w-[92%] max-w-[350px] md:max-w-[700px] lg:max-w-[900px] shadow-lg md:shadow-2xl">
       <div className="grid grid-cols-1 gap-3 w-full">
-        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
           <AutocompleteInput
             placeholder="Нажмите здесь, чтобы изменить"
             inputlabel="Место назначение"
           />
-          
-          <div className='w-full rounded border border-transparent px-2 md:px-3 focus-within:bg-orange-50'>
+
+          <div className="w-full rounded border border-transparent px-2 md:px-3 focus-within:bg-orange-50">
             <span className="text-xs font-medium text-gray-700">Выберите дату</span>
             <DatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           </div>
-          
+
           <button className="bg-blue-400 hover:bg-blue-500 transition-colors text-white rounded-lg flex items-center justify-center gap-2 font-medium h-10 md:h-12 w-full">
             <p>Поиск</p>
             <svg
@@ -37,7 +36,6 @@ export default function TourSearchBar() {
             </svg>
           </button>
         </div>
-        
       </div>
     </div>
   );

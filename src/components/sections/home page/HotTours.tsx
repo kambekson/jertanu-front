@@ -25,21 +25,17 @@ const HotTours = ({ tours }: { tours: Tour[] }) => {
   const maxIndex = Math.max(0, tours.length - 3);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex >= maxIndex ? 0 : prevIndex + 1
-    );
+    setCurrentIndex((prevIndex) => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex <= 0 ? maxIndex : prevIndex - 1
-    );
+    setCurrentIndex((prevIndex) => (prevIndex <= 0 ? maxIndex : prevIndex - 1));
   };
 
   // Set up auto play
   useEffect(() => {
     if (!autoPlay || tours.length <= 3) return;
-    
+
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
   }, [autoPlay, currentIndex]);
@@ -66,7 +62,6 @@ const HotTours = ({ tours }: { tours: Tour[] }) => {
     );
   }
 
-  // For more than 3 tours, implement carousel functionality
   return (
     <div className="container mx-auto px-4">
       <div className="flex justify-between items-center mb-6">
@@ -77,10 +72,9 @@ const HotTours = ({ tours }: { tours: Tour[] }) => {
       </div>
 
       <div className="relative">
-
         {/* Carousel container */}
         <div className="overflow-hidden">
-          <div 
+          <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
           >

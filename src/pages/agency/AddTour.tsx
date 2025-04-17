@@ -1,4 +1,4 @@
-import { useState, useRef, DragEvent, useEffect, RefObject } from 'react';
+import { useState, useRef, DragEvent, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, X, Upload } from 'lucide-react';
 import Button from '../../components/UI/Button';
@@ -6,9 +6,8 @@ import Input from '../../components/UI/Input';
 import DatePicker from '../../components/UI/DatePicker';
 import { serviceOptions } from '../../data/serviceOptions';
 import { tourStatuses } from '../../data/tourStatuses';
-import { tourTypes } from '../../data/tourTypes';
+import { getTourTypes } from '../../data/tourTypes';
 import { cities } from '../../data/cities';
-
 
 interface ItineraryStop {
   id: string;
@@ -29,7 +28,7 @@ interface TourFormData {
   images: TourImage[];
   price: number;
   discountPrice?: number;
-  startDate: string; 
+  startDate: string;
   endDate: string;
   city: string;
   type: string;
@@ -50,7 +49,6 @@ export default function AddTour() {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
 
-
   const [formData, setFormData] = useState<TourFormData>({
     title: '',
     description: '',
@@ -60,66 +58,68 @@ export default function AddTour() {
     startDate: new Date().toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
     city: '',
-    type: '', 
+    type: '',
     isActive: true,
     services: [],
     itinerary: [],
     statuses: [],
-    maxParticipants: 10
+    maxParticipants: 10,
   });
 
   const [newStop, setNewStop] = useState<ItineraryStop>({
     id: '',
     location: '',
     description: '',
-    duration: ''
+    duration: '',
   });
 
   // Update form data when dates change
   useEffect(() => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0]
+      endDate: endDate.toISOString().split('T')[0],
     }));
   }, [startDate, endDate]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value, type } = e.target;
-    
+
     if (type === 'checkbox') {
       const target = e.target as HTMLInputElement;
       if (name === 'isActive') {
         setFormData({
           ...formData,
-          isActive: target.checked
+          isActive: target.checked,
         });
       } else if (name.startsWith('service_')) {
         const serviceId = name.replace('service_', '');
         const updatedServices = target.checked
           ? [...formData.services, serviceId]
-          : formData.services.filter(id => id !== serviceId);
+          : formData.services.filter((id) => id !== serviceId);
         setFormData({
           ...formData,
-          services: updatedServices
+          services: updatedServices,
         });
       }
     } else if (name === 'price' || name === 'discountPrice' || name === 'maxParticipants') {
       setFormData({
         ...formData,
-        [name]: value === '' ? 0 : isNaN(parseInt(value, 10)) ? 0 : parseInt(value, 10)
+        [name]: value === '' ? 0 : isNaN(parseInt(value, 10)) ? 0 : parseInt(value, 10),
       });
     } else {
       setFormData({
         ...formData,
-        [name]: value
+        [name]: value,
       });
 
       // Handle city suggestions
       if (name === 'city') {
         if (value) {
-          const filteredSuggestions = cities.filter(city => 
-            city.toLowerCase().includes(value.toLowerCase())
+          const filteredSuggestions = cities.filter((city) =>
+            city.toLowerCase().includes(value.toLowerCase()),
           );
           setSuggestions(filteredSuggestions);
           setShowSuggestions(true);
@@ -133,9 +133,9 @@ export default function AddTour() {
 
   const handleNewStopChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setNewStop(prev => ({
+    setNewStop((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -143,38 +143,38 @@ export default function AddTour() {
     if (newStop.location && newStop.description && newStop.duration) {
       const stopWithId = {
         ...newStop,
-        id: Date.now().toString()
+        id: Date.now().toString(),
       };
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        itinerary: [...prev.itinerary, stopWithId]
+        itinerary: [...prev.itinerary, stopWithId],
       }));
       setNewStop({
         id: '',
         location: '',
         description: '',
-        duration: ''
+        duration: '',
       });
     }
   };
 
   const removeItineraryStop = (id: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      itinerary: prev.itinerary.filter(stop => stop.id !== id)
+      itinerary: prev.itinerary.filter((stop) => stop.id !== id),
     }));
   };
 
   const handleImageUpload = (files: FileList) => {
-    const newImages = Array.from(files).map(file => ({
+    const newImages = Array.from(files).map((file) => ({
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
       file,
-      preview: URL.createObjectURL(file)
+      preview: URL.createObjectURL(file),
     }));
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...newImages]
+      images: [...prev.images, ...newImages],
     }));
   };
 
@@ -191,38 +191,38 @@ export default function AddTour() {
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     if (e.dataTransfer.files) {
       handleImageUpload(e.dataTransfer.files);
     }
   };
 
   const removeImage = (id: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter(img => {
+      images: prev.images.filter((img) => {
         if (img.id === id) {
           URL.revokeObjectURL(img.preview); // Cleanup preview URL
           return false;
         }
         return true;
-      })
+      }),
     }));
   };
 
   const handleStatusChange = (statusId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       statuses: prev.statuses.includes(statusId)
-        ? prev.statuses.filter(id => id !== statusId)
-        : [...prev.statuses, statusId]
+        ? prev.statuses.filter((id) => id !== statusId)
+        : [...prev.statuses, statusId],
     }));
   };
 
   const handleCitySelect = (city: string) => {
     setFormData({
       ...formData,
-      city
+      city,
     });
     setShowSuggestions(false);
   };
@@ -233,8 +233,8 @@ export default function AddTour() {
   // Handle city input focus
   const handleCityFocus = () => {
     if (formData.city) {
-      const filteredSuggestions = cities.filter(city => 
-        city.toLowerCase().includes(formData.city.toLowerCase())
+      const filteredSuggestions = cities.filter((city) =>
+        city.toLowerCase().includes(formData.city.toLowerCase()),
       );
       setSuggestions(filteredSuggestions);
     } else {
@@ -265,25 +265,25 @@ export default function AddTour() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       // Валидация перед отправкой формы
       if (formData.title.trim() === '') {
         throw new Error('Название тура не может быть пустым');
       }
-      
+
       if (formData.city.trim() === '') {
         throw new Error('Укажите город');
       }
-      
+
       if (formData.type === '') {
         throw new Error('Выберите тип тура');
       }
-      
+
       if (formData.description.trim() === '') {
         throw new Error('Добавьте описание тура');
       }
-      
+
       if (formData.itinerary.length === 0) {
         throw new Error('Добавьте хотя бы одну точку маршрута');
       }
@@ -292,11 +292,14 @@ export default function AddTour() {
       if (formData.price === undefined || isNaN(formData.price) || formData.price <= 0) {
         throw new Error('Цена должна быть положительным числом');
       }
-      
-      if (formData.discountPrice !== undefined && (isNaN(formData.discountPrice) || formData.discountPrice <= 0)) {
+
+      if (
+        formData.discountPrice !== undefined &&
+        (isNaN(formData.discountPrice) || formData.discountPrice <= 0)
+      ) {
         throw new Error('Цена со скидкой должна быть положительным числом');
       }
-      
+
       if (formData.discountPrice !== undefined && formData.discountPrice >= formData.price) {
         throw new Error('Цена со скидкой должна быть меньше обычной цены');
       }
@@ -309,16 +312,16 @@ export default function AddTour() {
       setLoading(true);
 
       // Подготовка данных для отправки
-      const serviceNames = formData.services.map(serviceId => {
-        const service = serviceOptions.find(s => s.id === serviceId);
+      const serviceNames = formData.services.map((serviceId) => {
+        const service = serviceOptions.find((s) => s.id === serviceId);
         return service ? service.title : serviceId;
       });
 
       // Преобразование итинерария в формат API
-      const itineraryForApi = formData.itinerary.map(stop => ({
+      const itineraryForApi = formData.itinerary.map((stop) => ({
         location: stop.location,
         description: stop.description,
-        duration: stop.duration
+        duration: stop.duration,
       }));
 
       // Получение статуса тура
@@ -338,7 +341,7 @@ export default function AddTour() {
         isActive: formData.isActive,
         services: serviceNames,
         itinerary: itineraryForApi,
-        maxParticipants: formData.maxParticipants
+        maxParticipants: formData.maxParticipants,
       };
 
       console.log('Отправка данных на API:', tourData);
@@ -347,7 +350,7 @@ export default function AddTour() {
       // Отправка данных на сервер через FormData
       const formDataForSubmit = new FormData();
       formDataForSubmit.append('data', JSON.stringify(tourData));
-      formData.images.forEach(image => {
+      formData.images.forEach((image) => {
         formDataForSubmit.append('images', image.file);
       });
 
@@ -360,9 +363,9 @@ export default function AddTour() {
       const response = await fetch('http://localhost:3000/api/tours', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: formDataForSubmit
+        body: formDataForSubmit,
       });
 
       if (!response.ok) {
@@ -371,9 +374,9 @@ export default function AddTour() {
 
       const result = await response.json();
       console.log('Тур успешно создан:', result);
-      
+
       // Очистка превью изображений
-      formData.images.forEach(img => {
+      formData.images.forEach((img) => {
         URL.revokeObjectURL(img.preview);
       });
 
@@ -381,7 +384,11 @@ export default function AddTour() {
     } catch (error) {
       console.error('Ошибка при отправке формы:', error);
       // Show a more specific error message
-      alert(error instanceof Error ? error.message : 'Произошла ошибка при создании тура. Пожалуйста, попробуйте снова.');
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Произошла ошибка при создании тура. Пожалуйста, попробуйте снова.',
+      );
     } finally {
       setLoading(false);
     }
@@ -394,8 +401,8 @@ export default function AddTour() {
           {/* Header */}
           <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Link 
-                to="/agency/my-tours" 
+              <Link
+                to="/agency/my-tours"
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors"
               >
                 <ArrowLeft size={24} className="text-gray-600" />
@@ -419,7 +426,7 @@ export default function AddTour() {
                       value={formData.title}
                       onChange={handleInputChange}
                     />
-    
+
                     <div className="relative" ref={cityInputRef}>
                       <div className="space-y-1">
                         <label htmlFor="city" className="block text-gray-700 mb-1">
@@ -436,12 +443,12 @@ export default function AddTour() {
                           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                       </div>
-                      
+
                       {showSuggestions && suggestions.length > 0 && (
                         <div className="absolute z-10 w-full mt-1 bg-white shadow-lg max-h-60 rounded-md overflow-auto">
                           <ul className="py-1">
                             {suggestions.map((city, index) => (
-                              <li 
+                              <li
                                 key={index}
                                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                                 onClick={() => handleCitySelect(city)}
@@ -470,28 +477,22 @@ export default function AddTour() {
                       <label htmlFor="startDate" className="block text-gray-700 mb-1">
                         Дата начала
                       </label>
-                      <div 
+                      <div
                         className="w-full p-3 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500"
                         onClick={preventFormSubmission}
                       >
-                        <DatePicker 
-                          selectedDate={startDate} 
-                          setSelectedDate={setStartDate} 
-                        />
+                        <DatePicker selectedDate={startDate} setSelectedDate={setStartDate} />
                       </div>
                     </div>
                     <div>
                       <label htmlFor="endDate" className="block text-gray-700 mb-1">
                         Дата окончания
                       </label>
-                      <div 
+                      <div
                         className="w-full p-3 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500"
                         onClick={preventFormSubmission}
                       >
-                        <DatePicker 
-                          selectedDate={endDate} 
-                          setSelectedDate={setEndDate} 
-                        />
+                        <DatePicker selectedDate={endDate} setSelectedDate={setEndDate} />
                       </div>
                     </div>
                   </div>
@@ -502,11 +503,11 @@ export default function AddTour() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-medium text-gray-900">Маршрут</h3>
                   </div>
-                  
+
                   <div className="space-y-3">
                     {formData.itinerary.map((stop) => (
-                      <div 
-                        key={stop.id} 
+                      <div
+                        key={stop.id}
                         className="bg-gray-50 rounded-lg p-4 relative hover:shadow-md transition-shadow"
                       >
                         <button
@@ -517,7 +518,9 @@ export default function AddTour() {
                           <X size={20} className="text-gray-500" />
                         </button>
                         <h4 className="text-sm font-medium text-gray-900 pr-8">{stop.location}</h4>
-                        <p className="text-sm text-gray-600 mt-1 whitespace-pre-line">{stop.description}</p>
+                        <p className="text-sm text-gray-600 mt-1 whitespace-pre-line">
+                          {stop.description}
+                        </p>
                         <p className="text-sm text-gray-500 mt-1">Длительность: {stop.duration}</p>
                       </div>
                     ))}
@@ -575,7 +578,9 @@ export default function AddTour() {
                           className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
                         <label htmlFor={`service_${service.id}`} className="ml-3">
-                          <span className="block text-sm font-medium text-gray-700">{service.title}</span>
+                          <span className="block text-sm font-medium text-gray-700">
+                            {service.title}
+                          </span>
                           <span className="block text-sm text-gray-500">{service.description}</span>
                         </label>
                       </div>
@@ -586,7 +591,6 @@ export default function AddTour() {
 
               {/* Sidebar */}
               <div className="space-y-6">
-              
                 {/* Images Card */}
                 <div className="bg-gray-50 rounded-lg p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Фотографии</h3>
@@ -652,7 +656,9 @@ export default function AddTour() {
                       label="Цена со скидкой (₸)"
                       placeholder="45000"
                       type="number"
-                      value={formData.discountPrice === 0 ? '' : formData.discountPrice?.toString() || ''}
+                      value={
+                        formData.discountPrice === 0 ? '' : formData.discountPrice?.toString() || ''
+                      }
                       onChange={handleInputChange}
                     />
                     <Input
@@ -689,8 +695,12 @@ export default function AddTour() {
                             className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                           />
                           <label htmlFor={`status_${status.id}`} className="ml-3">
-                            <span className="block text-sm font-medium text-gray-700">{status.title}</span>
-                            <span className="block text-sm text-gray-500">{status.description}</span>
+                            <span className="block text-sm font-medium text-gray-700">
+                              {status.title}
+                            </span>
+                            <span className="block text-sm text-gray-500">
+                              {status.description}
+                            </span>
                           </label>
                         </div>
                       ))}
@@ -698,22 +708,24 @@ export default function AddTour() {
                   </div>
                 </div>
 
-                 {/* Tour Type Card */}
-                 <div className="bg-gray-50 rounded-lg p-6">
+                {/* Tours Type Card */}
+                <div className="bg-gray-50 rounded-lg p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Тип тура</h3>
                   <div className="space-y-3">
-                    {tourTypes.map((type) => (
+                    {getTourTypes.map((type) => (
                       <div key={type.id} className="flex items-start">
                         <input
                           type="radio"
                           id={`type_${type.id}`}
                           name="type"
                           checked={formData.type === type.id}
-                          onChange={() => setFormData({...formData, type: type.id})}
+                          onChange={() => setFormData({ ...formData, type: type.id })}
                           className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded-full focus:ring-blue-500"
                         />
                         <label htmlFor={`type_${type.id}`} className="ml-3">
-                          <span className="block text-sm font-medium text-gray-700">{type.title}</span>
+                          <span className="block text-sm font-medium text-gray-700">
+                            {type.title}
+                          </span>
                           <span className="block text-sm text-gray-500">{type.description}</span>
                         </label>
                       </div>
@@ -726,14 +738,11 @@ export default function AddTour() {
             {/* Footer */}
             <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-4">
               <Link to="/agency/my-tours">
-                <Button variant="neutral" className="px-6">Отмена</Button>
+                <Button variant="neutral" className="px-6">
+                  Отмена
+                </Button>
               </Link>
-              <Button 
-                type="submit" 
-                variant="primary" 
-                disabled={loading}
-                className="px-6"
-              >
+              <Button type="submit" variant="primary" disabled={loading} className="px-6">
                 {loading ? 'Сохранение...' : 'Создать тур'}
               </Button>
             </div>

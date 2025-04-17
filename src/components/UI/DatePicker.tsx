@@ -134,13 +134,13 @@ export default function DatePicker({
       />
 
       {showCalendar && (
-        <div 
+        <div
           className="absolute top-10 left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-50 w-64"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center mb-4">
-            <button 
-              onClick={prevMonth} 
+            <button
+              onClick={prevMonth}
               className="p-2 text-gray-600 hover:text-gray-900"
               type="button"
             >
@@ -163,8 +163,8 @@ export default function DatePicker({
             <h2 className="text-lg font-medium">
               {getMonthName(currentMonth)} {currentYear}
             </h2>
-            <button 
-              onClick={nextMonth} 
+            <button
+              onClick={nextMonth}
               className="p-2 text-gray-600 hover:text-gray-900"
               type="button"
             >

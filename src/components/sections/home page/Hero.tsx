@@ -22,8 +22,7 @@ export default function Hero() {
             <div
               key={index}
               className={`w-full h-[580px] relative ${
-                index >= 1 && index < 2 ? 'hidden md:block' : 
-                index >= 2 ? 'hidden lg:block' : ''
+                index >= 1 && index < 2 ? 'hidden md:block' : index >= 2 ? 'hidden lg:block' : ''
               }`}
             >
               <img
@@ -38,7 +37,7 @@ export default function Hero() {
           ))}
         </div>
       </div>
-      
+
       <TourSearchBar />
     </div>
   );

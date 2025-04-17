@@ -21,9 +21,7 @@ const StepsIndicator: React.FC<StepsIndicatorProps> = ({ activeStep, steps }) =>
             </div>
             <span className="text-xs mt-1">{step.label}</span>
           </div>
-          {index < steps.length - 1 && (
-            <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>
-          )}
+          {index < steps.length - 1 && <div className="flex-1 h-0.5 bg-gray-300 mx-2"></div>}
         </React.Fragment>
       ))}
     </div>

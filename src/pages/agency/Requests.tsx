@@ -43,7 +43,7 @@ export default function Requests() {
   const [activeTab, setActiveTab] = useState<'paid' | 'unpaid' | 'canceled'>('paid');
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // Загрузка данных пользователя из localStorage
     const storedUser = localStorage.getItem('user');
@@ -65,7 +65,7 @@ export default function Requests() {
       phone: '+77003824839',
       price: 54990,
       tour: 'Туркестан',
-      status: 'paid'
+      status: 'paid',
     },
     {
       id: 2506,
@@ -74,7 +74,7 @@ export default function Requests() {
       phone: '+77012345678',
       price: 35000,
       tour: 'Кольсай',
-      status: 'paid'
+      status: 'paid',
     },
     {
       id: 2507,
@@ -83,7 +83,7 @@ export default function Requests() {
       phone: '+77023456789',
       price: 48000,
       tour: 'Бурабай',
-      status: 'unpaid'
+      status: 'unpaid',
     },
     {
       id: 2508,
@@ -92,7 +92,7 @@ export default function Requests() {
       phone: '+77034567890',
       price: 62000,
       tour: 'Каинды',
-      status: 'unpaid'
+      status: 'unpaid',
     },
     {
       id: 2509,
@@ -101,12 +101,12 @@ export default function Requests() {
       phone: '+77045678901',
       price: 75000,
       tour: 'Алматы',
-      status: 'canceled'
-    }
+      status: 'canceled',
+    },
   ];
 
   // Фильтрация заявок по активному табу
-  const filteredRequests = requests.filter(request => request.status === activeTab);
+  const filteredRequests = requests.filter((request) => request.status === activeTab);
 
   // Функция для определения цвета статуса
   const getStatusColor = (status: string) => {
@@ -142,7 +142,7 @@ export default function Requests() {
         <div className="flex flex-col md:flex-row">
           {/* Левая боковая панель */}
           <AgencySidebar />
-          
+
           {/* Основной контент */}
           <div className="w-full md:w-3/4">
             {/* Переключатель табов */}
@@ -167,7 +167,7 @@ export default function Requests() {
                   Отмененные
                 </button>
               </div>
-              
+
               <Button
                 variant="neutral"
                 className="text-blue-600"
@@ -177,13 +177,13 @@ export default function Requests() {
                 Статистика
               </Button>
             </div>
-            
+
             {/* Таблица заявок */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="mb-4">
                 <h2 className="text-xl font-bold">Заявки</h2>
               </div>
-              
+
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
@@ -208,7 +208,9 @@ export default function Requests() {
                           <td className="px-4 py-4">{request.price.toLocaleString()} ₸</td>
                           <td className="px-4 py-4">{request.tour}</td>
                           <td className="px-4 py-4">
-                            <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(request.status)}`}>
+                            <span
+                              className={`px-3 py-1 rounded-full text-sm ${getStatusColor(request.status)}`}
+                            >
                               {getStatusText(request.status)}
                             </span>
                           </td>
@@ -230,4 +232,4 @@ export default function Requests() {
       </div>
     </div>
   );
-} 
+}

@@ -40,13 +40,13 @@ interface User {
   };
 }
 
-const TourCard: React.FC<TourCardProps> = ({ 
-  title, 
-  imageUrl, 
-  rating, 
-  dates, 
-  price, 
-  discountPrice 
+const TourCard: React.FC<TourCardProps> = ({
+  title,
+  imageUrl,
+  rating,
+  dates,
+  price,
+  discountPrice,
 }) => {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow">
@@ -75,7 +75,7 @@ const TourCard: React.FC<TourCardProps> = ({
 export default function AgencyProfile() {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
-  
+
   // Редирект на "Мои туры" при загрузке профиля агентства
   useEffect(() => {
     navigate('/agency/my-tours');
@@ -102,7 +102,7 @@ export default function AgencyProfile() {
       rating: 4.9,
       dates: '21 - 26 марта',
       price: 490000,
-      discountPrice: 399000
+      discountPrice: 399000,
     },
     {
       id: 2,
@@ -111,7 +111,7 @@ export default function AgencyProfile() {
       rating: 4.7,
       dates: '1 - 2 апреля',
       price: 35000,
-      discountPrice: 32000
+      discountPrice: 32000,
     },
     {
       id: 3,
@@ -120,7 +120,7 @@ export default function AgencyProfile() {
       rating: 4.2,
       dates: '5 - 6 апреля',
       price: 62000,
-      discountPrice: 57000
+      discountPrice: 57000,
     },
     {
       id: 4,
@@ -129,11 +129,10 @@ export default function AgencyProfile() {
       rating: 4.9,
       dates: '12 - 14 апреля',
       price: 120000,
-      discountPrice: 100000
+      discountPrice: 100000,
     },
   ];
 
   // Возвращаем пустой компонент, так как происходит редирект
   return null;
 }
-

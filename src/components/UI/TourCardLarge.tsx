@@ -9,7 +9,7 @@ import LocationIcon from '../../assets/icons/LocationIcon.svg';
 import DurationIcon from '../../assets/icons/DurationIcon.svg';
 import GuideIcon from '../../assets/icons/GuideIcon.svg';
 import TicketsIcon from '../../assets/icons/TicketsIcon.svg';
-import {Tour} from '../../pages/ToursPage'
+import { Tour } from '../../pages/ToursPage';
 import { calculateDuration, formatDate } from '../../utils/dateUtils';
 
 interface TourCardLargeProps {
@@ -52,33 +52,24 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
                   tour.status === 'hot'
                     ? 'bg-orange-100 text-orange-700'
                     : tour.status === 'seasonal'
-                    ? 'bg-green-100 text-green-700'
-                    : tour.status === 'new_destination'
-                    ? 'bg-blue-100 text-blue-700'
-                    : tour.status === 'regular'
-                    ? 'bg-gray-100 text-gray-700'
-                    : 'bg-orange-50 text-orange-600'
+                      ? 'bg-green-100 text-green-700'
+                      : tour.status === 'new_destination'
+                        ? 'bg-blue-100 text-blue-700'
+                        : tour.status === 'regular'
+                          ? 'bg-gray-100 text-gray-700'
+                          : 'bg-orange-50 text-orange-600'
                 } text-sm py-1 px-3 rounded-full mt-4 mb-3`}
               >
                 {tour.status === 'hot' ? (
-                  <span className="flex items-center gap-2">
-                    Горящий тур
-                  </span>
+                  <span className="flex items-center gap-2">Горящий тур</span>
                 ) : tour.status === 'seasonal' ? (
-                  <span className="flex items-center gap-2">
-                    Сезонный тур
-                  </span>
+                  <span className="flex items-center gap-2">Сезонный тур</span>
                 ) : tour.status === 'new_destination' ? (
-                  <span className="flex items-center gap-2">
-                    Новое направление
-                  </span>
+                  <span className="flex items-center gap-2">Новое направление</span>
                 ) : tour.status === 'regular' ? (
-                  <span className="flex items-center gap-2">
-                    Регулярный тур
-                  </span>
+                  <span className="flex items-center gap-2">Регулярный тур</span>
                 ) : (
-                  <span className="flex items-center gap-2">
-                  </span>
+                  <span className="flex items-center gap-2"></span>
                 )}
               </div>
             </div>
@@ -166,9 +157,7 @@ export const TourCardLarge: React.FC<TourCardLargeProps> = ({ tour }) => {
             <span>{calculateDuration(tour.startDate, tour.endDate)}</span>
           </div>
         </div>
-        <div className="text-right text-blue-500 font-bold">
-          От {tour.price.toLocaleString()} ₸
-        </div>
+        <div className="text-right text-blue-500 font-bold">От {tour.price.toLocaleString()} ₸</div>
       </div>
     </div>
   );

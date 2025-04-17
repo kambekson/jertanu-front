@@ -40,13 +40,13 @@ interface User {
   };
 }
 
-const TourCard: React.FC<TourCardProps> = ({ 
-  title, 
-  imageUrl, 
-  rating, 
-  dates, 
-  price, 
-  discountPrice 
+const TourCard: React.FC<TourCardProps> = ({
+  title,
+  imageUrl,
+  rating,
+  dates,
+  price,
+  discountPrice,
 }) => {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow">
@@ -74,7 +74,7 @@ const TourCard: React.FC<TourCardProps> = ({
 
 export default function HotTours() {
   const [user, setUser] = useState<User | null>(null);
-  
+
   useEffect(() => {
     // Загрузка данных пользователя из localStorage
     const storedUser = localStorage.getItem('user');
@@ -96,7 +96,7 @@ export default function HotTours() {
       rating: 4.9,
       dates: '21 - 26 марта',
       price: 490000,
-      discountPrice: 399000
+      discountPrice: 399000,
     },
     {
       id: 2,
@@ -105,7 +105,7 @@ export default function HotTours() {
       rating: 4.7,
       dates: '1 - 2 апреля',
       price: 35000,
-      discountPrice: 32000
+      discountPrice: 32000,
     },
     {
       id: 3,
@@ -114,7 +114,7 @@ export default function HotTours() {
       rating: 4.2,
       dates: '5 - 6 апреля',
       price: 62000,
-      discountPrice: 57000
+      discountPrice: 57000,
     },
     {
       id: 4,
@@ -123,7 +123,7 @@ export default function HotTours() {
       rating: 4.9,
       dates: '12 - 14 апреля',
       price: 120000,
-      discountPrice: 100000
+      discountPrice: 100000,
     },
   ];
 
@@ -133,24 +133,21 @@ export default function HotTours() {
         <div className="flex flex-col md:flex-row">
           {/* Левая боковая панель */}
           <AgencySidebar />
-          
+
           {/* Основной контент */}
           <div className="w-full md:w-3/4">
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Горящие туры</h2>
-                <Button 
-                  variant="primary"
-                  onClick={() => console.log('Редактировать')}
-                >
+                <Button variant="primary" onClick={() => console.log('Редактировать')}>
                   <Edit size={16} className="mr-2" />
                   Редактировать
                 </Button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {hotTours.map(tour => (
-                  <TourCard 
+                {hotTours.map((tour) => (
+                  <TourCard
                     key={tour.id}
                     id={tour.id}
                     title={tour.title}
@@ -168,4 +165,4 @@ export default function HotTours() {
       </div>
     </div>
   );
-} 
+}

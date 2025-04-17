@@ -19,7 +19,6 @@ export default function Header() {
   const navigate = useNavigate();
   const isAgencyPage = location.pathname.startsWith('/agency');
 
-
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('access_token');
@@ -30,11 +29,11 @@ export default function Header() {
 
       try {
         console.log('Checking authentication with token');
-        
+
         // Проверка соответствия типа аккаунта текущей странице
         const isAgencyUser = localStorage.getItem('agency_login') === 'true';
         const isRegularUser = localStorage.getItem('user_type') === 'user';
-        
+
         // Если пользователь находится на странице не своего типа аккаунта, перенаправляем
         if (isAgencyUser && !isAgencyPage) {
           navigate('/agency');
@@ -43,7 +42,7 @@ export default function Header() {
           navigate('/');
           return;
         }
-        
+
         const userData = await apiService.get('/users/me');
         console.log('User data received:', userData);
 
@@ -95,7 +94,7 @@ export default function Header() {
 
   const handleLogout = () => {
     // Используем функцию logout из authService
-    import('./../../services/authService').then(module => {
+    import('./../../services/authService').then((module) => {
       const { authService } = module;
       authService.logout();
       setIsLoggedIn(false);
@@ -133,13 +132,10 @@ export default function Header() {
             </ul>
           </div>
         </div>
-        
+
         {/* Бургер-меню для мобильных устройств */}
         <div className="md:hidden">
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2"
-          >
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -221,17 +217,14 @@ export default function Header() {
           initialMode={authMode as 'login' | 'signup' | 'forgot' | 'reset' | 'verify' | 'register'}
         />
       </div>
-      
+
       {/* Мобильное меню */}
       {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-white z-50 pt-20 px-4" 
-          ref={mobileMenuRef}
-        >
+        <div className="fixed inset-0 bg-white z-50 pt-20 px-4" ref={mobileMenuRef}>
           <div className="flex flex-col space-y-4">
             {!isAgencyPage && (
-              <Link 
-                to="/tours" 
+              <Link
+                to="/tours"
                 className="text-lg py-2 border-b border-gray-100"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -239,8 +232,8 @@ export default function Header() {
               </Link>
             )}
             {!isLoggedIn && isAgencyPage && (
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="text-lg py-2 border-b border-gray-100"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -248,42 +241,42 @@ export default function Header() {
               </Link>
             )}
             {!isLoggedIn && !isAgencyPage && (
-              <Link 
-                to="/agency" 
+              <Link
+                to="/agency"
                 className="text-lg py-2 border-b border-gray-100"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Для турагентств
               </Link>
             )}
-            
+
             {isLoggedIn ? (
               <>
-                <Link 
-                  to="/profile" 
+                <Link
+                  to="/profile"
                   className="text-lg py-2 border-b border-gray-100 flex items-center gap-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <User className="w-5 h-5" />
                   <span>Профиль</span>
                 </Link>
-                <Link 
-                  to="#" 
+                <Link
+                  to="#"
                   className="text-lg py-2 border-b border-gray-100 flex items-center gap-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Heart className="w-5 h-5" />
                   <span>Избранное</span>
                 </Link>
-                <Link 
-                  to="#" 
+                <Link
+                  to="#"
                   className="text-lg py-2 border-b border-gray-100 flex items-center gap-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Calendar className="w-5 h-5" />
                   <span>Брони</span>
                 </Link>
-                <button 
+                <button
                   className="text-lg py-2 text-red-500 flex items-center gap-2"
                   onClick={() => {
                     handleLogout();

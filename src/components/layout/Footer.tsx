@@ -129,7 +129,6 @@ export default function Footer() {
             <a href="#" className="hover:text-gray-300">
               Политика конфиденциальности
             </a>
-            
           </div>
         </div>
       </div>

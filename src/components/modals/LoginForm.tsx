@@ -52,7 +52,7 @@ export default function LoginForm({ switchView }: LoginFormProps) {
 
       // Also store as 'token' for backward compatibility with Profile page
       localStorage.setItem('token', data.access_token);
-      
+
       // Mark this as a regular user login and clear any agency login flag
       localStorage.setItem('user_type', 'user');
       localStorage.removeItem('agency_login');

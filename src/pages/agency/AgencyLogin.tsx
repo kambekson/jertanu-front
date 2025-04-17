@@ -35,19 +35,19 @@ const AgencyLogin = () => {
       localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('token', data.access_token);
       localStorage.setItem('agency_login', 'true');
-      
+
       // Clear any regular user login flag
       localStorage.removeItem('user_type');
-      
+
       // Получаем данные пользователя и сохраняем их в localStorage
       try {
         console.log('Fetching user data...');
         const userData = await fetch('http://localhost:3000/api/users/me', {
           headers: {
-            'Authorization': `Bearer ${data.access_token}`
-          }
+            Authorization: `Bearer ${data.access_token}`,
+          },
         });
-        
+
         if (userData.ok) {
           const userInfo = await userData.json();
           console.log('User data received:', userInfo);
@@ -73,7 +73,7 @@ const AgencyLogin = () => {
     <div className="flex justify-center items-center bg-blue-50 py-10">
       <div className="bg-white rounded-lg shadow-sm p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold mb-2">Вход в личный кабинет агентства</h1>
-        
+
         <div className="mb-6">
           <p className="text-gray-700">
             У вас еще нет аккаунта?{' '}

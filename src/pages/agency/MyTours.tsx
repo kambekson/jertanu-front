@@ -48,17 +48,17 @@ interface Tour {
   isActive: boolean;
 }
 
-const TourCard: React.FC<TourCardProps> = ({ 
+const TourCard: React.FC<TourCardProps> = ({
   id,
-  title, 
-  imageUrl, 
-  price, 
+  title,
+  imageUrl,
+  price,
   isActive,
   onEdit,
-  onDelete
+  onDelete,
 }) => {
   const navigate = useNavigate();
-  
+
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow border border-gray-200">
       <div className="border-b border-gray-200">
@@ -69,25 +69,23 @@ const TourCard: React.FC<TourCardProps> = ({
             </div>
             <h3 className="font-medium text-gray-800">{title}</h3>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="flex items-center">
               <span className="text-gray-800 font-medium">₸ {price.toLocaleString()}</span>
             </div>
-            <div className={`px-3 py-1 rounded-full text-sm ${isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+            <div
+              className={`px-3 py-1 rounded-full text-sm ${isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
+            >
               {isActive ? 'Активный' : 'Не активный'}
             </div>
           </div>
         </div>
       </div>
-      
+
       <div className="p-4 border-t border-gray-100">
         <div className="flex gap-2">
-          <Button 
-            variant="neutral" 
-            className="text-sm"
-            onClick={() => onEdit(id)}
-          >
+          <Button variant="neutral" className="text-sm" onClick={() => onEdit(id)}>
             <Edit size={14} className="mr-1" />
             Редактировать
           </Button>
@@ -95,11 +93,7 @@ const TourCard: React.FC<TourCardProps> = ({
             <Eye size={14} className="mr-1" />
             Просмотр
           </Button>
-          <Button 
-            variant="neutral" 
-            className="text-sm text-red-500"
-            onClick={() => onDelete(id)}
-          >
+          <Button variant="neutral" className="text-sm text-red-500" onClick={() => onDelete(id)}>
             <Trash2 size={14} className="mr-1" />
             Удалить
           </Button>
@@ -116,7 +110,7 @@ export default function MyTours() {
   const [error, setError] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // Загрузка данных пользователя из localStorage
     const storedUser = localStorage.getItem('user');
@@ -128,7 +122,7 @@ export default function MyTours() {
       }
     }
   }, []);
-  
+
   // Функция для загрузки списка туров
   const fetchTours = async () => {
     try {
@@ -167,27 +161,27 @@ export default function MyTours() {
     setDeleteLoading(true);
     try {
       console.log('Удаление тура с ID:', id);
-      
+
       // Используем fetch напрямую, чтобы получить полный доступ к ответу
       const token = localStorage.getItem('access_token');
       if (!token) {
         throw new Error('Не найден токен авторизации');
       }
-      
+
       // Обратите внимание на исправленный URL - явно указываем полный путь API
       const url = `http://localhost:3000/api/tours/${id}`;
       console.log('Отправка DELETE запроса на URL:', url);
-      
+
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
-      
+
       console.log('Статус ответа:', response.status);
-      
+
       if (!response.ok) {
         let errorMessage = `Ошибка сервера: ${response.status}`;
         try {
@@ -204,10 +198,10 @@ export default function MyTours() {
         } catch (parseError) {
           console.error('Не удалось прочитать текст ошибки', parseError);
         }
-        
+
         throw new Error(errorMessage);
       }
-      
+
       await fetchTours();
       console.log('Тур успешно удален');
     } catch (err) {
@@ -258,29 +252,29 @@ export default function MyTours() {
         <div className="flex flex-col md:flex-row">
           {/* Левая боковая панель */}
           <AgencySidebar />
-          
+
           {/* Основной контент */}
           <div className="w-full md:w-3/4">
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Мои туры</h2>
-                <Button 
-                  variant="primary"
-                  onClick={handleAddTour}
-                  disabled={deleteLoading}
-                >
+                <Button variant="primary" onClick={handleAddTour} disabled={deleteLoading}>
                   <Plus size={16} className="mr-2" />
                   Добавить
                 </Button>
               </div>
-              
+
               <div className="space-y-4">
-                {tours.map(tour => (
-                  <TourCard 
+                {tours.map((tour) => (
+                  <TourCard
                     key={tour.id}
                     id={tour.id}
                     title={tour.title}
-                    imageUrl={tour.imageUrls && tour.imageUrls.length > 0 ? tour.imageUrls[0] : 'https://placehold.co/600x400?text=No+Image'}
+                    imageUrl={
+                      tour.imageUrls && tour.imageUrls.length > 0
+                        ? tour.imageUrls[0]
+                        : 'https://placehold.co/600x400?text=No+Image'
+                    }
                     price={tour.price}
                     isActive={tour.isActive}
                     onEdit={handleEditTour}
@@ -299,4 +293,4 @@ export default function MyTours() {
       </div>
     </div>
   );
-} 
+}

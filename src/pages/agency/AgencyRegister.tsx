@@ -31,7 +31,7 @@ const AgencyRegister = () => {
       loginEmail: '',
       password: '',
       confirmPassword: '',
-    }
+    },
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -42,7 +42,7 @@ const AgencyRegister = () => {
   };
 
   const handleNextSection = () => {
-    const sectionIds = sectionsConfig.map(section => section.id);
+    const sectionIds = sectionsConfig.map((section) => section.id);
     const currentIndex = sectionIds.indexOf(activeSection);
     if (currentIndex < sectionIds.length - 1) {
       setActiveSection(sectionIds[currentIndex + 1]);
@@ -50,31 +50,31 @@ const AgencyRegister = () => {
   };
 
   const handleInputChange = (fieldId: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [activeSection]: {
         ...prev[activeSection as keyof typeof prev],
-        [fieldId]: value
-      }
+        [fieldId]: value,
+      },
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.access.password !== formData.access.confirmPassword) {
       setError('Пароли не совпадают');
       return;
     }
-    
+
     setLoading(true);
     setError('');
-    
+
     try {
       const response = await fetch('http://localhost:3000/api/auth/register/agency', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: formData.access.loginEmail,
@@ -94,21 +94,21 @@ const AgencyRegister = () => {
             actualAddress: formData.contact.address,
             bankAccount: formData.banking.accountNumber,
             bankBic: formData.banking.bankBik,
-            bankName: formData.banking.bankName
-          }
-        })
+            bankName: formData.banking.bankName,
+          },
+        }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Ошибка при регистрации');
       }
-      
+
       // Сохраняем токен в localStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      
+
       // Перенаправляем пользователя в личный кабинет
       navigate('/agency/dashboard');
     } catch (err) {
@@ -119,13 +119,13 @@ const AgencyRegister = () => {
   };
 
   // Находим активную конфигурацию секции
-  const activeConfig = sectionsConfig.find(section => section.id === activeSection);
+  const activeConfig = sectionsConfig.find((section) => section.id === activeSection);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-blue-50 p-4">
       <div className="bg-white rounded-lg shadow-sm p-8 w-full container mx-auto min-h-[720px]">
         <h1 className="text-3xl font-bold mb-2">Регистрация</h1>
-        
+
         <div className="mb-6">
           <p className="text-gray-700">
             У вас уже есть аккаунт?{' '}
@@ -135,20 +135,13 @@ const AgencyRegister = () => {
           </p>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
-            {error}
-          </div>
-        )}
+        {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>}
 
         <div className="flex flex-wrap -mx-2">
           <div className="w-full md:w-1/4 px-2 mb-6">
-            <SideMenu 
-              activeSection={activeSection} 
-              onSectionChange={handleSectionChange}
-            />
+            <SideMenu activeSection={activeSection} onSectionChange={handleSectionChange} />
           </div>
-          
+
           <div className="w-full md:w-3/4 px-2">
             {activeConfig && (
               <FormSection
@@ -168,4 +161,4 @@ const AgencyRegister = () => {
   );
 };
 
-export default AgencyRegister; 
+export default AgencyRegister;

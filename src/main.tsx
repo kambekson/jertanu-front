@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'agency/register',
-        element: <AgencyRegister/>,
+        element: <AgencyRegister />,
       },
       {
         path: 'agency/login',
@@ -110,7 +110,7 @@ const router = createBrowserRouter([
       {
         path: 'agency/about',
         element: <AboutAgency />,
-      }
+      },
     ],
   },
 ]);

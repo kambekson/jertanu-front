@@ -57,7 +57,7 @@ const FormSection: React.FC<FormSectionProps> = ({
             onChange={(e) => handleInputChange(field.id, e.target.value)}
           />
         ))}
-        
+
         {showPrivacyPolicy && (
           <div className="flex items-center mt-6">
             <input
@@ -67,19 +67,17 @@ const FormSection: React.FC<FormSectionProps> = ({
               required
             />
             <label htmlFor="privacyPolicy" className="ml-2 text-gray-700">
-              Я принимаю <Link to="/terms" className="text-blue-600 hover:underline">политику конфиденциальности</Link>
+              Я принимаю{' '}
+              <Link to="/terms" className="text-blue-600 hover:underline">
+                политику конфиденциальности
+              </Link>
             </label>
           </div>
         )}
       </div>
-      
+
       <div>
-        <Button 
-          variant="primary" 
-          type="submit"
-          className="w-full py-3"
-          disabled={loading}
-        >
+        <Button variant="primary" type="submit" className="w-full py-3" disabled={loading}>
           {loading ? 'Загрузка...' : buttonText}
         </Button>
       </div>
@@ -87,4 +85,4 @@ const FormSection: React.FC<FormSectionProps> = ({
   );
 };
 
-export default FormSection; 
+export default FormSection;

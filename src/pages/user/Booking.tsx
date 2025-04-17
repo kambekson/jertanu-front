@@ -35,14 +35,12 @@ const Booking: React.FC<BookingProps> = () => {
   const guestCount = Number(queryParams.get('guestCount')) || 1;
   const price = Number(queryParams.get('price')) || 0;
   const title = queryParams.get('title') || '';
-  
+
   const [activeStep, setActiveStep] = useState<number>(2);
   const [travellerCount, setTravellerCount] = useState<number>(guestCount);
   const [mainTraveler, setMainTraveler] = useState<TravelerInfo>({ ...initialTravelerInfo });
   const [travelers, setTravelers] = useState<TravelerInfo[]>(() => {
-    return guestCount > 1 
-      ? Array(guestCount - 1).fill({ ...initialTravelerInfo })
-      : [];
+    return guestCount > 1 ? Array(guestCount - 1).fill({ ...initialTravelerInfo }) : [];
   });
   const totalPrice = travellerCount * price;
 
@@ -84,12 +82,12 @@ const Booking: React.FC<BookingProps> = () => {
     <div className="bg-gray-100 min-h-screen pb-10">
       <div className="container mx-auto px-4 py-6">
         {/* Steps indicator */}
-        <StepsIndicator 
-          activeStep={activeStep} 
+        <StepsIndicator
+          activeStep={activeStep}
           steps={[
             { number: 1, label: 'Выбор тура' },
             { number: 2, label: 'Ввод данных' },
-            { number: 3, label: 'Оплата' }
+            { number: 3, label: 'Оплата' },
           ]}
         />
 
@@ -97,8 +95,10 @@ const Booking: React.FC<BookingProps> = () => {
           <div className="lg:col-span-2">
             {/* Traveler Count Selector */}
             <div className="bg-white rounded-lg border-2 border-gray-300 p-6 mb-4">
-              <h2 className="text-lg font-medium mb-4">Количество путешественников ( {guestCount} )</h2>
-              <h3 className='mb-2'> Вы можете поменять количество путешествинников</h3>
+              <h2 className="text-lg font-medium mb-4">
+                Количество путешественников ( {guestCount} )
+              </h2>
+              <h3 className="mb-2"> Вы можете поменять количество путешествинников</h3>
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
                   <p className="text-sm mb-2">Укажите количество</p>
@@ -276,14 +276,11 @@ const Booking: React.FC<BookingProps> = () => {
 
               {/* Additional Travelers Forms */}
               {travelers.map((traveler, index) => {
-    
                 return (
                   <div key={`traveler-${index}`} className="border-t pt-6 mb-8">
                     <div className="flex justify-between items-center mb-4">
                       <div>
-                        <h3 className="font-medium">
-                          Путешественник {index + 1}{' '}
-                        </h3>
+                        <h3 className="font-medium">Путешественник {index + 1} </h3>
                         <p className="text-sm text-gray-600">Контакт</p>
                       </div>
                       <button className="text-blue-500 text-sm">Компаньоны</button>
@@ -430,9 +427,7 @@ const Booking: React.FC<BookingProps> = () => {
                   </div>
                   <span>{totalPrice} ₸</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  
-                </div>
+                <div className="flex justify-between items-center"></div>
               </div>
 
               <hr className="my-4" />

@@ -9,33 +9,35 @@ const stepsData = [
   {
     number: 1,
     isRight: false,
-    title: "Зарегистрируйтесь в сервисе JerTanu как тур-агент и откройте доступ к сервисам",
-    description: ""
+    title: 'Зарегистрируйтесь в сервисе JerTanu как тур-агент и откройте доступ к сервисам',
+    description: '',
   },
   {
     number: 2,
     isRight: true,
-    title: "Получите бесплатный тестовый доступ в личный кабинет JerTanu на 10 дней и оцените все возможности",
-    description: ""
+    title:
+      'Получите бесплатный тестовый доступ в личный кабинет JerTanu на 10 дней и оцените все возможности',
+    description: '',
   },
   {
     number: 3,
     isRight: false,
-    title: "Выберите подходящий тариф, оплатите услуги и получите доступ к сервисам JerTanu",
-    description: ""
+    title: 'Выберите подходящий тариф, оплатите услуги и получите доступ к сервисам JerTanu',
+    description: '',
   },
   {
     number: 4,
     isRight: true,
-    title: "Ваше агентство - новый счастливый пользователь сервисов JerTanu, получайте больше готовых заявок на туры и следите за новыми предложениями",
-    description: ""
-  }
+    title:
+      'Ваше агентство - новый счастливый пользователь сервисов JerTanu, получайте больше готовых заявок на туры и следите за новыми предложениями',
+    description: '',
+  },
 ];
 
 export default function ChooseAgency() {
   const [timelineVisible, setTimelineVisible] = useState(false);
   const timelineRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -47,8 +49,8 @@ export default function ChooseAgency() {
         }
       },
       {
-        threshold: 0.2
-      }
+        threshold: 0.2,
+      },
     );
 
     if (timelineRef.current) {
@@ -141,13 +143,13 @@ export default function ChooseAgency() {
           </h2>
 
           <div ref={timelineRef} className="relative w-full">
-            <div 
+            <div
               className={`absolute left-1/2 top-0 bottom-0 w-px bg-white opacity-50 transform -translate-x-1/2
                 ${timelineVisible ? 'h-full' : 'h-0'} 
                 transition-all duration-1000 ease-in-out`}
               style={{ transitionDelay: '200ms' }}
             ></div>
-            
+
             {stepsData.map((step) => (
               <Step
                 key={step.number}
@@ -157,7 +159,6 @@ export default function ChooseAgency() {
                 description={step.description}
               />
             ))}
-
           </div>
         </div>
       </div>

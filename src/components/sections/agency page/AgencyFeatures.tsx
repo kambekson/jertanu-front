@@ -61,11 +61,21 @@ export default function AgencyFeatures() {
           </h2>
 
           <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-            <Button variant="primary" className="text-sm sm:text-base">Удобная система поиска туров</Button>
-            <Button variant="neutral" className="text-sm sm:text-base">Система бронирования туров</Button>
-            <Button variant="neutral" className="text-sm sm:text-base">Система управления заявками</Button>
-            <Button variant="neutral" className="text-sm sm:text-base">Увеличение клиентской базы</Button>
-            <Button variant="neutral" className="text-sm sm:text-base">Личный кабинет для управления заявками</Button>
+            <Button variant="primary" className="text-sm sm:text-base">
+              Удобная система поиска туров
+            </Button>
+            <Button variant="neutral" className="text-sm sm:text-base">
+              Система бронирования туров
+            </Button>
+            <Button variant="neutral" className="text-sm sm:text-base">
+              Система управления заявками
+            </Button>
+            <Button variant="neutral" className="text-sm sm:text-base">
+              Увеличение клиентской базы
+            </Button>
+            <Button variant="neutral" className="text-sm sm:text-base">
+              Личный кабинет для управления заявками
+            </Button>
           </div>
 
           <div className="mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -99,7 +109,9 @@ export default function AgencyFeatures() {
                       ></path>
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base">Актуальные туры и цены в реальном времени</span>
+                  <span className="text-sm sm:text-base">
+                    Актуальные туры и цены в реальном времени
+                  </span>
                 </li>
                 <li className="flex items-start sm:items-center">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2 sm:mr-3 mt-0.5 sm:mt-0 flex-shrink-0">
@@ -116,7 +128,9 @@ export default function AgencyFeatures() {
                       ></path>
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base">Интуитивно понятный интерфейс с гибкими фильтрами</span>
+                  <span className="text-sm sm:text-base">
+                    Интуитивно понятный интерфейс с гибкими фильтрами
+                  </span>
                 </li>
                 <li className="flex items-start sm:items-center">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2 sm:mr-3 mt-0.5 sm:mt-0 flex-shrink-0">
@@ -133,7 +147,9 @@ export default function AgencyFeatures() {
                       ></path>
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base">Безопасное онлайн-бронирование и оплата</span>
+                  <span className="text-sm sm:text-base">
+                    Безопасное онлайн-бронирование и оплата
+                  </span>
                 </li>
                 <li className="flex items-start sm:items-center">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2 sm:mr-3 mt-0.5 sm:mt-0 flex-shrink-0">
@@ -150,7 +166,9 @@ export default function AgencyFeatures() {
                       ></path>
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base">Полная стоимость с учетом всех сборов и налогов</span>
+                  <span className="text-sm sm:text-base">
+                    Полная стоимость с учетом всех сборов и налогов
+                  </span>
                 </li>
                 <li className="flex items-start sm:items-center">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2 sm:mr-3 mt-0.5 sm:mt-0 flex-shrink-0">
@@ -167,12 +185,16 @@ export default function AgencyFeatures() {
                       ></path>
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base">Быстрая загрузка и оптимизация конверсии</span>
+                  <span className="text-sm sm:text-base">
+                    Быстрая загрузка и оптимизация конверсии
+                  </span>
                 </li>
               </ul>
 
               <div className="mt-6 sm:mt-8 flex justify-center md:justify-start">
-                <Button variant="secondary" className="w-full sm:w-auto">Увеличение клиентской базы</Button>
+                <Button variant="secondary" className="w-full sm:w-auto">
+                  Увеличение клиентской базы
+                </Button>
               </div>
             </div>
           </div>

@@ -7,14 +7,9 @@ interface SectionButtonProps {
   onClick: () => void;
 }
 
-const SectionButton: React.FC<SectionButtonProps> = ({
-  icon,
-  label,
-  isActive,
-  onClick,
-}) => {
+const SectionButton: React.FC<SectionButtonProps> = ({ icon, label, isActive, onClick }) => {
   return (
-    <button 
+    <button
       className={`flex items-center p-3 w-full rounded-lg border ${isActive ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'} text-left`}
       onClick={onClick}
     >
@@ -25,4 +20,4 @@ const SectionButton: React.FC<SectionButtonProps> = ({
   );
 };
 
-export default SectionButton; 
+export default SectionButton;

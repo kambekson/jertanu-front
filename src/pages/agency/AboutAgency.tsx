@@ -30,7 +30,7 @@ export default function AboutAgency() {
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<User['profile']>>({});
-  
+
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -54,9 +54,9 @@ export default function AboutAgency() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -73,16 +73,16 @@ export default function AboutAgency() {
       //   body: JSON.stringify(formData)
       // });
       // const updatedUser = await response.json();
-      
+
       // Временное обновление локальных данных
       const updatedUser = {
         ...user,
         profile: {
           ...user?.profile,
-          ...formData
-        }
+          ...formData,
+        },
       };
-      
+
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setIsEditing(false);
@@ -96,13 +96,13 @@ export default function AboutAgency() {
       <div className="container mx-auto py-4 px-2">
         <div className="flex flex-col md:flex-row">
           <AgencySidebar />
-          
+
           <div className="w-full md:w-3/4">
             <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Информация об агентстве</h2>
                 {!isEditing && (
-                  <button 
+                  <button
                     onClick={handleEditClick}
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                   >
@@ -110,30 +110,36 @@ export default function AboutAgency() {
                   </button>
                 )}
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   {isEditing ? (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Название компании</label>
-                    <input
-                      type="text"
-                      name="companyName"
-                      value={formData.companyName || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">Название компании</h3>
-                    <p className="mt-1 text-gray-900">{user?.profile?.companyName || 'Не указано'}</p>
-                  </div>
-                )}
-                  
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Название компании
+                      </label>
+                      <input
+                        type="text"
+                        name="companyName"
+                        value={formData.companyName || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">Название компании</h3>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.companyName || 'Не указано'}
+                      </p>
+                    </div>
+                  )}
+
                   {isEditing ? (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Официальное название</label>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Официальное название
+                      </label>
                       <input
                         type="text"
                         name="officialCompanyName"
@@ -145,10 +151,12 @@ export default function AboutAgency() {
                   ) : (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Официальное название</h3>
-                      <p className="mt-1 text-gray-900">{user?.profile?.officialCompanyName || 'Не указано'}</p>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.officialCompanyName || 'Не указано'}
+                      </p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-500 mb-1">БИН</label>
@@ -166,10 +174,12 @@ export default function AboutAgency() {
                       <p className="mt-1 text-gray-900">{user?.profile?.bin || 'Не указано'}</p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Дата регистрации</label>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Дата регистрации
+                      </label>
                       <input
                         type="date"
                         name="registrationDate"
@@ -181,13 +191,17 @@ export default function AboutAgency() {
                   ) : (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Дата регистрации</h3>
-                      <p className="mt-1 text-gray-900">{user?.profile?.registrationDate || 'Не указано'}</p>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.registrationDate || 'Не указано'}
+                      </p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Директор</label>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Директор
+                      </label>
                       <input
                         type="text"
                         name="directorFullName"
@@ -199,11 +213,13 @@ export default function AboutAgency() {
                   ) : (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Директор</h3>
-                      <p className="mt-1 text-gray-900">{user?.profile?.directorFullName || 'Не указано'}</p>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.directorFullName || 'Не указано'}
+                      </p>
                     </div>
                   )}
                 </div>
-                
+
                 <div className="space-y-4">
                   {isEditing ? (
                     <div className="mb-4">
@@ -222,10 +238,12 @@ export default function AboutAgency() {
                       <p className="mt-1 text-gray-900">{user?.profile?.city || 'Не указано'}</p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Контактное лицо</label>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Контактное лицо
+                      </label>
                       <input
                         type="text"
                         name="contactPerson"
@@ -237,13 +255,17 @@ export default function AboutAgency() {
                   ) : (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Контактное лицо</h3>
-                      <p className="mt-1 text-gray-900">{user?.profile?.contactPerson || 'Не указано'}</p>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.contactPerson || 'Не указано'}
+                      </p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Телефон</label>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Телефон
+                      </label>
                       <input
                         type="tel"
                         name="phoneNumber"
@@ -255,10 +277,12 @@ export default function AboutAgency() {
                   ) : (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Телефон</h3>
-                      <p className="mt-1 text-gray-900">{user?.profile?.phoneNumber || 'Не указано'}</p>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.phoneNumber || 'Не указано'}
+                      </p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
@@ -273,13 +297,17 @@ export default function AboutAgency() {
                   ) : (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Email</h3>
-                      <p className="mt-1 text-gray-900">{user?.profile?.contactEmail || 'Не указано'}</p>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.contactEmail || 'Не указано'}
+                      </p>
                     </div>
                   )}
-                  
+
                   {isEditing ? (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">Тип агентства</label>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Тип агентства
+                      </label>
                       <input
                         type="text"
                         name="agencyType"
@@ -291,12 +319,14 @@ export default function AboutAgency() {
                   ) : (
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Тип агентства</h3>
-                      <p className="mt-1 text-gray-900">{user?.profile?.agencyType || 'Не указано'}</p>
+                      <p className="mt-1 text-gray-900">
+                        {user?.profile?.agencyType || 'Не указано'}
+                      </p>
                     </div>
                   )}
                 </div>
               </div>
-              
+
               {isEditing ? (
                 <div className="mt-6 mb-4">
                   <label className="block text-sm font-medium text-gray-500 mb-1">Описание</label>
@@ -314,11 +344,13 @@ export default function AboutAgency() {
                   <p className="mt-1 text-gray-900">{user?.profile?.description || 'Не указано'}</p>
                 </div>
               )}
-              
+
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 {isEditing ? (
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Юридический адрес</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      Юридический адрес
+                    </label>
                     <input
                       type="text"
                       name="legalAddress"
@@ -330,13 +362,17 @@ export default function AboutAgency() {
                 ) : (
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Юридический адрес</h3>
-                    <p className="mt-1 text-gray-900">{user?.profile?.legalAddress || 'Не указано'}</p>
+                    <p className="mt-1 text-gray-900">
+                      {user?.profile?.legalAddress || 'Не указано'}
+                    </p>
                   </div>
                 )}
-                
+
                 {isEditing ? (
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Фактический адрес</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      Фактический адрес
+                    </label>
                     <input
                       type="text"
                       name="actualAddress"
@@ -348,15 +384,19 @@ export default function AboutAgency() {
                 ) : (
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Фактический адрес</h3>
-                    <p className="mt-1 text-gray-900">{user?.profile?.actualAddress || 'Не указано'}</p>
+                    <p className="mt-1 text-gray-900">
+                      {user?.profile?.actualAddress || 'Не указано'}
+                    </p>
                   </div>
                 )}
               </div>
-              
+
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 {isEditing ? (
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Банковский счет</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      Банковский счет
+                    </label>
                     <input
                       type="text"
                       name="bankAccount"
@@ -368,13 +408,17 @@ export default function AboutAgency() {
                 ) : (
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Банковский счет</h3>
-                    <p className="mt-1 text-gray-900">{user?.profile?.bankAccount || 'Не указано'}</p>
+                    <p className="mt-1 text-gray-900">
+                      {user?.profile?.bankAccount || 'Не указано'}
+                    </p>
                   </div>
                 )}
-                
+
                 {isEditing ? (
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-500 mb-1">БИК банка</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      БИК банка
+                    </label>
                     <input
                       type="text"
                       name="bankBic"
@@ -389,10 +433,12 @@ export default function AboutAgency() {
                     <p className="mt-1 text-gray-900">{user?.profile?.bankBic || 'Не указано'}</p>
                   </div>
                 )}
-                
+
                 {isEditing ? (
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Название банка</label>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">
+                      Название банка
+                    </label>
                     <input
                       type="text"
                       name="bankName"
@@ -408,24 +454,24 @@ export default function AboutAgency() {
                   </div>
                 )}
               </div>
-            
-            {isEditing && (
-              <div className="flex justify-end gap-4 mt-6">
-                <button
-                  onClick={handleCancelClick}
-                  className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                >
-                  Отмена
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  Сохранить
-                </button>
-              </div>
-            )}
-          </div>
+
+              {isEditing && (
+                <div className="flex justify-end gap-4 mt-6">
+                  <button
+                    onClick={handleCancelClick}
+                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    Отмена
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    Сохранить
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

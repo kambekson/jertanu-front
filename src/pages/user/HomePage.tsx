@@ -10,14 +10,13 @@ import heroimg4 from '../../assets/hero4.png';
 
 // Массив изображений для маппинга с данными API
 const imageMap = {
-  'Астана': heroimg1,
-  'Ақтау': heroimg2,
-  'Алматы': heroimg3,
-  'Түркістан': heroimg4,
+  Астана: heroimg1,
+  Ақтау: heroimg2,
+  Алматы: heroimg3,
+  Түркістан: heroimg4,
   // Значение по умолчанию, если город не найден
-  'default': heroimg1
+  default: heroimg1,
 };
-
 
 export default function HomePage() {
   const [tours, setTours] = useState([]);
@@ -28,17 +27,17 @@ export default function HomePage() {
     const fetchTours = async () => {
       try {
         const response = await fetch('http://localhost:3000/api/tours');
-        
+
         if (!response.ok) {
           throw new Error(`Ошибка при получении данных: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
+
         // Преобразование данных API в формат, ожидаемый компонентами
         const formattedTours = data.map((tour: any) => ({
           id: tour.id,
-          img: (tour.imageUrls && tour.imageUrls.length > 0) ? tour.imageUrls[0] : '',
+          img: tour.imageUrls && tour.imageUrls.length > 0 ? tour.imageUrls[0] : '',
           city: tour.city,
           title: tour.title,
           price: tour.price,
@@ -47,9 +46,9 @@ export default function HomePage() {
           totalReviews: tour.totalReviews || 0,
           dates: `${new Date(tour.startDate).toLocaleDateString()} - ${new Date(tour.endDate).toLocaleDateString()}`,
           statuses: tour.status,
-          discount: tour.discount
+          discount: tour.discount,
         }));
-        
+
         setTours(formattedTours);
       } catch (err) {
         console.error('Ошибка при загрузке туров:', err);

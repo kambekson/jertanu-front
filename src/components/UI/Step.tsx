@@ -30,8 +30,8 @@ export default function Step({ number, isRight = false, title, description }: St
       {
         root: null, // viewport
         rootMargin: '0px',
-        threshold: 0.1 // 10% of the item visible
-      }
+        threshold: 0.1, // 10% of the item visible
+      },
     );
 
     if (stepRef.current) {
@@ -66,7 +66,7 @@ export default function Step({ number, isRight = false, title, description }: St
       </div>
       <div className="w-1/2"></div>
       {/* Circle dot for timeline */}
-      <div 
+      <div
         className={`absolute left-1/2 top-0 transform -translate-x-1/2 w-6 h-6 bg-white rounded-full border-4 border-blue-500 z-10
           ${isVisible ? 'scale-100' : 'scale-0'} 
           transition-transform duration-500 ease-out`}

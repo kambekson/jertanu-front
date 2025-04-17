@@ -11,9 +11,7 @@ const AutocompleteInput = ({
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [options, setOptions] = useState([
-    ...cities.map((city) => city),
-  ]);
+  const [options, setOptions] = useState([...cities.map((city) => city)]);
   const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);

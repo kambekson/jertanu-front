@@ -45,31 +45,31 @@ export default function Promos() {
       category: 'Для постоянных пользователей',
       discount: '10%',
       expiryDate: 'май 2025',
-      code: 'TOUR25'
+      code: 'TOUR25',
     },
     {
       id: 2,
       category: 'Для новых клиентов',
       discount: '5%',
       expiryDate: 'сент 2025',
-      code: 'WELCOME25'
+      code: 'WELCOME25',
     },
     {
       id: 3,
       category: 'Для вип-клиентов',
       discount: '20%',
       expiryDate: 'дек 2025',
-      code: 'VIP25'
-    }
+      code: 'VIP25',
+    },
   ]);
   const [showModal, setShowModal] = useState(false);
   const [newPromo, setNewPromo] = useState<Omit<Promo, 'id'>>({
     category: '',
     discount: '',
     expiryDate: '',
-    code: ''
+    code: '',
   });
-  
+
   useEffect(() => {
     // Загрузка данных пользователя из localStorage
     const storedUser = localStorage.getItem('user');
@@ -92,28 +92,28 @@ export default function Promos() {
       category: '',
       discount: '',
       expiryDate: '',
-      code: ''
+      code: '',
     });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setNewPromo(prev => ({
+    setNewPromo((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Добавление нового промокода
-    const newId = promos.length > 0 ? Math.max(...promos.map(p => p.id)) + 1 : 1;
+    const newId = promos.length > 0 ? Math.max(...promos.map((p) => p.id)) + 1 : 1;
     const promoToAdd = {
       id: newId,
-      ...newPromo
+      ...newPromo,
     };
-    
+
     setPromos([...promos, promoToAdd]);
     handleCloseModal();
   };
@@ -124,14 +124,14 @@ export default function Promos() {
         <div className="flex flex-col md:flex-row">
           {/* Левая боковая панель */}
           <AgencySidebar />
-          
+
           {/* Основной контент */}
           <div className="w-full md:w-3/4">
             <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-medium text-gray-800">Промокоды</h2>
-                <Button 
-                  variant="primary" 
+                <Button
+                  variant="primary"
                   className="flex items-center gap-2"
                   onClick={handleAddPromo}
                 >
@@ -139,14 +139,18 @@ export default function Promos() {
                   <span>Добавить</span>
                 </Button>
               </div>
-              
+
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-white border-b border-gray-200">
                       <th className="text-center px-4 py-4 text-gray-600 font-bold">Категория</th>
-                      <th className="text-center px-4 py-4 text-gray-600 font-bold">Размер скидки</th>
-                      <th className="text-center px-4 py-4 text-gray-600 font-bold">Срок действия</th>
+                      <th className="text-center px-4 py-4 text-gray-600 font-bold">
+                        Размер скидки
+                      </th>
+                      <th className="text-center px-4 py-4 text-gray-600 font-bold">
+                        Срок действия
+                      </th>
                       <th className="text-center px-4 py-4 text-gray-600 font-bold">Промокод</th>
                     </tr>
                   </thead>
@@ -173,14 +177,14 @@ export default function Promos() {
           <div className="bg-white/90 rounded-lg shadow-xl w-full max-w-md backdrop-blur-md border border-gray-100">
             <div className="flex justify-between items-center p-6 border-b border-gray-200">
               <h3 className="text-lg font-medium">Добавление промокода</h3>
-              <button 
+              <button
                 onClick={handleCloseModal}
                 className="text-gray-400 hover:text-gray-500 transition-colors"
               >
                 <X size={20} />
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6">
               <div className="mb-4">
                 <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
@@ -201,7 +205,7 @@ export default function Promos() {
                   <option value="Сезонная акция">Сезонная акция</option>
                 </select>
               </div>
-              
+
               <div className="mb-4">
                 <label htmlFor="discount" className="block text-sm font-medium text-gray-700 mb-1">
                   Размер скидки
@@ -217,9 +221,12 @@ export default function Promos() {
                   required
                 />
               </div>
-              
+
               <div className="mb-4">
-                <label htmlFor="expiryDate" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="expiryDate"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Срок действия
                 </label>
                 <input
@@ -233,7 +240,7 @@ export default function Promos() {
                   required
                 />
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
                   Промокод
@@ -249,7 +256,7 @@ export default function Promos() {
                   required
                 />
               </div>
-              
+
               <div className="flex justify-end gap-3">
                 <button
                   type="button"
@@ -258,10 +265,7 @@ export default function Promos() {
                 >
                   Отмена
                 </button>
-                <Button
-                  variant="primary"
-                  type="submit"
-                >
+                <Button variant="primary" type="submit">
                   Добавить
                 </Button>
               </div>
@@ -271,4 +275,4 @@ export default function Promos() {
       )}
     </div>
   );
-} 
+}

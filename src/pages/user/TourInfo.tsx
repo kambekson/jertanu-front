@@ -116,20 +116,20 @@ const TourInfo: React.FC = () => {
     fetchTour();
   }, [id]); // Добавляем id в массив зависимостей
 
- // Если данные загружаются, показываем индикатор загрузки
- if (loading) {
-  return <div className="container py-20 text-center">Загрузка туров...</div>;
-}
+  // Если данные загружаются, показываем индикатор загрузки
+  if (loading) {
+    return <div className="container py-20 text-center">Загрузка туров...</div>;
+  }
 
-// Если произошла ошибка, показываем сообщение об ошибке
-if (error) {
-  return <div className="container py-20 text-center text-red-500">{error}</div>;
-}
+  // Если произошла ошибка, показываем сообщение об ошибке
+  if (error) {
+    return <div className="container py-20 text-center text-red-500">{error}</div>;
+  }
 
-// Если туры не найдены, показываем соответствующее сообщение
-if (!tours.length) {
-  return <div className="container py-20 text-center">Туры не найдены</div>;
-}
+  // Если туры не найдены, показываем соответствующее сообщение
+  if (!tours.length) {
+    return <div className="container py-20 text-center">Туры не найдены</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -190,36 +190,38 @@ if (!tours.length) {
             width={500}
             height={300}
           />
-          
         </div>
       </div>
 
       {/* Title and Description */}
       <div className="mt-10">
-        <h1 className="text-2xl font-bold mb-4">
-          {tours[0]?.title}
-        </h1>
-        <p className="text-gray-600 text-sm">
-        {tours[0]?.description}
-        </p>
+        <h1 className="text-2xl font-bold mb-4">{tours[0]?.title}</h1>
+        <p className="text-gray-600 text-sm">{tours[0]?.description}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-        {/* Left Column - Tour Details */}
+        {/* Left Column - Tours Details */}
         <div className="md:col-span-2">
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Длительность</h2>
             <div className="flex gap-2 my-1.5">
               {formatDate(tours[0].startDate)} - {formatDate(tours[0].endDate)}
             </div>
-            <p className="text-sm mb-4">{calculateDuration(tours[0].startDate, tours[0].endDate)} {tours[0].title}</p>
+            <p className="text-sm mb-4">
+              {calculateDuration(tours[0].startDate, tours[0].endDate)} {tours[0].title}
+            </p>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              {tours[0]?.itinerary?.map((item: { location: string; duration: string; description: string }, index: number) => (
-                <div key={index} className="rounded-lg border-2 border-gray-400">
-                  <p className="px-3 py-1">{item.location}</p>
-                </div>
-              ))}
+              {tours[0]?.itinerary?.map(
+                (
+                  item: { location: string; duration: string; description: string },
+                  index: number,
+                ) => (
+                  <div key={index} className="rounded-lg border-2 border-gray-400">
+                    <p className="px-3 py-1">{item.location}</p>
+                  </div>
+                ),
+              )}
             </div>
             <div className="border-t border-gray-200 pt-4 mt-2"></div>
           </div>
@@ -229,33 +231,38 @@ if (!tours.length) {
             <h2 className="text-xl font-semibold mb-4">План путешествия</h2>
 
             <div className="accordion mb-4">
-            {tours[0]?.itinerary?.map((item: { location: string; duration: string; description: string }, index: number) => (
-              <div className="mb-4">
-                <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
-                  <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
-                  {item.location} ({item.duration})
-                    <svg
-                      width="12"
-                      height="6"
-                      viewBox="0 0 12 6"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 1L6 5L11 1"
-                        stroke="#666"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </summary>
-                  <div className="p-4 border-t border-gray-100">
-                    <p className="text-sm text-gray-600">{item.description}</p>
+              {tours[0]?.itinerary?.map(
+                (
+                  item: { location: string; duration: string; description: string },
+                  index: number,
+                ) => (
+                  <div className="mb-4">
+                    <details className="bg-white border border-gray-200 rounded-md overflow-hidden">
+                      <summary className="cursor-pointer p-4 flex items-center justify-between font-medium">
+                        {item.location} ({item.duration})
+                        <svg
+                          width="12"
+                          height="6"
+                          viewBox="0 0 12 6"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M1 1L6 5L11 1"
+                            stroke="#666"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </summary>
+                      <div className="p-4 border-t border-gray-100">
+                        <p className="text-sm text-gray-600">{item.description}</p>
+                      </div>
+                    </details>
                   </div>
-                </details>
-              </div>
-              ))}
+                ),
+              )}
             </div>
           </div>
 
@@ -265,14 +272,16 @@ if (!tours.length) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {tours[0]?.services?.map((serviceId, index) => {
                 // Находим информацию о сервисе из serviceOptions по его id
-                const serviceInfo = serviceOptions.find(option => option.id === serviceId);
-                
+                const serviceInfo = serviceOptions.find((option) => option.id === serviceId);
+
                 return (
                   <div key={index} className="bg-gray-100 p-4 rounded-md">
                     <div className="flex items-center mb-2">
                       <h3 className="font-medium text-sm">{serviceInfo?.title || serviceId}</h3>
                     </div>
-                    <p className="text-xs text-gray-600">{serviceInfo?.description || 'Описание недоступно'}</p>
+                    <p className="text-xs text-gray-600">
+                      {serviceInfo?.description || 'Описание недоступно'}
+                    </p>
                   </div>
                 );
               })}
@@ -374,9 +383,9 @@ if (!tours.length) {
           <div className="bg-gray-50 rounded-lg p-6 sticky top-4">
             <div className="mb-6 ">
               <h3 className="text-sm font-medium mb-3">Дата</h3>
-                <div className="w-full border border-gray-200 rounded-md p-2  bg-white">
-                  {formatDate(tours[0].startDate)} - {formatDate(tours[0].endDate)}
-                </div>
+              <div className="w-full border border-gray-200 rounded-md p-2  bg-white">
+                {formatDate(tours[0].startDate)} - {formatDate(tours[0].endDate)}
+              </div>
             </div>
 
             <div className="mb-6">
@@ -400,8 +409,7 @@ if (!tours.length) {
                     viewBox="0 0 12 6"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                  >
-                  </svg>
+                  ></svg>
                 </div>
               </div>
             </div>
@@ -415,11 +423,15 @@ if (!tours.length) {
                 </div>
                 <div className="flex justify-between mb-2 text-gray-500 text-sm">
                   <span>НДС:</span>
-                  <span>12% - {Math.round(tours[0].price * guestCount * 0.12).toLocaleString()} ₸</span>
+                  <span>
+                    12% - {Math.round(tours[0].price * guestCount * 0.12).toLocaleString()} ₸
+                  </span>
                 </div>
                 <div className="flex justify-between mt-4 pt-4 border-t border-gray-200">
                   <span className="text-lg font-semibold">Итого:</span>
-                  <span className="text-lg font-semibold text-orange-500">{Math.round(tours[0].price * guestCount).toLocaleString()} ₸</span>
+                  <span className="text-lg font-semibold text-orange-500">
+                    {Math.round(tours[0].price * guestCount).toLocaleString()} ₸
+                  </span>
                 </div>
               </div>
             </div>

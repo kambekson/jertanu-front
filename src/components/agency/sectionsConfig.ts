@@ -135,4 +135,4 @@ const sectionsConfig: SectionConfig[] = [
   },
 ];
 
-export default sectionsConfig; 
+export default sectionsConfig;

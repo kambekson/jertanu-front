@@ -28,7 +28,9 @@ export default function FeatureCard({ number, title, description }: FeatureCardP
               className="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-50 text-white rounded-md"
             >
               <img src={ArrowRightIcon} alt="" className="w-4 h-4 sm:w-auto sm:h-auto" />
-              <span className="ml-2 sm:ml-3 text-sm sm:text-base text-blue-500 font-bold">Подробнее</span>
+              <span className="ml-2 sm:ml-3 text-sm sm:text-base text-blue-500 font-bold">
+                Подробнее
+              </span>
             </a>
           </div>
         </div>

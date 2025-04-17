@@ -13,7 +13,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ activeSection, onSectionChange }) =
   return (
     <div className="space-y-2">
       {sectionsConfig.map((section) => (
-        <SectionButton 
+        <SectionButton
           key={section.id}
           icon={section.icon}
           label={section.label}
@@ -25,4 +25,4 @@ const SideMenu: React.FC<SideMenuProps> = ({ activeSection, onSectionChange }) =
   );
 };
 
-export default SideMenu; 
+export default SideMenu;
