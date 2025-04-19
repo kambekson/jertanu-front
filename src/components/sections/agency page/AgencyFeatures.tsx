@@ -1,6 +1,6 @@
 import toursHero from '../../../assets/toursHero.jpg';
-import FeatureCard from '../../../components/UI/FeatureCard';
-import Button from '../../UI/Button';
+import FeatureCard from '../../../UI/FeatureCard';
+import Button from '../../../UI/Button';
 
 export default function AgencyFeatures() {
   // Define features data

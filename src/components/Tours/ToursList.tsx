@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { TourCardLarge } from '../UI/TourCardLarge';
+import { TourCardLarge } from '../../UI/TourCardLarge';
 import { Tour } from '../../pages/ToursPage';
 
 interface ToursListProps {

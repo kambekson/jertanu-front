@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import Feature from '../../UI/Feature';
-import Step from '../../UI/Step';
+import Feature from '../../../UI/Feature';
+import Step from '../../../UI/Step';
 import planeBg from '../../../assets/icons/plane-ico.png';
 import chooseBg from '../../../assets/choose-agency-bg.png';
 

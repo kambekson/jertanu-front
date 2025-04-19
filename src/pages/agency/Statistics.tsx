@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, BarChart2, ArrowLeft } from 'lucide-react';
+import { LogOut, ArrowLeft } from 'lucide-react';
 
 interface User {
   id: number;

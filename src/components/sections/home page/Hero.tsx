@@ -3,7 +3,7 @@ import heroimg2 from '../../../assets/hero2.png';
 import heroimg3 from '../../../assets/hero3.png';
 import heroimg4 from '../../../assets/hero4.png';
 
-import TourSearchBar from '../../UI/TourSearchBar.tsx';
+import TourSearchBar from '../../../UI/TourSearchBar.tsx';
 
 // Массив с изображениями и названиями городов
 const images = [

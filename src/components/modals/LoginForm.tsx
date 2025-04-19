@@ -1,70 +1,21 @@
 import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
-import Button from '../UI/Button';
+import Button from '../../UI/Button';
+import Input from '../../UI/Input';
+import {useLogin} from "../../hooks/useLogin.tsx";
 
-interface LoginFormProps {
+interface LoginFormProps{
   switchView: (view: 'forgot' | 'signup') => void;
 }
 
 export default function LoginForm({ switchView }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const {login, error, isLoading} = useLogin();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    try {
-      console.log('Attempting login with:', { email }); // Don't log password
-
-      // Simplified request matching exactly what works in Postman
-      const response = await fetch('http://localhost:3000/api/auth/sign-in', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        // Removed credentials: 'include' as it might interfere with the request
-      });
-
-      console.log('Login response status:', response.status);
-
-      // Log the raw response text for debugging
-      const responseText = await response.text();
-      console.log('Raw response:', responseText);
-
-      // Parse the JSON manually after logging the raw text
-      const data = responseText ? JSON.parse(responseText) : {};
-      console.log('Login response data:', data);
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Неверный email или пароль. Пожалуйста, проверьте введенные данные.');
-        } else {
-          throw new Error(data.message || 'Ошибка при входе');
-        }
-      }
-
-      // Store tokens consistently across the application
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
-
-      // Also store as 'token' for backward compatibility with Profile page
-      localStorage.setItem('token', data.access_token);
-
-      // Mark this as a regular user login and clear any agency login flag
-      localStorage.setItem('user_type', 'user');
-      localStorage.removeItem('agency_login');
-
-      console.log('Login successful, redirecting to home page');
-      window.location.href = '/';
-    } catch (err) {
-      console.error('Login error:', err);
-      setError(err instanceof Error ? err.message : 'Произошла ошибка при входе');
-    } finally {
-      setIsLoading(false);
-    }
+    login(email, password)
   };
 
   return (
@@ -82,22 +33,22 @@ export default function LoginForm({ switchView }: LoginFormProps) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-4">
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
+            <Input
+              id='email'
+              label="Email"
               type="email"
               placeholder="Ваш email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
-            <input
+            <Input
+              id='password'
+              label="Пароль"
               type="password"
               placeholder="Ваш пароль"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

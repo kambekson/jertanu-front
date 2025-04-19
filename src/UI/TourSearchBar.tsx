@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import DatePicker from './DatePicker';
-import AutocompleteInput from './AutocompleteInput';
+import DatePicker from './DatePicker.tsx';
+import AutocompleteInput from './AutocompleteInput.tsx';
 
 export default function TourSearchBar() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());

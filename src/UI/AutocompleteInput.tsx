@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { cities } from '../../data/cities';
+import { cities } from '../data/cities.ts';
 
 // Autocomplete component
 const AutocompleteInput = ({

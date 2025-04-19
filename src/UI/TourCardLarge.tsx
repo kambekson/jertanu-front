@@ -1,16 +1,16 @@
 import { Heart } from 'lucide-react';
 import React, { useState } from 'react';
-import HotelIcon from '../../assets/icons/HotelIcon.svg';
-import TransferIcon from '../../assets/icons/TransferIcon.svg';
-import MealIcon from '../../assets/icons/MealIcon.svg';
-import RemainingIcon from '../../assets/icons/RemainingIcon.svg';
-import StarIcon from '../../assets/icons/StarIcon.svg';
-import LocationIcon from '../../assets/icons/LocationIcon.svg';
-import DurationIcon from '../../assets/icons/DurationIcon.svg';
-import GuideIcon from '../../assets/icons/GuideIcon.svg';
-import TicketsIcon from '../../assets/icons/TicketsIcon.svg';
-import { Tour } from '../../pages/ToursPage';
-import { calculateDuration, formatDate } from '../../utils/dateUtils';
+import HotelIcon from '../assets/icons/HotelIcon.svg';
+import TransferIcon from '../assets/icons/TransferIcon.svg';
+import MealIcon from '../assets/icons/MealIcon.svg';
+import RemainingIcon from '../assets/icons/RemainingIcon.svg';
+import StarIcon from '../assets/icons/StarIcon.svg';
+import LocationIcon from '../assets/icons/LocationIcon.svg';
+import DurationIcon from '../assets/icons/DurationIcon.svg';
+import GuideIcon from '../assets/icons/GuideIcon.svg';
+import TicketsIcon from '../assets/icons/TicketsIcon.svg';
+import { Tour } from '../pages/ToursPage.tsx';
+import { calculateDuration, formatDate } from '../utils/dateUtils.ts';
 
 interface TourCardLargeProps {
   tour: Tour;

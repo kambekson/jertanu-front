@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import StepsIndicator from '../../components/UI/StepsIndicator';
+import StepsIndicator from '../../UI/StepsIndicator';
 
 interface TravelerInfo {
   firstName: string;

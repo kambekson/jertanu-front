@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, LogOut, Edit, Eye, Trash2 } from 'lucide-react';
-import Button from '../../components/UI/Button';
+import Button from '../../UI/Button';
 import AgencySidebar from '../../components/layout/AgencySidebar';
 import { apiService } from '../../services/apiService';
 

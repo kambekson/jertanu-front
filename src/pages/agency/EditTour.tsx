@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, DragEvent } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Upload, X } from 'lucide-react';
-import Button from '../../components/UI/Button';
-import Input from '../../components/UI/Input';
-import DatePicker from '../../components/UI/DatePicker';
+import Button from '../../UI/Button';
+import Input from '../../UI/Input';
+import DatePicker from '../../UI/DatePicker';
 import { apiService } from '../../services/apiService';
 import { serviceOptions } from '../../data/serviceOptions';
 import { tourStatuses } from '../../data/tourStatuses';

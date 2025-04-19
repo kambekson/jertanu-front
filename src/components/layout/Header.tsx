@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import AuthModal from '../modals/AuthModal';
-import Button from '../UI/Button';
+import Button from '../../UI/Button';
 import logo from '../../assets/jertanu-logo.svg';
 import { User, Heart, Calendar, LogOut, Menu, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';

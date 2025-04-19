@@ -1,5 +1,5 @@
 import React from 'react';
-import SectionButton from '../UI/SectionButton';
+import SectionButton from '../../UI/SectionButton';
 import sectionsConfig from './sectionsConfig';
 
 export type SectionType = 'general' | 'contact' | 'banking' | 'access';

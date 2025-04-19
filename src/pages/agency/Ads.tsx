@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Button from '../../components/UI/Button';
+import Button from '../../UI/Button';
 import AgencySidebar from '../../components/layout/AgencySidebar';
 
 interface User {

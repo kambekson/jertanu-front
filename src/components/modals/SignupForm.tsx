@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User } from 'lucide-react';
+import { Mail} from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Button from '../UI/Button';
+import Button from '../../UI/Button';
 
 interface SignupFormProps {
   switchView: (view: 'login' | 'signup' | 'forgot' | 'reset' | 'verify') => void;

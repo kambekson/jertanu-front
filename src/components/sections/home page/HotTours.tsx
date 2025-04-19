@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import TourCard from '../../UI/TourCard';
+import TourCard from '../../../UI/TourCard';
 import { Link } from 'react-router-dom';
 
 export interface Tour {

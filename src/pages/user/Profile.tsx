@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Profile.scss';
 import avatarPlaceholder from '../../assets/avatar-placeholder.svg';
-import Button from '../../components/UI/Button';
+import Button from '../../UI/Button';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:3000/api';

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import seasonTours from '../../../assets/season.jpg';
-import TourCard from '../../UI/TourCard';
+import TourCard from '../../../UI/TourCard';
 
 interface BaseTour {
   img: string;

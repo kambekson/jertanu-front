@@ -1,5 +1,5 @@
 import jertanuLogo from '../../../assets/jertanu-logo-white.svg';
-import Button from '../../UI/Button';
+import Button from '../../../UI/Button';
 import agencyHeroBg from '../../../assets/hero-agency-bg.png';
 import ClientScreen from '../../../assets/client-snap.png';
 import { useNavigate } from 'react-router-dom';

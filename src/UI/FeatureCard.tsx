@@ -1,4 +1,4 @@
-import ArrowRightIcon from '../../assets/icons/arrow1.svg';
+import ArrowRightIcon from '../assets/icons/arrow1.svg';
 
 interface FeatureCardProps {
   number: string;

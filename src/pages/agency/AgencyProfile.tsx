@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Edit, LogOut } from 'lucide-react';
-import Button from '../../components/UI/Button';
+import Button from '../../UI/Button';
 import AgencySidebar from '../../components/layout/AgencySidebar';
 
 interface TourCardProps {

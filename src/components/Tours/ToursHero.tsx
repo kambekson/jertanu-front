@@ -1,5 +1,5 @@
 import toursHero from '../../assets/toursHero.jpg';
-import TourSearchBar from '../UI/TourSearchBar.tsx';
+import TourSearchBar from '../../UI/TourSearchBar.tsx';
 
 export default function ToursHero() {
   return (

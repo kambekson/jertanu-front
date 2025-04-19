@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, LogOut, Plus, X } from 'lucide-react';
-import Button from '../../components/UI/Button';
+import Button from '../../UI/Button';
 import AgencySidebar from '../../components/layout/AgencySidebar';
 
 interface User {
