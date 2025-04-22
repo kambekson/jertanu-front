@@ -70,5 +70,6 @@ export default function LoginForm({ switchView }: LoginFormProps) {
         </button>
       </div>
     </div>
+    
   );
 }
