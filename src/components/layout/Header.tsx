@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import AuthModal from '../modals/AuthModal';
+import AuthModal from '../../features/auth/components/AuthModal';
 import Button from '../../UI/Button';
 import logo from '../../assets/jertanu-logo.svg';
 import { User, Heart, Calendar, LogOut, Menu, X } from 'lucide-react';

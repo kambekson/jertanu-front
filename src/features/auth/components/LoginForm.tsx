@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Button from '../../UI/Button';
-import Input from '../../UI/Input';
-import {useLogin} from "../../hooks/useLogin.tsx";
+import Button from '../../../UI/Button';
+import Input from '../../../UI/Input';
+import {useLogin} from "../hooks/useLogin.tsx";
 
 interface LoginFormProps{
   switchView: (view: 'forgot' | 'signup') => void;

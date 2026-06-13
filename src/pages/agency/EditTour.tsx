@@ -994,7 +994,7 @@ export default function EditTour() {
                 <div className="bg-gray-50 rounded-lg p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Тип тура</h3>
                   <div className="space-y-3">
-                    {getTourTypes.map((type) => (
+                    {getTourTypes().map((type) => (
                       <div key={type.id} className="flex items-start">
                         <input
                           type="radio"

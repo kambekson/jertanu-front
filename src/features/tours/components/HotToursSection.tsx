@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import TourCard from '../../../UI/TourCard';
+import TourCard from './TourCard';
 import { Link } from 'react-router-dom';
 
 export interface Tour {
@@ -17,7 +17,7 @@ export interface Tour {
   textColor?: string;
 }
 
-const HotTours = ({ tours }: { tours: Tour[] }) => {
+const HotToursSection = ({ tours }: { tours: Tour[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
 
@@ -92,4 +92,4 @@ const HotTours = ({ tours }: { tours: Tour[] }) => {
   );
 };
 
-export default HotTours;
+export default HotToursSection;

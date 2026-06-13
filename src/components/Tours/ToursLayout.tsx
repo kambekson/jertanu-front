@@ -1,5 +1,5 @@
-import ToursHero from './ToursHero';
-import TourFilters from './ToursFilters';
+import ToursHero from '../../features/tours/components/ToursHero.tsx';
+import TourFilters from '../../features/tours/components/ToursFilters.tsx';
 import ToursList from './ToursList';
 import {Tour} from "../../pages/ToursPage.tsx"
 

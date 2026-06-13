@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import seasonTours from '../../../assets/season.jpg';
-import TourCard from '../../../UI/TourCard';
+import TourCard from './TourCard';
 
 interface BaseTour {
   img: string;
@@ -24,7 +24,7 @@ interface SeasonToursProps {
   tours: BaseTour[];
 }
 
-const SeasonTours = ({ tours }: SeasonToursProps) => {
+const SeasonToursSection = ({ tours }: SeasonToursProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
 
@@ -84,4 +84,4 @@ const SeasonTours = ({ tours }: SeasonToursProps) => {
   );
 };
 
-export default SeasonTours;
+export default SeasonToursSection;

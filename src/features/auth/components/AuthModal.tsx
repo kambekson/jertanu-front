@@ -4,10 +4,10 @@ import SignupForm from './SignupForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
 import ResetPasswordForm from './ResetPasswordForm';
 import { X } from 'lucide-react';
-import authbg1 from '../../assets/auth-modal/auth-modal1.jpg';
-import authbg2 from '../../assets/auth-modal/auth-modal2.jpg';
-import authbg3 from '../../assets/auth-modal/auth-modal3.jpg';
-import logo from '../../assets/jertanu-logo-white.svg';
+import authbg1 from '../../../assets/auth-modal/auth-modal1.jpg';
+import authbg2 from '../../../assets/auth-modal/auth-modal2.jpg';
+import authbg3 from '../../../assets/auth-modal/auth-modal3.jpg';
+import logo from '../../../assets/jertanu-logo-white.svg';
 
 interface AuthModalProps {
   isOpen: boolean;

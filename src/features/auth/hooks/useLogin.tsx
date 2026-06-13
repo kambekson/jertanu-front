@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {storeTokens} from "../utils/authUtils.ts";
+import {storeTokens} from "../../../utils/authUtils";
 
 export const useLogin = () => {
     const [error, setError] = useState('');

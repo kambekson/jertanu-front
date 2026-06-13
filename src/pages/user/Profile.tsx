@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../../styles/Profile.scss';
 import avatarPlaceholder from '../../assets/avatar-placeholder.svg';
 import Button from '../../UI/Button';
 import { useNavigate } from 'react-router-dom';

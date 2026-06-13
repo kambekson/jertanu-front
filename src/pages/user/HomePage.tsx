@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import Hero from '../../components/sections/home page/Hero.tsx';
-import HotTours from '../../components/sections/home page/HotTours.tsx';
-import PopularCities from '../../components/sections/home page/PopularCities.tsx';
-import SeasonTours from '../../components/sections/home page/SeasonTours.tsx';
+import Hero from '../../components/sections/home page/Hero';
+import HotToursSection from '../../features/tours/components/HotToursSection';
+import PopularCities from '../../components/sections/home page/PopularCities';
+import SeasonToursSection from '../../features/tours/components/SeasonToursSection';
 import heroimg1 from '../../assets/hero1.png';
 import heroimg2 from '../../assets/hero2.png';
 import heroimg3 from '../../assets/hero3.png';
@@ -80,9 +80,9 @@ export default function HomePage() {
     <div className="py-3">
       <Hero />
       <div className="py-12">
-        <HotTours tours={tours} />
+        <HotToursSection tours={tours} />
         <PopularCities tours={tours} />
-        <SeasonTours tours={tours} />
+        <SeasonToursSection tours={tours} />
       </div>
     </div>
   );
