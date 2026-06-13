@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiService } from '../services/apiService';
 import ToursLayout from '../components/Tours/ToursLayout.tsx';
-
-enum TourType {
-  ETHNO = 'ethno',
-  NATURE = 'nature',
-  CULTURAL = 'cultural',
-  ADVENTURE = 'adventure',
-  GASTRO = 'gastronomy',
-  OTHER = 'other',
-}
+import { getTourFilters, TourTypeId } from '../data/tourTypes';
 
 export type Tour = {
   id: number;
@@ -21,7 +13,7 @@ export type Tour = {
   startDate: string;
   endDate: string;
   city: string;
-  type: string;
+  type: TourTypeId;
   isActive: boolean;
   services: string[];
   averageRating: number;
@@ -32,14 +24,7 @@ export type Tour = {
   duration: string;
 };
 
-const tourFilters = [
-  { id: TourType.ETHNO, label: 'Этнографические туры' },
-  { id: TourType.NATURE, label: 'Природные туры' },
-  { id: TourType.CULTURAL, label: 'Культурные туры' },
-  { id: TourType.ADVENTURE, label: 'Приключенческие туры' },
-  { id: TourType.GASTRO, label: 'Гастрономические туры' },
-  { id: TourType.OTHER, label: 'Другие туры' },
-];
+const tourFilters = getTourFilters();
 
 export default function ToursPage() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);

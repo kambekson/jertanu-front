@@ -43,7 +43,7 @@ const FormSection: React.FC<FormSectionProps> = ({
   };
 
   return (
-    <form className="space-y-6 h-[500px] min-h-[500px] flex flex-col" onSubmit={handleSubmit}>
+    <form className="space-y-6 min-h-[500px] flex flex-col" onSubmit={handleSubmit}>
       <div className="flex-grow">
         {fields.map((field, index) => (
           <Input
@@ -86,3 +86,5 @@ const FormSection: React.FC<FormSectionProps> = ({
 };
 
 export default FormSection;
+
+
